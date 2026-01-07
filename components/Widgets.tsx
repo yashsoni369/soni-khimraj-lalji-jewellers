@@ -63,15 +63,15 @@ export const HeroCarousel = () => {
           </div>
 
           {/* Content */}
-          <div className={`absolute bottom-20 md:bottom-28 left-6 md:left-20 max-w-3xl text-white transition-all duration-1000 delay-300 transform ${index === currentSlide ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="h-px w-16 bg-gold-400"></div>
-              <span className="text-gold-300 font-bold uppercase tracking-[0.3em] text-xs">The House of Soni Khimraj Lalji Jewellers</span>
+          <div className={`absolute bottom-16 md:bottom-28 left-4 md:left-20 right-4 md:right-auto max-w-3xl text-white transition-all duration-1000 delay-300 transform ${index === currentSlide ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="flex items-center gap-3 mb-4 md:mb-6">
+              <div className="h-px w-10 md:w-16 bg-gold-400"></div>
+              <span className="text-gold-300 font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-[10px] md:text-xs">The House of Soni Khimraj</span>
             </div>
-            <h1 className="text-5xl md:text-8xl font-serif mb-6 leading-[0.9] text-white drop-shadow-2xl">
+            <h1 className="text-4xl sm:text-5xl md:text-8xl font-serif mb-4 md:mb-6 leading-[1.1] md:leading-[0.9] text-white drop-shadow-2xl">
               {slide.title}
             </h1>
-            <p className="text-lg md:text-xl text-white/80 mb-10 font-light max-w-lg leading-relaxed border-l border-gold-500/50 pl-6">
+            <p className="text-base md:text-xl text-white/80 mb-8 md:mb-10 font-light max-w-lg leading-relaxed border-l border-gold-500/50 pl-4 md:pl-6">
               {slide.subtitle}
             </p>
             <div className="flex gap-4">
@@ -89,12 +89,12 @@ export const HeroCarousel = () => {
       </div>
 
       {/* Custom Controls */}
-      <div className="absolute bottom-8 right-8 z-30 flex gap-4">
-        <button onClick={prevSlide} className="p-3 border border-white/20 rounded-full text-white hover:bg-white hover:text-maroon-900 transition-all" aria-label="Previous Slide">
-          <ChevronLeft size={20} />
+      <div className="absolute bottom-6 md:bottom-8 right-6 md:right-8 z-30 flex gap-3 md:gap-4">
+        <button onClick={prevSlide} className="p-2 md:p-3 border border-white/20 rounded-full text-white hover:bg-white hover:text-maroon-900 transition-all backdrop-blur-sm" aria-label="Previous Slide">
+          <ChevronLeft size={18} className="md:w-5 md:h-5" />
         </button>
-        <button onClick={nextSlide} className="p-3 border border-white/20 rounded-full text-white hover:bg-white hover:text-maroon-900 transition-all" aria-label="Next Slide">
-          <ChevronRight size={20} />
+        <button onClick={nextSlide} className="p-2 md:p-3 border border-white/20 rounded-full text-white hover:bg-white hover:text-maroon-900 transition-all backdrop-blur-sm" aria-label="Next Slide">
+          <ChevronRight size={18} className="md:w-5 md:h-5" />
         </button>
       </div>
     </div>
@@ -122,24 +122,24 @@ export const Spotlight = () => (
       </div>
 
       {/* Text Side */}
-      <div className="w-full md:w-1/2 space-y-8 text-center md:text-left">
+      <div className="w-full md:w-1/2 space-y-6 md:space-y-8 text-center md:text-left">
         <div className="flex items-center gap-4 justify-center md:justify-start">
-          <span className="h-px w-12 bg-gold-400"></span>
-          <span className="text-gold-300 uppercase tracking-widest text-xs font-bold">Shrestha Ratna - Our Finest Pick</span>
+          <span className="h-px w-8 md:w-12 bg-gold-400"></span>
+          <span className="text-gold-300 uppercase tracking-widest text-[10px] md:text-xs font-bold">Shrestha Ratna - Our Finest Pick</span>
         </div>
-        <h2 className="text-5xl md:text-7xl font-serif leading-none">The Nizam's <br /><span className="italic text-gold-200">Emerald Choker</span></h2>
-        <p className="text-maroon-100 font-light leading-loose text-lg max-w-lg mx-auto md:mx-0">
+        <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif leading-tight md:leading-none">The Nizam's <br /><span className="italic text-gold-200">Emerald Choker</span></h2>
+        <p className="text-maroon-100 font-light leading-relaxed md:leading-loose text-base md:text-lg max-w-lg mx-auto md:mx-0">
           An ode to the royal courts of Hyderabad. Featuring uncut Colombian emeralds nestled in 22K hallmarks gold, accented with Basra pearls.
           This piece represents over 200 hours of artisanal labor using the ancient 'Kundan' setting technique.
         </p>
-        <div className="flex gap-12 pt-6 justify-center md:justify-start border-t border-white/10 mt-8">
+        <div className="grid grid-cols-2 gap-6 md:gap-12 pt-6 justify-items-center md:justify-items-start border-t border-white/10 mt-8">
           <div>
             <p className="text-[10px] uppercase text-gold-300 tracking-wider mb-2">Total Weight</p>
-            <p className="font-serif text-3xl">84.5g</p>
+            <p className="font-serif text-2xl md:text-3xl">84.5g</p>
           </div>
           <div>
             <p className="text-[10px] uppercase text-gold-300 tracking-wider mb-2">Gemstones</p>
-            <p className="font-serif text-3xl">Emerald & Polki</p>
+            <p className="font-serif text-2xl md:text-3xl">Emerald & Polki</p>
           </div>
         </div>
       </div>
@@ -159,15 +159,15 @@ export const CategoryShowcase = () => {
         </div>
 
         {/* Asymmetric Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[300px] md:auto-rows-[400px]">
 
           {/* Large Featured Card */}
-          <div className="md:col-span-2 relative group cursor-pointer overflow-hidden bg-gray-100">
+          <div className="md:col-span-2 md:row-span-1 relative group cursor-pointer overflow-hidden bg-gray-100">
             <img src="/assest/dhulan collection.png" width="800" height="400" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Elegant Gold Necklaces" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-            <div className="absolute bottom-8 left-8 text-white">
-              <span className="text-xs uppercase tracking-widest mb-2 block text-gold-300">Signature Collection</span>
-              <h3 className="font-serif text-4xl italic">Necklaces</h3>
+            <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
+              <span className="text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2 block text-gold-300">Signature Collection</span>
+              <h3 className="font-serif text-3xl md:text-4xl italic">Necklaces</h3>
             </div>
           </div>
 
@@ -175,8 +175,8 @@ export const CategoryShowcase = () => {
           <div className="md:row-span-2 relative group cursor-pointer overflow-hidden bg-gray-100">
             <img src="/assest/ring.png" width="400" height="800" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Diamond Rings" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-            <div className="absolute bottom-8 left-8 text-white">
-              <h3 className="font-serif text-4xl italic">Rings</h3>
+            <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
+              <h3 className="font-serif text-3xl md:text-4xl italic">Rings</h3>
             </div>
           </div>
 
@@ -184,8 +184,8 @@ export const CategoryShowcase = () => {
           <div className="relative group cursor-pointer overflow-hidden bg-gray-100">
             <img src="/assest/earing.png" width="400" height="400" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Gold Earrings" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-            <div className="absolute bottom-8 left-8 text-white">
-              <h3 className="font-serif text-3xl italic">Earrings</h3>
+            <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
+              <h3 className="font-serif text-2xl md:text-3xl italic">Earrings</h3>
             </div>
           </div>
 
@@ -193,8 +193,8 @@ export const CategoryShowcase = () => {
           <div className="relative group cursor-pointer overflow-hidden bg-gray-100">
             <img src="/assest/Bangles.png" width="400" height="400" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Gold Bangles" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-            <div className="absolute bottom-8 left-8 text-white">
-              <h3 className="font-serif text-3xl italic">Bangles</h3>
+            <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
+              <h3 className="font-serif text-2xl md:text-3xl italic">Bangles</h3>
             </div>
           </div>
 
