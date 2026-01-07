@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Search, Phone, ShoppingBag, X, Instagram, MapPin, Mail, ChevronDown, User, Heart, ArrowRight, MessageCircle, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Instagram, MapPin, Mail, Phone, Clock, Menu, X } from 'lucide-react';
 import { STORE_INFO } from '../constants';
-import { Button, Input, Dialog, useToast } from './ui/SharedUI';
 import { openWhatsApp, createEnquiryMessage } from '../services/whatsappService';
 
 
 
 export const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
+
+  // Use the dark logo for the white header background by default
+  const logoSrc = '/assest/logo dark.png';
 
   const navLinks = [
     { name: 'The Heritage', path: '/#heritage' },
@@ -41,6 +46,17 @@ export const Header = () => {
       >
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-center relative h-16 md:h-20 lg:h-24">
 
+          {/* MOBILE: Hamburger Menu Button */}
+          <div className="lg:hidden absolute left-6 z-50">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-maroon-900 focus:outline-none"
+              aria-label="Toggle Menu"
+            >
+              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+
           {/* DESKTOP: Left Nav */}
           <nav className="hidden lg:flex gap-8 xl:gap-12 items-center justify-end flex-1 pr-8">
             {leftNav.map((link) => (
@@ -63,7 +79,7 @@ export const Header = () => {
           {/* CENTER: Logo */}
           <div className="flex-shrink-0 z-40 cursor-pointer mx-4 flex items-center justify-center p-1" onClick={() => navigate('/')}>
             <img
-              src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto,w_400/v1767617444/WhatsApp_Image_2026-01-05_at_17.49.34_8d676492-removebg-preview_odncuk.png"
+              src={logoSrc}
               alt="Soni Khimraj Lalji Logo"
               width="400"
               height="112"
@@ -109,6 +125,43 @@ export const Header = () => {
           </div>
 
         </div>
+
+        {/* MOBILE MENU OVERLAY */}
+        <div className={`lg:hidden fixed inset-x-0 top-[64px] md:top-[80px] bg-white border-b border-gray-100 shadow-xl transition-all duration-500 z-40 overflow-hidden ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+          <nav className="flex flex-col p-8 gap-6">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.path.replace('/', '')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsMenuOpen(false);
+                  const target = document.querySelector(link.path.replace('/', ''));
+                  if (target) target.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-lg uppercase tracking-[0.2em] text-gray-700 hover:text-maroon-900 border-b border-gray-50 pb-2"
+              >
+                {link.name}
+              </a>
+            ))}
+            <button
+              onClick={() => {
+                setIsMenuOpen(false);
+                openWhatsApp(createEnquiryMessage());
+              }}
+              className="mt-4 flex items-center justify-center gap-3 bg-maroon-900 text-white px-6 py-4 rounded-sm tracking-widest uppercase text-sm font-bold"
+            >
+              <img
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23fff' d='M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.7 17.8 69.4 27.2 106.2 27.2 122.4 0 222-99.6 222-222 0-59.3-23-115.1-65-157.1zM223.9 446.3c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 365.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.5-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-82.7 184.6-184.5 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.2-8.5-44.2-27.2-16.4-14.6-27.4-32.7-30.6-38.2-3.2-5.6-.3-8.6 2.4-11.3 2.5-2.4 5.6-6.5 8.3-9.7 2.8-3.3 3.7-5.5 5.5-9.2 1.9-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z'/%3E%3C/svg%3E"
+                alt="WhatsApp"
+                width="20"
+                height="20"
+                className="w-5 h-5"
+              />
+              Chat Now
+            </button>
+          </nav>
+        </div>
       </header>
     </div>
   );
@@ -130,7 +183,7 @@ export const StoreAddress = () => {
               {/* Store Image */}
               <div className="h-64 md:h-auto overflow-hidden relative">
                 <img
-                  src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto,w_600/v1767694078/2025-10-27_mofwa9.png"
+                  src="/assest/storeimg.png"
                   width="600"
                   height="400"
                   className="w-full h-full object-cover"
@@ -198,7 +251,7 @@ export const Footer = () => {
 
           {/* BIS Logo */}
           <img
-            src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto/v1767092148/Bureau_of_Indian_Standards_Logo_lwfmnz.svg"
+            src="/assest/BIS.png"
             alt="BIS Hallmark"
             width="160"
             height="40"

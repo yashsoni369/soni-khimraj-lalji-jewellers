@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, useNavigate, useSearchParams, useParams, useLocation } from 'react-router-dom';
-import { Phone, MessageCircle, MapPin, Clock, Filter, ChevronRight, Gem, ShieldCheck, Truck, Ruler, RefreshCw, ArrowRight, X, Heart, ChevronDown, BookOpen, PenTool, Share2, Star, Award } from 'lucide-react';
-
-import { MOCK_PRODUCTS, STORE_INFO, FAQS, OCCASIONS, KNOWLEDGE_ARTICLES } from './constants';
-import { Product, ProductCategory, CollectionType } from './types';
+import React, { useEffect } from 'react';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { STORE_INFO } from './constants';
 import { Header, Footer, StoreAddress } from './components/Layout';
-import { HeroCarousel, GoldRateWidget, Testimonials, TrustBar, BrandStory, Spotlight, CategoryShowcase, Newsletter } from './components/Widgets';
-import { Button, Input, Badge, Card, useToast } from './components/ui/SharedUI';
-import { openWhatsApp, createEnquiryMessage } from './services/whatsappService';
+import { HeroCarousel, Spotlight, CategoryShowcase } from './components/Widgets';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -20,55 +15,23 @@ const ScrollToTop = () => {
   return null;
 };
 
-// --- COMPONENT: INFO ACCORDION (Clean Editorial) ---
-const InfoAccordion = ({ title, children, defaultOpen = false }: { title: string, children?: React.ReactNode, defaultOpen?: boolean }) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  return (
-    <div className="border-t border-gray-200">
-      <button
-        className="w-full py-6 flex justify-between items-center text-left hover:text-maroon-800 transition-colors group"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className="font-serif text-lg text-gray-900">{title}</span>
-        <span className={`text-2xl font-light text-gray-600 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}>+</span>
-      </button>
-      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mb-8' : 'max-h-0 opacity-0'}`}>
-        <div className="text-gray-600 leading-relaxed font-light pr-4">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 // --- COMPONENT: WHY SHOP WITH US ---
 const WhyShopWithUs = () => {
-  const logoUrl = "https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto/v1767091807/image-Picsart-AiImageEnhancer-removebg-preview_nqmlzh.png";
   const items = [
     {
-      icon: <img src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto/v1767617443/BIS-removebg-preview_ergy6p.png" width="288" height="256" className="w-72 h-64 object-contain" alt="BIS Hallmark" />,
-      title: "",
-      sub: ""
+      icon: <img src="/assest/BIS.png" width="288" height="256" className="w-72 h-64 object-contain" alt="BIS Hallmark" />,
     },
     {
-      icon: <img src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto/v1767618098/Gemini_Generated_Image_vygvirvygvirvygv-removebg-preview_o6h7ho.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Trusted Brand" />,
-      title: "",
-      sub: ""
+      icon: <img src="/assest/trust.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Trusted Brand" />,
     },
     {
-      icon: <img src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto/v1767617444/shiled-removebg-preview_mgje97.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Leading Brand" />,
-      title: "",
-      sub: ""
+      icon: <img src="/assest/shiled.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Leading Brand" />,
     },
     {
-      icon: <img src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto/v1767617443/Dimond-removebg-preview_vmcjvm.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Certified Diamonds" />,
-      title: "",
-      sub: ""
+      icon: <img src="/assest/Dimond.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Certified Diamonds" />,
     },
     {
-      icon: <img src="https://res.cloudinary.com/dkdxvobta/image/upload/f_auto,q_auto/v1767617443/crasfman-removebg-preview_nriusl.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Seasoned Craftsmen" />,
-      title: "",
-      sub: ""
+      icon: <img src="/assest/crasfman.png" width="288" height="256" className="w-72 h-64 object-contain" alt="Seasoned Craftsmen" />,
     }
   ];
 
@@ -129,8 +92,8 @@ const HomePage = () => {
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
           <div className="order-2 md:order-1">
             <div className="grid grid-cols-2 gap-4">
-              <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=40&w=400&auto=format&fm=avif&fit=crop" width="300" height="400" loading="lazy" className="mt-12 w-full object-cover aspect-[3/4] shadow-lg" alt="Gold Jewelry Display" />
-              <img src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=40&w=400&auto=format&fm=avif&fit=crop" width="300" height="400" loading="lazy" className="w-full object-cover aspect-[3/4] shadow-lg" alt="Elegant Jewelry" />
+              <img src="/assest/hertage gold.png" width="300" height="400" loading="lazy" className="mt-12 w-full object-cover aspect-[3/4] shadow-lg" alt="Gold Jewelry Display" />
+              <img src="/assest/month.png" width="300" height="400" loading="lazy" className="w-full object-cover aspect-[3/4] shadow-lg" alt="Elegant Jewelry" />
             </div>
           </div>
           <div className="order-1 md:order-2">
