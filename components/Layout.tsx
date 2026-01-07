@@ -251,7 +251,7 @@ export const Footer = () => {
 
           {/* BIS Logo */}
           <img
-            src="/assest/BIS.png"
+            src="/assest/BIS_original.png"
             alt="BIS Hallmark"
             width="160"
             height="40"
