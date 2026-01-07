@@ -121,8 +121,6 @@ const HomePage = () => {
       <section id="why-us">
         <WhyShopWithUs />
       </section>
-
-
       <StoreAddress />
     </div>
   );

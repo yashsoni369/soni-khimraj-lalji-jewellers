@@ -181,27 +181,37 @@ export const StoreAddress = () => {
           <div className="bg-white rounded-sm overflow-hidden shadow-2xl">
             <div className="grid md:grid-cols-2 gap-0">
               {/* Store Image */}
-              <div className="h-64 md:h-auto overflow-hidden relative">
+              <a
+                href={STORE_INFO.mapEmbedUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-64 md:h-auto overflow-hidden relative block group/img"
+              >
                 <img
-                  src="/assest/storeimg.png"
+                  src="/assest/shopimg.png"
                   width="600"
                   height="400"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110"
                   alt="Soni Khimraj Lalji Jewellers Store"
                 />
-                <div className="absolute inset-0 bg-maroon-900/10"></div>
-              </div>
+                <div className="absolute inset-0 bg-maroon-900/10 group-hover/img:bg-transparent transition-colors"></div>
+              </a>
 
               {/* Store Details */}
               <div className="p-8 md:p-12 flex flex-col justify-center">
                 <h3 className="text-3xl font-serif text-maroon-900 mb-6 pb-4 border-b-2 border-gold-200">Soni Khimraj Lalji Jewellers</h3>
                 <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-3">
-                    <MapPin size={20} className="text-gold-600 mt-1 flex-shrink-0" />
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                  <a
+                    href={STORE_INFO.mapEmbedUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 group/addr"
+                  >
+                    <MapPin size={20} className="text-gold-600 mt-1 flex-shrink-0 group-hover/addr:scale-110 transition-transform" />
+                    <p className="text-sm text-gray-700 leading-relaxed group-hover:text-gold-700 transition-colors">
                       {STORE_INFO.address}
                     </p>
-                  </div>
+                  </a>
                   <div className="flex items-center gap-3">
                     <Phone size={20} className="text-gold-600 flex-shrink-0" />
                     <a href={`tel:${STORE_INFO.phone}`} className="text-sm text-gray-700 hover:text-gold-600 transition-colors">
