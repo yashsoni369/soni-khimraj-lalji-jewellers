@@ -7,7 +7,7 @@ export const STORE_INFO: StoreInfo = {
   phone: import.meta.env.VITE_STORE_PHONE || "+91-98765-43210",
   whatsapp: import.meta.env.VITE_STORE_WHATSAPP || "+919876543210",
   email: import.meta.env.VITE_STORE_EMAIL || "contact@skljewellers.com",
-  hours: "Mon–Sun 10:30 AM – 8:30 PM",
+  hours: "Mon–Sun 10 AM – 9:30 PM",
   mapEmbedUrl: "https://maps.app.goo.gl/7KYPvULTMaccjDjJA",
   instagram: "https://www.instagram.com/sonikhimrajlalji/"
 };
