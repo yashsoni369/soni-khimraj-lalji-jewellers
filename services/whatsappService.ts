@@ -1,6 +1,6 @@
 import { STORE_INFO } from '../constants';
 
-const GREETING = 'Namaste Mr. Soni 🙏';
+const GREETING = 'Namaste Mr. Soni';
 
 export const openWhatsApp = (message: string) => {
   const encodedMessage = encodeURIComponent(message);
