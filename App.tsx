@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { MessageCircle } from 'lucide-react';
 import { STORE_INFO } from './constants';
-import { Header, Footer, StoreAddress } from './components/Layout';
+import { Header, Footer, StoreAddress, StickyMobileCTA, GoldRateChip } from './components/Layout';
 import { HeroCarousel, Spotlight, CategoryShowcase } from './components/Widgets';
+import {
+  openWhatsApp,
+  createKnowledgeMessage,
+  createHelloMessage,
+} from './services/whatsappService';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -51,6 +57,20 @@ const WhyShopWithUs = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 md:mt-24 max-w-2xl mx-auto text-center">
+          <p className="text-gray-700 font-light italic text-base md:text-lg leading-relaxed mb-6">
+            We'd love to meet you. Walk into our Ghatkopar store — or simply say namaste on WhatsApp.
+          </p>
+          <button
+            type="button"
+            onClick={() => openWhatsApp(createHelloMessage())}
+            className="inline-flex items-center gap-3 bg-maroon-900 hover:bg-maroon-800 text-white px-7 py-3 md:px-8 md:py-4 rounded-sm tracking-widest uppercase text-xs md:text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+          >
+            <MessageCircle size={18} />
+            Say Hello to Mr. Soni
+          </button>
         </div>
       </div>
     </section>
@@ -106,14 +126,28 @@ const HomePage = () => {
               Understanding gold purity and diamond quality is essential to building your personal collection.
             </p>
             <div className="flex flex-col gap-4">
-              <div className="border-l-2 border-gold-400 pl-6 py-2 cursor-pointer group">
+              <button
+                type="button"
+                onClick={() => openWhatsApp(createKnowledgeMessage('the BIS Hallmark & HUID on your jewellery'))}
+                className="border-l-2 border-gold-400 pl-6 py-2 text-left group hover:bg-gold-50/60 transition-colors"
+              >
                 <h3 className="font-serif text-xl text-maroon-900 group-hover:text-gold-700 transition-colors">BIS Hallmark & HUID</h3>
                 <p className="text-sm text-gray-600 font-light mt-1">Trust and transparency in every gram.</p>
-              </div>
-              <div className="border-l-2 border-gold-400 pl-6 py-2 cursor-pointer group">
+                <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] uppercase tracking-widest text-gold-700 opacity-80 group-hover:opacity-100">
+                  <MessageCircle size={12} /> Ask Mr. Soni
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => openWhatsApp(createKnowledgeMessage('the 4Cs of diamond quality'))}
+                className="border-l-2 border-gold-400 pl-6 py-2 text-left group hover:bg-gold-50/60 transition-colors"
+              >
                 <h3 className="font-serif text-xl text-maroon-900 group-hover:text-gold-700 transition-colors">Diamond Quality Guide</h3>
                 <p className="text-sm text-gray-600 font-light mt-1">Understanding the 4Cs of brilliance.</p>
-              </div>
+                <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] uppercase tracking-widest text-gold-700 opacity-80 group-hover:opacity-100">
+                  <MessageCircle size={12} /> Ask Mr. Soni
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -135,7 +169,7 @@ const App = () => {
       <div className="min-h-screen flex flex-col font-sans bg-white text-gray-900 selection:bg-gold-200 selection:text-maroon-900">
         <ScrollToTop />
         <Header />
-        <main className="flex-grow">
+        <main className="flex-grow pb-16 lg:pb-0">
           <Routes>
             <Route path="/" element={<HomePage />} />
             {/* Fallback to homepage for all routes to keep it SPA/Homepage only */}
@@ -143,6 +177,8 @@ const App = () => {
           </Routes>
         </main>
         <Footer />
+        <StickyMobileCTA />
+        <GoldRateChip />
       </div>
     </HashRouter>
   );
