@@ -9,6 +9,12 @@ import {
   createVideoRequestMessage,
   createCategoryMessage,
 } from '../services/whatsappService';
+import { TrackedButton, TrackedLink } from './TrackedCTA';
+import type { CtaLocation, CollectionCategory } from '@/lib/tracking';
+
+const HERO_SLOTS: readonly CtaLocation[] = ['hero_slide_1', 'hero_slide_2', 'hero_slide_3'];
+const HERO_CATEGORIES: readonly CollectionCategory[] = ['shahi_dulhan', 'heritage_gold', 'nakshatra_diamonds'];
+const SPOTLIGHT_PRODUCT = 'nizams_emerald_choker';
 
 const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?: string; fill?: string }) => (
   <img
@@ -91,22 +97,29 @@ export const HeroCarousel = () => {
               {slide.subtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
-              <button
+              <TrackedButton
+                track={{
+                  cta: 'whatsapp',
+                  location: HERO_SLOTS[index] ?? 'hero_slide_1',
+                  intent: 'chat_general',
+                  category: HERO_CATEGORIES[index],
+                }}
                 onClick={() => openWhatsApp(createSlideMessage(slide.title))}
                 className="group/cta inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-maroon-950 px-5 md:px-7 py-3 md:py-4 rounded-sm font-semibold tracking-wide transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 <WhatsAppGlyph className="w-5 h-5 md:w-5 md:h-5" fill="%23450a0a" />
                 <span className="text-sm md:text-base">Chat with Mr. Soni</span>
-              </button>
-              <a
+              </TrackedButton>
+              <TrackedLink
                 href={STORE_INFO.mapEmbedUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                track={{ cta: 'directions', location: HERO_SLOTS[index] ?? 'hero_slide_1' }}
                 className="inline-flex items-center gap-2 text-white/90 hover:text-gold-200 px-3 py-3 md:py-4 border-b border-white/30 hover:border-gold-300 transition-colors"
               >
                 <MapPin size={16} />
                 <span className="text-sm md:text-base uppercase tracking-widest">Visit us in Ghatkopar</span>
-              </a>
+              </TrackedLink>
             </div>
             <div className="flex items-center gap-2 mt-4 text-white/70 text-xs md:text-sm">
               <span className="relative flex h-2 w-2">
@@ -182,20 +195,32 @@ export const Spotlight = () => (
           </div>
         </div>
         <div className="pt-4 flex flex-col sm:flex-row items-center md:items-start gap-4">
-          <button
+          <TrackedButton
+            track={{
+              cta: 'whatsapp',
+              location: 'shrestha_ratna',
+              intent: 'private_viewing',
+              product: SPOTLIGHT_PRODUCT,
+            }}
             onClick={() => openWhatsApp(createSpotlightMessage("Nizam's Emerald Choker"))}
             className="inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-maroon-950 px-6 md:px-8 py-3 md:py-4 rounded-sm font-semibold tracking-wide transition-all duration-300 shadow-xl hover:-translate-y-0.5"
           >
             <WhatsAppGlyph className="w-5 h-5" fill="%23450a0a" />
             <span className="text-sm md:text-base">Reserve a Private Viewing</span>
-          </button>
-          <button
+          </TrackedButton>
+          <TrackedButton
+            track={{
+              cta: 'whatsapp',
+              location: 'shrestha_ratna',
+              intent: 'video_request',
+              product: SPOTLIGHT_PRODUCT,
+            }}
             onClick={() => openWhatsApp(createVideoRequestMessage("Nizam's Emerald Choker"))}
             className="inline-flex items-center gap-2 text-gold-200 hover:text-white px-3 py-2 border border-gold-500/40 hover:border-gold-300 rounded-sm transition-colors"
           >
             <Play size={14} className="fill-current" />
             <span className="text-xs md:text-sm uppercase tracking-widest">Request video on WhatsApp</span>
-          </button>
+          </TrackedButton>
         </div>
         <p className="text-[11px] uppercase tracking-[0.2em] text-gold-300/80">
           One-of-a-kind · Currently at our Ghatkopar store
@@ -220,8 +245,9 @@ export const CategoryShowcase = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[300px] md:auto-rows-[400px]">
 
           {/* Large Featured Card */}
-          <button
+          <TrackedButton
             type="button"
+            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'necklaces' }}
             onClick={() => openWhatsApp(createCategoryMessage('Necklaces'))}
             aria-label="See our Necklaces catalogue on WhatsApp"
             className="md:col-span-2 md:row-span-1 relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
@@ -236,11 +262,12 @@ export const CategoryShowcase = () => {
                 See catalogue on WhatsApp →
               </span>
             </div>
-          </button>
+          </TrackedButton>
 
           {/* Tall Vertical Card */}
-          <button
+          <TrackedButton
             type="button"
+            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'rings' }}
             onClick={() => openWhatsApp(createCategoryMessage('Rings'))}
             aria-label="See our Rings catalogue on WhatsApp"
             className="md:row-span-2 relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
@@ -254,11 +281,12 @@ export const CategoryShowcase = () => {
                 See catalogue on WhatsApp →
               </span>
             </div>
-          </button>
+          </TrackedButton>
 
           {/* Standard Card 1 */}
-          <button
+          <TrackedButton
             type="button"
+            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'earrings' }}
             onClick={() => openWhatsApp(createCategoryMessage('Earrings'))}
             aria-label="See our Earrings catalogue on WhatsApp"
             className="relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
@@ -272,11 +300,12 @@ export const CategoryShowcase = () => {
                 See catalogue →
               </span>
             </div>
-          </button>
+          </TrackedButton>
 
           {/* Standard Card 2 */}
-          <button
+          <TrackedButton
             type="button"
+            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'bangles' }}
             onClick={() => openWhatsApp(createCategoryMessage('Bangles'))}
             aria-label="See our Bangles catalogue on WhatsApp"
             className="relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
@@ -290,7 +319,7 @@ export const CategoryShowcase = () => {
                 See catalogue →
               </span>
             </div>
-          </button>
+          </TrackedButton>
 
         </div>
 

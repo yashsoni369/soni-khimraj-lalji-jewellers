@@ -4,19 +4,23 @@ import { MessageCircle } from 'lucide-react';
 import { STORE_INFO } from './constants';
 import { Header, Footer, StoreAddress, StickyMobileCTA, GoldRateChip } from './components/Layout';
 import { HeroCarousel, Spotlight, CategoryShowcase } from './components/Widgets';
+import { TrackedButton } from './components/TrackedCTA';
+import { usePageViewTracking } from './hooks/usePageViewTracking';
 import {
   openWhatsApp,
   createKnowledgeMessage,
   createHelloMessage,
 } from './services/whatsappService';
 
-// Scroll to top on route change
+// Scroll to top + page_view on route change
 const ScrollToTop = () => {
   const location = useLocation();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [location.pathname, location.search]);
+
+  usePageViewTracking();
 
   return null;
 };
@@ -63,14 +67,15 @@ const WhyShopWithUs = () => {
           <p className="text-gray-700 font-light italic text-base md:text-lg leading-relaxed mb-6">
             We'd love to meet you. Walk into our Ghatkopar store — or simply say namaste on WhatsApp.
           </p>
-          <button
+          <TrackedButton
             type="button"
+            track={{ cta: 'whatsapp', location: 'why_us', intent: 'chat_general' }}
             onClick={() => openWhatsApp(createHelloMessage())}
             className="inline-flex items-center gap-3 bg-maroon-900 hover:bg-maroon-800 text-white px-7 py-3 md:px-8 md:py-4 rounded-sm tracking-widest uppercase text-xs md:text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
           >
             <MessageCircle size={18} />
             Say Hello to Mr. Soni
-          </button>
+          </TrackedButton>
         </div>
       </div>
     </section>
@@ -126,8 +131,9 @@ const HomePage = () => {
               Understanding gold purity and diamond quality is essential to building your personal collection.
             </p>
             <div className="flex flex-col gap-4">
-              <button
+              <TrackedButton
                 type="button"
+                track={{ cta: 'content_inquiry', location: 'knowledge', topic: 'bis_hallmark' }}
                 onClick={() => openWhatsApp(createKnowledgeMessage('the BIS Hallmark & HUID on your jewellery'))}
                 className="border-l-2 border-gold-400 pl-6 py-2 text-left group hover:bg-gold-50/60 transition-colors"
               >
@@ -136,9 +142,10 @@ const HomePage = () => {
                 <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] uppercase tracking-widest text-gold-700 opacity-80 group-hover:opacity-100">
                   <MessageCircle size={12} /> Ask Mr. Soni
                 </span>
-              </button>
-              <button
+              </TrackedButton>
+              <TrackedButton
                 type="button"
+                track={{ cta: 'content_inquiry', location: 'knowledge', topic: 'diamond_4cs' }}
                 onClick={() => openWhatsApp(createKnowledgeMessage('the 4Cs of diamond quality'))}
                 className="border-l-2 border-gold-400 pl-6 py-2 text-left group hover:bg-gold-50/60 transition-colors"
               >
@@ -147,7 +154,7 @@ const HomePage = () => {
                 <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] uppercase tracking-widest text-gold-700 opacity-80 group-hover:opacity-100">
                   <MessageCircle size={12} /> Ask Mr. Soni
                 </span>
-              </button>
+              </TrackedButton>
             </div>
           </div>
         </div>

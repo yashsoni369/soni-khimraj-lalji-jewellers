@@ -7,6 +7,7 @@ import {
   createEnquiryMessage,
   createGoldRateMessage,
 } from '../services/whatsappService';
+import { TrackedButton, TrackedLink } from './TrackedCTA';
 
 const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?: string; fill?: string }) => (
   <img
@@ -121,7 +122,8 @@ export const Header = () => {
 
           {/* RIGHT: WhatsApp Contact - Absolute positioned on mobile for centering logo */}
           <div className="absolute right-4 lg:right-12 flex items-center gap-2 lg:gap-3 z-50">
-            <button
+            <TrackedButton
+              track={{ cta: 'whatsapp', location: 'header', intent: 'chat_general' }}
               onClick={() => openWhatsApp(createEnquiryMessage())}
               className="flex items-center gap-2 text-maroon-900 hover:text-gold-600 transition-colors bg-cream-50 hover:bg-gold-50 px-2 md:px-4 py-1.5 md:py-2 rounded-sm border border-maroon-200"
             >
@@ -133,7 +135,7 @@ export const Header = () => {
                 className="w-5 h-5 md:w-5 md:h-5"
               />
               <span className="hidden md:inline text-sm font-medium">Contact</span>
-            </button>
+            </TrackedButton>
           </div>
 
         </div>
@@ -156,7 +158,8 @@ export const Header = () => {
                 {link.name}
               </a>
             ))}
-            <button
+            <TrackedButton
+              track={{ cta: 'whatsapp', location: 'mobile_menu', intent: 'chat_general' }}
               onClick={() => {
                 setIsMenuOpen(false);
                 openWhatsApp(createEnquiryMessage());
@@ -171,7 +174,7 @@ export const Header = () => {
                 className="w-5 h-5"
               />
               Chat Now
-            </button>
+            </TrackedButton>
           </nav>
         </div>
       </header>
@@ -193,10 +196,11 @@ export const StoreAddress = () => {
           <div className="bg-white rounded-sm overflow-hidden shadow-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               {/* Store Image */}
-              <a
+              <TrackedLink
                 href={STORE_INFO.mapEmbedUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                track={{ cta: 'directions', location: 'store_address' }}
                 className="h-64 md:h-auto overflow-hidden relative block group/img"
               >
                 <img
@@ -207,28 +211,33 @@ export const StoreAddress = () => {
                   alt="Soni Khimraj Lalji Jewellers Store"
                 />
                 <div className="absolute inset-0 bg-maroon-900/10 group-hover/img:bg-transparent transition-colors"></div>
-              </a>
+              </TrackedLink>
 
               {/* Store Details */}
               <div className="p-6 md:p-12 flex flex-col justify-center">
                 <h3 className="text-2xl md:text-3xl font-serif text-maroon-900 mb-6 pb-4 border-b-2 border-gold-200 leading-tight">Soni Khimraj Lalji Jewellers</h3>
                 <div className="space-y-4 mb-8">
-                  <a
+                  <TrackedLink
                     href={STORE_INFO.mapEmbedUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    track={{ cta: 'directions', location: 'store_address' }}
                     className="flex items-start gap-3 group/addr"
                   >
                     <MapPin size={18} className="text-gold-600 mt-1 flex-shrink-0 group-hover/addr:scale-110 transition-transform" />
                     <p className="text-sm text-gray-700 leading-relaxed group-hover:text-gold-700 transition-colors">
                       {STORE_INFO.address}
                     </p>
-                  </a>
+                  </TrackedLink>
                   <div className="flex items-center gap-3">
                     <Phone size={18} className="text-gold-600 flex-shrink-0" />
-                    <a href={`tel:${STORE_INFO.phone}`} className="text-sm text-gray-700 hover:text-gold-600 transition-colors">
+                    <TrackedLink
+                      href={`tel:${STORE_INFO.phone}`}
+                      track={{ cta: 'phone', location: 'footer_phone_1', phoneNumber: STORE_INFO.phone }}
+                      className="text-sm text-gray-700 hover:text-gold-600 transition-colors"
+                    >
                       {STORE_INFO.phone}
-                    </a>
+                    </TrackedLink>
                   </div>
                   <div className="flex items-center gap-3">
                     <Clock size={18} className="text-gold-600 flex-shrink-0" />
@@ -237,7 +246,8 @@ export const StoreAddress = () => {
                 </div>
 
                 {/* WhatsApp Contact Button */}
-                <button
+                <TrackedButton
+                  track={{ cta: 'whatsapp', location: 'store_address', intent: 'chat_general' }}
                   onClick={() => openWhatsApp(createEnquiryMessage("I would like to visit your store"))}
                   className="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white px-5 py-3 md:px-6 md:py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl group"
                 >
@@ -249,7 +259,7 @@ export const StoreAddress = () => {
                     className="w-6 h-6 group-hover:scale-110 transition-transform"
                   />
                   <span className="font-semibold text-lg">{STORE_INFO.phone}</span>
-                </button>
+                </TrackedButton>
               </div>
             </div>
           </div>
@@ -284,7 +294,7 @@ export const Footer = () => {
           <div className="flex gap-8">
             <a href={STORE_INFO.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Follow us on Instagram"><Instagram size={20} strokeWidth={1.5} /></a>
             <a href={`mailto:${STORE_INFO.email}`} className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Send us an Email"><Mail size={20} strokeWidth={1.5} /></a>
-            <a href={STORE_INFO.mapEmbedUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Find us on Google Maps"><MapPin size={20} strokeWidth={1.5} /></a>
+            <TrackedLink href={STORE_INFO.mapEmbedUrl} target="_blank" rel="noopener noreferrer" track={{ cta: 'directions', location: 'footer_address' }} className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Find us on Google Maps"><MapPin size={20} strokeWidth={1.5} /></TrackedLink>
           </div>
         </div>
 
@@ -301,14 +311,15 @@ export const Footer = () => {
           <div className="flex flex-col items-center md:items-start max-w-sm mx-auto md:mx-0">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Visit</h3>
             <p className="text-sm text-gray-700 leading-relaxed mb-4">{STORE_INFO.address}</p>
-            <a
+            <TrackedLink
               href={STORE_INFO.mapEmbedUrl}
               target="_blank"
               rel="noopener noreferrer"
+              track={{ cta: 'directions', location: 'footer_address' }}
               className="text-xs uppercase tracking-widest text-gold-600 border-b-2 border-gold-600 pb-1 hover:text-maroon-900 hover:border-maroon-900 transition-all font-medium inline-block"
             >
               Get Directions
-            </a>
+            </TrackedLink>
           </div>
           <div className="flex flex-col items-center md:items-start lg:col-span-1">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Contact</h3>
@@ -344,32 +355,35 @@ export const StickyMobileCTA = () => {
       aria-label="Quick contact"
     >
       <div className="bg-white/95 backdrop-blur-md border-t border-gold-200 shadow-2xl grid grid-cols-3">
-        <button
+        <TrackedButton
+          track={{ cta: 'whatsapp', location: 'sticky_mobile_whatsapp', intent: 'chat_general' }}
           onClick={() => openWhatsApp(createEnquiryMessage())}
           className="flex flex-col items-center justify-center gap-1 py-3 bg-green-600 text-white active:bg-green-700 transition-colors"
           aria-label="Chat with Mr. Soni on WhatsApp"
         >
           <WhatsAppGlyph className="w-5 h-5" fill="%23fff" />
           <span className="text-[10px] uppercase tracking-widest font-semibold">WhatsApp</span>
-        </button>
-        <a
+        </TrackedButton>
+        <TrackedLink
           href={`tel:${STORE_INFO.phone}`}
+          track={{ cta: 'phone', location: 'footer_phone_2', phoneNumber: STORE_INFO.phone }}
           className="flex flex-col items-center justify-center gap-1 py-3 text-maroon-900 active:bg-maroon-50 transition-colors"
           aria-label="Call the store"
         >
           <Phone size={18} />
           <span className="text-[10px] uppercase tracking-widest font-semibold">Call</span>
-        </a>
-        <a
+        </TrackedLink>
+        <TrackedLink
           href={STORE_INFO.mapEmbedUrl}
           target="_blank"
           rel="noopener noreferrer"
+          track={{ cta: 'directions', location: 'sticky_mobile_directions' }}
           className="flex flex-col items-center justify-center gap-1 py-3 text-maroon-900 active:bg-maroon-50 transition-colors"
           aria-label="Get directions to the store"
         >
           <MapPin size={18} />
           <span className="text-[10px] uppercase tracking-widest font-semibold">Directions</span>
-        </a>
+        </TrackedLink>
       </div>
     </div>
   );
@@ -388,7 +402,8 @@ export const GoldRateChip = () => {
   }, []);
 
   return (
-    <button
+    <TrackedButton
+      track={{ cta: 'whatsapp', location: 'gold_rate_chip', intent: 'chat_general' }}
       onClick={() => openWhatsApp(createGoldRateMessage())}
       aria-label="Get today's gold rate on WhatsApp"
       className={`hidden lg:inline-flex fixed bottom-8 right-8 z-40 items-center gap-2 bg-maroon-900 hover:bg-maroon-800 text-white px-5 py-3 rounded-full shadow-2xl border border-gold-400/60 transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
@@ -396,6 +411,6 @@ export const GoldRateChip = () => {
       <TrendingUp size={16} className="text-gold-300" />
       <span className="text-xs uppercase tracking-widest font-semibold">Today's 22K Gold Rate</span>
       <span className="text-[10px] text-gold-300 uppercase tracking-widest">on WhatsApp</span>
-    </button>
+    </TrackedButton>
   );
 };
