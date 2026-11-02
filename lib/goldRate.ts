@@ -25,6 +25,11 @@ export interface GoldRate {
 
 const BASE = 'https://snapdata.dev/api/v1';
 const MAX_LOOKBACK_DAYS = 6;
+const UPSTREAM_TIMEOUT_MS = 5000;
+
+// Sanity bounds (INR). Anything outside is treated as bad upstream data.
+const GOLD_PER_GRAM = { min: 2_000, max: 50_000 };
+const SILVER_PER_KG = { min: 20_000, max: 1_000_000 };
 
 interface Observation {
   date: string;
@@ -39,7 +44,10 @@ interface Snapshot {
 }
 
 async function getJson(url: string): Promise<Snapshot | null> {
-  const res = await fetch(url, { headers: { accept: 'application/json' } });
+  const res = await fetch(url, {
+    headers: { accept: 'application/json' },
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+  });
   if (!res.ok) return null;
   return (await res.json()) as Snapshot;
 }
@@ -69,6 +77,8 @@ async function latestComplete(dataset: 'gold' | 'silver', check: (s: Snapshot | 
   return null;
 }
 
+const inRange = (v: number, r: { min: number; max: number }) => Number.isFinite(v) && v >= r.min && v <= r.max;
+
 const toPrice = (o: Observation | undefined, multiplier: number): MetalPrice | null =>
   o && typeof o.value === 'number'
     ? { price: Math.round(o.value * multiplier), changePct: typeof o.change_pct === 'number' ? o.change_pct : null }
@@ -82,15 +92,24 @@ export async function fetchGoldRate(): Promise<GoldRate> {
   if (!gold) throw new Error('gold rate unavailable');
 
   const k24 = find(gold, 'XAU.24K')!;
+  const k22 = find(gold, 'XAU.22K')!;
+  const k18 = find(gold, 'XAU.18K')!;
+  const [g24, g22, g18] = [k24.value!, k22.value!, k18.value!];
+  if (![g24, g22, g18].every((v) => inRange(v, GOLD_PER_GRAM)) || !(g24 > g22 && g22 > g18)) {
+    throw new Error(`gold rate failed sanity check: ${g24}/${g22}/${g18}`);
+  }
+  const silverObs = find(silver, 'XAG');
+  const silverOk = silverObs && inRange(silverObs.value!, SILVER_PER_KG);
+
   return {
     date: k24.date,
     status: k24.status,
     gold: {
       k24: toPrice(k24, 10)!,
-      k22: toPrice(find(gold, 'XAU.22K'), 10)!,
-      k18: toPrice(find(gold, 'XAU.18K'), 10)!,
+      k22: toPrice(k22, 10)!,
+      k18: toPrice(k18, 10)!,
     },
-    silver: toPrice(find(silver, 'XAG'), 1),
+    silver: silverOk ? toPrice(silverObs, 1) : null,
     source: 'IBJA',
     via: 'snapdata.dev',
   };

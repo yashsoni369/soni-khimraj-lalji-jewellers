@@ -4,6 +4,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Code-level page protection (host-agnostic; no server headers needed) -->
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <!-- Only directives that work from <meta>; no script-src so GTM/GA/Fonts/Maps are unaffected. -->
+  <meta http-equiv="Content-Security-Policy" content="base-uri 'self'; object-src 'none'; upgrade-insecure-requests" />
+  <!-- Anti-clickjacking (OWASP "best-for-now" frame breaker): page stays hidden if loaded inside another site's frame. -->
+  <style id="antiClickjack">body{display:none !important;}</style>
+  <noscript><style>body{display:block !important;}</style></noscript>
+  <script>
+    (function () {
+      if (self === top) {
+        var s = document.getElementById('antiClickjack');
+        if (s) s.parentNode.removeChild(s);
+      } else {
+        top.location = self.location;
+      }
+      // Main domain only: any other host serving this build is kept out of search results.
+      var h = location.hostname;
+      if (h !== 'www.sonikhimrajlaljijewellers.com' && h !== 'localhost' && h !== '127.0.0.1') {
+        var m = document.createElement('meta');
+        m.name = 'robots';
+        m.content = 'noindex';
+        document.head.appendChild(m);
+      }
+    })();
+  </script>
   <title>Jewellers in Ghatkopar West, Mumbai | Soni Khimraj Lalji Jewellers</title>
   <meta name="description"
     content="BIS hallmarked 916 gold, diamond, silver & bridal jewellery in Ghatkopar West, Mumbai for 25+ years. Visit us on Jivdaya Lane or WhatsApp for today's gold rate." />

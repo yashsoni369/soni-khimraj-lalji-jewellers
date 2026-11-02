@@ -68,8 +68,21 @@ declare global {
   }
 }
 
+// A fast double-tap fires the same click twice; count it once.
+const DUPLICATE_WINDOW_MS = 1000;
+let lastEvent: { key: string; at: number } | null = null;
+
+function isDuplicate(payload: Record<string, unknown>) {
+  const key = [payload.event, payload.cta_location, payload.lead_intent, payload.visit_purpose].join("|");
+  const now = Date.now();
+  const dup = lastEvent !== null && lastEvent.key === key && now - lastEvent.at < DUPLICATE_WINDOW_MS;
+  lastEvent = { key, at: now };
+  return dup;
+}
+
 function push(payload: Record<string, unknown>) {
   if (typeof window === "undefined") return;
+  if (isDuplicate(payload)) return;
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ page_type: pageTypeFor(window.location.pathname), ...payload });
 }
