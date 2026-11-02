@@ -335,7 +335,7 @@ export const Footer = () => {
           </div>
           <div className="flex flex-col items-center md:items-start lg:col-span-1">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Contact</h3>
-            <a href={`tel:${STORE_INFO.phone}`} className="text-sm text-gray-700 mb-2 hover:text-gold-800">{STORE_INFO.phoneDisplay}</a>
+            <TrackedLink href={`tel:${STORE_INFO.phone}`} track={{ cta: 'phone', location: 'footer_phone_2', phoneNumber: STORE_INFO.phone }} className="text-sm text-gray-700 mb-2 hover:text-gold-800">{STORE_INFO.phoneDisplay}</TrackedLink>
             <p className="text-sm text-gray-700">{STORE_INFO.hours}</p>
           </div>
         </div>

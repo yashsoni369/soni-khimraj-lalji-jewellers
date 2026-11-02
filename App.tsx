@@ -4,7 +4,7 @@ import { MessageCircle, TrendingUp, ChevronDown } from 'lucide-react';
 import { SERVICES, FAQS, STORE_INFO } from './constants';
 import { Header, Footer, StoreAddress, StickyMobileCTA, GoldRateChip } from './components/Layout';
 import { HeroCarousel, Spotlight, CategoryShowcase } from './components/Widgets';
-import { TrackedButton } from './components/TrackedCTA';
+import { TrackedButton, TrackedLink } from './components/TrackedCTA';
 import { usePageViewTracking } from './hooks/usePageViewTracking';
 import {
   openWhatsApp,
@@ -149,7 +149,7 @@ const FaqSection = () => (
       </div>
       <p className="text-center text-sm text-gray-700 mt-8">
         Still have a question? Call or WhatsApp us on{' '}
-        <a href={`tel:${STORE_INFO.phone}`} className="text-maroon-900 font-semibold underline underline-offset-4">{STORE_INFO.phoneDisplay}</a>.
+        <TrackedLink href={`tel:${STORE_INFO.phone}`} track={{ cta: 'phone', location: 'faq', phoneNumber: STORE_INFO.phone }} className="text-maroon-900 font-semibold underline underline-offset-4">{STORE_INFO.phoneDisplay}</TrackedLink>.
       </p>
     </div>
   </section>
