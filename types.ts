@@ -13,4 +13,6 @@ export interface StoreInfo {
   mapIframeSrc: string;
   instagram: string;
   facebook: string;
+  reviewUrl: string;
+  vcardUrl: string;
 }

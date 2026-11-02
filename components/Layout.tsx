@@ -1,13 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Instagram, Facebook, MapPin, Phone, Clock, Menu, X, TrendingUp } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Instagram, Facebook, MapPin, Phone, Clock, Menu, X, TrendingUp, UserPlus, Star } from 'lucide-react';
 import { STORE_INFO, NEARBY_AREAS } from '../constants';
 import {
-  openWhatsApp,
+  whatsappUrl,
   createEnquiryMessage,
   createGoldRateMessage,
 } from '../services/whatsappService';
-import { TrackedButton, TrackedLink } from './TrackedCTA';
+import { TrackedLink } from './TrackedCTA';
+import { BookVisitButton } from './BookVisit';
+import { useGoldRate } from '@/hooks/useGoldRate';
+import { formatInr } from '@/lib/goldRate';
+import { ROUTES } from '@/lib/routes';
+
+// Header/footer links: '/#id' scrolls on the homepage (or goes there first);
+// plain paths are client-side navigations to the other pages.
+function useNavTo() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  return (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const hash = path.startsWith('/#') ? path.slice(1) : '';
+    if (hash && pathname === '/') {
+      document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+      window.history.replaceState(null, '', path);
+    } else {
+      navigate(path);
+    }
+  };
+}
+
+const PAGE_LINKS = ROUTES.filter((r) => r.indexable && r.path !== '/');
 
 const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?: string; fill?: string }) => (
   <img
@@ -23,7 +47,7 @@ const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?:
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  const navTo = useNavTo();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -40,8 +64,8 @@ export const Header = () => {
   const navLinks = [
     { name: 'The Heritage', path: '/#heritage' },
     { name: 'Collections', path: '/#collections' },
-    { name: 'Exclusives', path: '/#spotlight' },
-    { name: 'Expertise', path: '/#knowledge' },
+    { name: 'Gold Rate', path: '/gold-rate-today-ghatkopar' },
+    { name: 'Bridal', path: '/bridal-jewellery' },
     { name: 'Why Us', path: '/#why-us' },
   ];
 
@@ -72,16 +96,12 @@ export const Header = () => {
           </div>
 
           {/* DESKTOP: Left Nav */}
-          <nav className="hidden lg:flex gap-8 xl:gap-12 items-center justify-end flex-1 pr-8">
+          <nav className="hidden lg:flex gap-6 xl:gap-12 items-center justify-end flex-1 pr-8">
             {leftNav.map((link) => (
               <a
                 key={link.name}
-                href={link.path.replace('/', '')}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const target = document.querySelector(link.path.replace('/', ''));
-                  if (target) target.scrollIntoView({ behavior: 'smooth' });
-                }}
+                href={link.path}
+                onClick={(e) => navTo(e, link.path)}
                 className="text-sm xl:text-base uppercase tracking-[0.15em] hover:text-maroon-800 transition-colors relative group py-2 whitespace-nowrap text-gray-600"
               >
                 {link.name}
@@ -91,7 +111,7 @@ export const Header = () => {
           </nav>
 
           {/* CENTER: Logo */}
-          <div className="flex-shrink-0 z-40 cursor-pointer flex items-center justify-center p-1" onClick={() => navigate('/')}>
+          <Link to="/" aria-label="Soni Khimraj Lalji Jewellers – home" className="flex-shrink-0 z-40 flex items-center justify-center p-1">
             <img
               src={logoSrc}
               alt="Soni Khimraj Lalji Jewellers logo"
@@ -99,19 +119,15 @@ export const Header = () => {
               height="264"
               className={`w-auto object-contain transition-all duration-500 transform ${isScrolled ? 'h-10 md:h-12' : 'h-12 md:h-20 lg:h-24'}`}
             />
-          </div>
+          </Link>
 
           {/* DESKTOP: Right Nav */}
-          <nav className="hidden lg:flex gap-8 xl:gap-12 items-center justify-start flex-1 pl-8">
+          <nav className="hidden lg:flex gap-6 xl:gap-12 items-center justify-start flex-1 pl-8 pr-40">
             {rightNav.map((link) => (
               <a
                 key={link.name}
-                href={link.path.replace('/', '')}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const target = document.querySelector(link.path.replace('/', ''));
-                  if (target) target.scrollIntoView({ behavior: 'smooth' });
-                }}
+                href={link.path}
+                onClick={(e) => navTo(e, link.path)}
                 className="text-sm xl:text-base uppercase tracking-[0.15em] hover:text-maroon-800 transition-colors relative group py-2 whitespace-nowrap text-gray-600"
               >
                 {link.name}
@@ -122,9 +138,11 @@ export const Header = () => {
 
           {/* RIGHT: WhatsApp Contact - Absolute positioned on mobile for centering logo */}
           <div className="absolute right-4 lg:right-12 flex items-center gap-2 lg:gap-3 z-50">
-            <TrackedButton
+            <TrackedLink
               track={{ cta: 'whatsapp', location: 'header', intent: 'chat_general' }}
-              onClick={() => openWhatsApp(createEnquiryMessage())}
+              href={whatsappUrl(createEnquiryMessage())}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 text-maroon-900 hover:text-gold-600 transition-colors bg-cream-50 hover:bg-gold-50 px-2 md:px-4 py-1.5 md:py-2 rounded-sm border border-maroon-200"
             >
               <img
@@ -135,7 +153,7 @@ export const Header = () => {
                 className="w-5 h-5 md:w-5 md:h-5"
               />
               <span className="hidden md:inline text-sm font-medium">Contact</span>
-            </TrackedButton>
+            </TrackedLink>
           </div>
 
         </div>
@@ -146,24 +164,22 @@ export const Header = () => {
             {navLinks.map((link) => (
               <a
                 key={link.name}
-                href={link.path.replace('/', '')}
+                href={link.path}
                 onClick={(e) => {
-                  e.preventDefault();
                   setIsMenuOpen(false);
-                  const target = document.querySelector(link.path.replace('/', ''));
-                  if (target) target.scrollIntoView({ behavior: 'smooth' });
+                  navTo(e, link.path);
                 }}
                 className="text-lg uppercase tracking-[0.2em] text-gray-700 hover:text-maroon-900 border-b border-gray-50 pb-2"
               >
                 {link.name}
               </a>
             ))}
-            <TrackedButton
+            <TrackedLink
               track={{ cta: 'whatsapp', location: 'mobile_menu', intent: 'chat_general' }}
-              onClick={() => {
-                setIsMenuOpen(false);
-                openWhatsApp(createEnquiryMessage());
-              }}
+              href={whatsappUrl(createEnquiryMessage())}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
               className="mt-4 flex items-center justify-center gap-3 bg-maroon-900 text-white px-6 py-4 rounded-sm tracking-widest uppercase text-sm font-bold"
             >
               <img
@@ -174,7 +190,7 @@ export const Header = () => {
                 className="w-5 h-5"
               />
               Chat Now
-            </TrackedButton>
+            </TrackedLink>
           </nav>
         </div>
       </header>
@@ -250,14 +266,41 @@ export const StoreAddress = () => {
                 </address>
 
                 {/* WhatsApp Contact Button */}
-                <TrackedButton
+                <TrackedLink
                   track={{ cta: 'whatsapp', location: 'store_address', intent: 'chat_general' }}
-                  onClick={() => openWhatsApp(createEnquiryMessage("I would like to visit your store"))}
+                  href={whatsappUrl(createEnquiryMessage("I would like to visit your store"))}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 bg-green-700 hover:bg-green-800 text-white px-5 py-3 md:px-6 md:py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl group"
                 >
                   <WhatsAppGlyph className="w-6 h-6 group-hover:scale-110 transition-transform" fill="%23fff" />
                   <span className="font-semibold text-lg">WhatsApp {STORE_INFO.phoneDisplay}</span>
-                </TrackedButton>
+                </TrackedLink>
+                <div className="grid grid-cols-2 gap-3 mt-3">
+                  <BookVisitButton
+                    location="store_address"
+                    className="flex items-center justify-center gap-2 border border-maroon-900 text-maroon-900 hover:bg-maroon-50 px-3 py-3 rounded-lg text-sm font-semibold transition-colors"
+                  />
+                  <TrackedLink
+                    href={STORE_INFO.vcardUrl}
+                    download
+                    track={{ cta: 'save_contact', location: 'store_address' }}
+                    className="flex items-center justify-center gap-2 border border-maroon-900 text-maroon-900 hover:bg-maroon-50 px-3 py-3 rounded-lg text-sm font-semibold transition-colors"
+                  >
+                    <UserPlus size={18} aria-hidden="true" /> Save Our Number
+                  </TrackedLink>
+                </div>
+                {STORE_INFO.reviewUrl && (
+                  <TrackedLink
+                    href={STORE_INFO.reviewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    track={{ cta: 'review', location: 'store_address' }}
+                    className="mt-4 inline-flex items-center justify-center gap-2 text-sm text-gray-700 hover:text-maroon-900 underline underline-offset-4"
+                  >
+                    <Star size={16} aria-hidden="true" /> Visited us? Leave a Google review
+                  </TrackedLink>
+                )}
               </div>
             </div>
 
@@ -279,6 +322,7 @@ export const StoreAddress = () => {
 };
 
 export const Footer = () => {
+  const navTo = useNavTo();
   return (
     <footer className="bg-[#FFFCF5] text-maroon-900 pt-16 md:pt-24 pb-12 border-t-2 border-gold-300">
       <div className="container mx-auto px-6 md:px-12">
@@ -312,12 +356,18 @@ export const Footer = () => {
           <div className="flex flex-col items-center md:items-start">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Explore</h3>
             <ul className="space-y-3 text-xs uppercase tracking-widest text-gray-700">
-              <li><a href="#heritage" className="hover:text-gold-600 transition-colors">The Heritage</a></li>
-              <li><a href="#why-us" className="hover:text-gold-600 transition-colors">Why Us</a></li>
-              <li><a href="#collections" className="hover:text-gold-600 transition-colors">Collections</a></li>
-              <li><a href="#services" className="hover:text-gold-600 transition-colors">What We Offer</a></li>
-              <li><a href="#knowledge" className="hover:text-gold-600 transition-colors">Knowledge</a></li>
-              <li><a href="#faq" className="hover:text-gold-600 transition-colors">FAQs</a></li>
+              {[
+                ...PAGE_LINKS.map((r) => ({ name: r.name, path: r.path })),
+                { name: 'What We Offer', path: '/#services' },
+                { name: 'Collections', path: '/#collections' },
+                { name: 'FAQs', path: '/#faq' },
+              ].map((l) => (
+                <li key={l.path}>
+                  <a href={l.path} onClick={(e) => navTo(e, l.path)} className="hover:text-gold-600 transition-colors">
+                    {l.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="flex flex-col items-center md:items-start max-w-sm mx-auto md:mx-0">
@@ -336,7 +386,26 @@ export const Footer = () => {
           <div className="flex flex-col items-center md:items-start lg:col-span-1">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Contact</h3>
             <TrackedLink href={`tel:${STORE_INFO.phone}`} track={{ cta: 'phone', location: 'footer_phone_2', phoneNumber: STORE_INFO.phone }} className="text-sm text-gray-700 mb-2 hover:text-gold-800">{STORE_INFO.phoneDisplay}</TrackedLink>
-            <p className="text-sm text-gray-700">{STORE_INFO.hours}</p>
+            <p className="text-sm text-gray-700 mb-4">{STORE_INFO.hours}</p>
+            <TrackedLink
+              href={STORE_INFO.vcardUrl}
+              download
+              track={{ cta: 'save_contact', location: 'footer_contact' }}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold-800 hover:text-maroon-900 mb-3"
+            >
+              <UserPlus size={14} aria-hidden="true" /> Save our number
+            </TrackedLink>
+            {STORE_INFO.reviewUrl && (
+              <TrackedLink
+                href={STORE_INFO.reviewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                track={{ cta: 'review', location: 'footer_contact' }}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold-800 hover:text-maroon-900"
+              >
+                <Star size={14} aria-hidden="true" /> Leave a Google review
+              </TrackedLink>
+            )}
           </div>
         </div>
 
@@ -367,18 +436,20 @@ export const StickyMobileCTA = () => {
       aria-label="Quick contact"
     >
       <div className="bg-white/95 backdrop-blur-md border-t border-gold-200 shadow-2xl grid grid-cols-3">
-        <TrackedButton
+        <TrackedLink
           track={{ cta: 'whatsapp', location: 'sticky_mobile_whatsapp', intent: 'chat_general' }}
-          onClick={() => openWhatsApp(createEnquiryMessage())}
-          className="flex flex-col items-center justify-center gap-1 py-3 bg-green-600 text-white active:bg-green-700 transition-colors"
+          href={whatsappUrl(createEnquiryMessage())}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center justify-center gap-1 py-3 bg-green-700 text-white active:bg-green-800 transition-colors"
           aria-label="Chat with Mr. Soni on WhatsApp"
         >
           <WhatsAppGlyph className="w-5 h-5" fill="%23fff" />
           <span className="text-[10px] uppercase tracking-widest font-semibold">WhatsApp</span>
-        </TrackedButton>
+        </TrackedLink>
         <TrackedLink
           href={`tel:${STORE_INFO.phone}`}
-          track={{ cta: 'phone', location: 'footer_phone_2', phoneNumber: STORE_INFO.phone }}
+          track={{ cta: 'phone', location: 'sticky_mobile_call', phoneNumber: STORE_INFO.phone }}
           className="flex flex-col items-center justify-center gap-1 py-3 text-maroon-900 active:bg-maroon-50 transition-colors"
           aria-label="Call the store"
         >
@@ -405,6 +476,7 @@ export const StickyMobileCTA = () => {
 // Floating WhatsApp prompt for the most common Indian-jeweller enquiry.
 export const GoldRateChip = () => {
   const [visible, setVisible] = useState(false);
+  const rate = useGoldRate();
 
   useEffect(() => {
     const show = () => setVisible(window.scrollY > 600);
@@ -414,15 +486,23 @@ export const GoldRateChip = () => {
   }, []);
 
   return (
-    <TrackedButton
-      track={{ cta: 'whatsapp', location: 'gold_rate_chip', intent: 'chat_general' }}
-      onClick={() => openWhatsApp(createGoldRateMessage())}
-      aria-label="Get today's gold rate on WhatsApp"
+    <TrackedLink
+      track={{ cta: 'whatsapp', location: 'gold_rate_chip', intent: 'gold_rate' }}
+      href={whatsappUrl(createGoldRateMessage())}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Get today's 22K gold rate from our shop on WhatsApp"
       className={`hidden lg:inline-flex fixed bottom-8 right-8 z-40 items-center gap-2 bg-maroon-900 hover:bg-maroon-800 text-white px-5 py-3 rounded-full shadow-2xl border border-gold-400/60 transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
     >
       <TrendingUp size={16} className="text-gold-300" />
-      <span className="text-xs uppercase tracking-widest font-semibold">Today's 22K Gold Rate</span>
-      <span className="text-[10px] text-gold-300 uppercase tracking-widest">on WhatsApp</span>
-    </TrackedButton>
+      {rate.status === 'ok' ? (
+        <span className="text-xs uppercase tracking-widest font-semibold">
+          IBJA 22K {formatInr(rate.rate.gold.k22.price)}<span className="normal-case tracking-normal font-normal">/10g</span>
+        </span>
+      ) : (
+        <span className="text-xs uppercase tracking-widest font-semibold">Today's 22K Gold Rate</span>
+      )}
+      <span className="text-[10px] text-gold-300 uppercase tracking-widest">Shop rate on WhatsApp</span>
+    </TrackedLink>
   );
 };

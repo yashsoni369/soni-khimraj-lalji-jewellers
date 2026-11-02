@@ -1,30 +1,51 @@
 import React, { useEffect } from 'react';
-import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { MessageCircle, TrendingUp, ChevronDown } from 'lucide-react';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { MessageCircle, TrendingUp, ChevronDown, ChevronRight } from 'lucide-react';
 import { SERVICES, FAQS, STORE_INFO } from './constants';
 import { Header, Footer, StoreAddress, StickyMobileCTA, GoldRateChip } from './components/Layout';
 import { HeroCarousel, Spotlight, CategoryShowcase } from './components/Widgets';
-import { TrackedButton, TrackedLink } from './components/TrackedCTA';
-import { usePageViewTracking } from './hooks/usePageViewTracking';
+import { TrackedLink } from './components/TrackedCTA';
+import { GoldRateCard } from './components/GoldRateCard';
+import { ServicePage } from './components/ServicePage';
+import { usePageMeta } from './hooks/usePageMeta';
+import { PAGE_CONTENT } from './content/pages';
+import { ROUTES, type PageType } from './lib/routes';
 import {
-  openWhatsApp,
+  whatsappUrl,
   createKnowledgeMessage,
   createHelloMessage,
-  createGoldRateMessage,
   createServiceMessage,
+  createOldGoldValuationMessage,
 } from './services/whatsappService';
 
-// Scroll to top + page_view on route change
+// On navigation: jump to #section if present, else to the top. Also syncs head tags.
+// (GA4 page_view comes from gtag + enhanced measurement history events.)
 const ScrollToTop = () => {
-  const location = useLocation();
+  const { pathname, search, hash } = useLocation();
 
   useEffect(() => {
+    if (hash) {
+      const target = document.querySelector(hash);
+      if (target) {
+        target.scrollIntoView();
+        return;
+      }
+    }
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [location.pathname, location.search]);
+  }, [pathname, search, hash]);
 
-  usePageViewTracking();
+  usePageMeta();
 
   return null;
+};
+
+// Homepage service cards that have their own page.
+const SERVICE_PAGES: Partial<Record<string, string>> = {
+  gold: '/gold-rate-today-ghatkopar',
+  bridal: '/bridal-jewellery',
+  mangalsutra: '/bridal-jewellery',
+  silver: '/silver-jewellery',
+  exchange: '/old-gold-exchange',
 };
 
 // --- COMPONENT: WHY SHOP WITH US ---
@@ -59,15 +80,16 @@ const WhyShopWithUs = () => {
           <p className="text-gray-700 font-light italic text-base md:text-lg leading-relaxed mb-6">
             We'd love to meet you. Walk into our Ghatkopar store — or simply say namaste on WhatsApp.
           </p>
-          <TrackedButton
-            type="button"
+          <TrackedLink
             track={{ cta: 'whatsapp', location: 'why_us', intent: 'chat_general' }}
-            onClick={() => openWhatsApp(createHelloMessage())}
+            href={whatsappUrl(createHelloMessage())}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-3 bg-maroon-900 hover:bg-maroon-800 text-white px-7 py-3 md:px-8 md:py-4 rounded-sm tracking-widest uppercase text-xs md:text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
           >
             <MessageCircle size={18} />
             Say Hello to Mr. Soni
-          </TrackedButton>
+          </TrackedLink>
         </div>
       </div>
     </section>
@@ -87,17 +109,34 @@ const ServicesSection = () => (
       </div>
       <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
         {SERVICES.map((svc) => (
-          <li key={svc.key} className="relative h-full p-6 border border-gold-200 bg-cream-50 hover:bg-gold-50 hover:border-gold-400 transition-colors">
+          <li key={svc.key} className="flex flex-col h-full p-6 border border-gold-200 bg-cream-50 hover:bg-gold-50 hover:border-gold-400 transition-colors">
             <h3 className="font-serif text-xl text-maroon-900 mb-2">{svc.title}</h3>
             <p className="text-sm text-gray-600 font-light leading-relaxed">{svc.text}</p>
-            <TrackedButton
-              type="button"
-              track={{ cta: 'whatsapp', location: 'services', intent: 'catalogue_browse', category: svc.key }}
-              onClick={() => openWhatsApp(createServiceMessage(svc.title))}
-              className="inline-flex items-center gap-1.5 mt-4 text-left text-[11px] uppercase tracking-widest text-gold-800 after:absolute after:inset-0 after:content-['']"
-            >
-              <MessageCircle size={12} /> Ask on WhatsApp<span className="sr-only"> about {svc.title}</span>
-            </TrackedButton>
+            <div className="mt-auto pt-4 flex flex-wrap gap-x-5 gap-y-2">
+              {SERVICE_PAGES[svc.key] && (
+                <Link
+                  to={SERVICE_PAGES[svc.key]!}
+                  className="inline-flex items-center gap-1 text-[11px] uppercase tracking-widest text-maroon-900 font-semibold hover:text-gold-800"
+                >
+                  Learn more<span className="sr-only"> about {svc.title}</span> <ChevronRight size={12} aria-hidden="true" />
+                </Link>
+              )}
+              <TrackedLink
+                track={
+                  svc.key === 'exchange'
+                    ? { cta: 'whatsapp', location: 'services', intent: 'old_gold_valuation', category: 'exchange' }
+                    : { cta: 'whatsapp', location: 'services', intent: 'catalogue_browse', category: svc.key }
+                }
+                href={whatsappUrl(svc.key === 'exchange' ? createOldGoldValuationMessage() : createServiceMessage(svc.title))}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-gold-800 hover:text-maroon-900"
+              >
+                <MessageCircle size={12} aria-hidden="true" />
+                {svc.key === 'exchange' ? 'Get my old gold valued' : 'Ask on WhatsApp'}
+                <span className="sr-only"> about {svc.title}</span>
+              </TrackedLink>
+            </div>
           </li>
         ))}
       </ul>
@@ -108,22 +147,20 @@ const ServicesSection = () => (
 // --- COMPONENT: TODAY'S GOLD RATE ---
 const GoldRateSection = () => (
   <section id="gold-rate" className="py-14 md:py-20 bg-maroon-900 text-white">
-    <div className="container mx-auto px-6 max-w-4xl text-center">
-      <TrendingUp className="mx-auto text-gold-300 mb-4" size={28} />
+    <div className="container mx-auto px-6 max-w-5xl text-center">
+      <TrendingUp className="mx-auto text-gold-300 mb-4" size={28} aria-hidden="true" />
       <h2 className="text-3xl md:text-5xl font-serif mb-4">Today's Gold Rate in Ghatkopar</h2>
-      <p className="text-maroon-100 font-light text-base md:text-lg leading-relaxed mb-8">
-        Gold prices in Mumbai change every day. Message us on WhatsApp for today's 22K (916), 18K and 24K gold rate
-        and silver rate at our Ghatkopar West shop – we reply within minutes during shop hours.
+      <p className="text-maroon-100 font-light text-base md:text-lg leading-relaxed mb-8 max-w-3xl mx-auto">
+        Gold prices in Mumbai change every day. Here is today's benchmark rate – message us on WhatsApp for our shop
+        rate at Ghatkopar West; we reply within minutes during shop hours.
       </p>
-      <TrackedButton
-        type="button"
-        track={{ cta: 'whatsapp', location: 'gold_rate_section', intent: 'chat_general' }}
-        onClick={() => openWhatsApp(createGoldRateMessage())}
-        className="inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-maroon-950 px-7 py-3 md:py-4 rounded-sm font-semibold tracking-wide transition-all shadow-xl hover:-translate-y-0.5"
+      <GoldRateCard location="gold_rate_section" />
+      <Link
+        to="/gold-rate-today-ghatkopar"
+        className="inline-flex items-center gap-1 mt-6 text-xs uppercase tracking-widest text-gold-200 hover:text-white"
       >
-        <MessageCircle size={18} />
-        Get Today's Gold Rate on WhatsApp
-      </TrackedButton>
+        24K vs 22K vs 18K explained <ChevronRight size={14} aria-hidden="true" />
+      </Link>
     </div>
   </section>
 );
@@ -210,10 +247,11 @@ const HomePage = () => {
               Understanding gold purity and diamond quality is essential to building your personal collection.
             </p>
             <div className="flex flex-col gap-4">
-              <TrackedButton
-                type="button"
+              <TrackedLink
                 track={{ cta: 'content_inquiry', location: 'knowledge', topic: 'bis_hallmark' }}
-                onClick={() => openWhatsApp(createKnowledgeMessage('the BIS Hallmark & HUID on your jewellery'))}
+                href={whatsappUrl(createKnowledgeMessage('the BIS Hallmark & HUID on your jewellery'))}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border-l-2 border-gold-400 pl-6 py-2 text-left group hover:bg-gold-50/60 transition-colors"
               >
                 <span className="block font-serif text-xl text-maroon-900 group-hover:text-gold-800 transition-colors">BIS Hallmark & HUID</span>
@@ -221,11 +259,12 @@ const HomePage = () => {
                 <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] uppercase tracking-widest text-gold-800">
                   <MessageCircle size={12} /> Ask Mr. Soni
                 </span>
-              </TrackedButton>
-              <TrackedButton
-                type="button"
+              </TrackedLink>
+              <TrackedLink
                 track={{ cta: 'content_inquiry', location: 'knowledge', topic: 'diamond_4cs' }}
-                onClick={() => openWhatsApp(createKnowledgeMessage('the 4Cs of diamond quality'))}
+                href={whatsappUrl(createKnowledgeMessage('the 4Cs of diamond quality'))}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border-l-2 border-gold-400 pl-6 py-2 text-left group hover:bg-gold-50/60 transition-colors"
               >
                 <span className="block font-serif text-xl text-maroon-900 group-hover:text-gold-800 transition-colors">Diamond Quality Guide</span>
@@ -233,7 +272,7 @@ const HomePage = () => {
                 <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] uppercase tracking-widest text-gold-800">
                   <MessageCircle size={12} /> Ask Mr. Soni
                 </span>
-              </TrackedButton>
+              </TrackedLink>
             </div>
           </div>
         </div>
@@ -249,17 +288,49 @@ const HomePage = () => {
   );
 };
 
-// Everything inside the router. Rendered by HashRouter in the browser and by
-// StaticRouter in entry-server.tsx at build time (prerender).
+// --- PAGE: 404 ---
+const NotFoundPage = () => (
+  <section className="py-24 md:py-32 container mx-auto px-6 text-center">
+    <h1 className="text-4xl md:text-6xl font-serif text-maroon-900 mb-6">Page not found</h1>
+    <p className="text-gray-600 mb-10">The page you were looking for doesn't exist.</p>
+    <ul className="flex flex-wrap justify-center gap-4">
+      {ROUTES.filter((r) => r.indexable).map((r) => (
+        <li key={r.path}>
+          <Link to={r.path} className="inline-block border border-gold-300 px-5 py-3 text-maroon-900 hover:bg-gold-50">
+            {r.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </section>
+);
+
+const PAGE_ELEMENTS: Record<PageType, React.ReactNode> = {
+  home: <HomePage />,
+  gold_rate: <ServicePage content={PAGE_CONTENT.gold_rate} />,
+  bridal: <ServicePage content={PAGE_CONTENT.bridal} />,
+  old_gold_exchange: <ServicePage content={PAGE_CONTENT.old_gold_exchange} />,
+  silver: <ServicePage content={PAGE_CONTENT.silver} />,
+  gold_dream_scheme: <ServicePage content={PAGE_CONTENT.gold_dream_scheme} />,
+  not_found: <NotFoundPage />,
+};
+
+// Everything inside the router. Rendered by BrowserRouter in the browser and by
+// StaticRouter in entry-server.tsx at build time (prerender, one HTML file per route).
 export const AppShell = () => (
-  <div className="min-h-screen flex flex-col font-sans bg-white text-gray-900 selection:bg-gold-200 selection:text-maroon-900">
+  <div className="min-h-screen flex flex-col overflow-x-clip font-sans bg-white text-gray-900 selection:bg-gold-200 selection:text-maroon-900">
     <ScrollToTop />
     <Header />
     <main className="flex-grow pb-16 lg:pb-0">
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        {/* Fallback to homepage for all routes to keep it SPA/Homepage only */}
-        <Route path="*" element={<HomePage />} />
+        {/* One <Route> per entry in lib/routes.ts */}
+        <Route path="/" element={PAGE_ELEMENTS.home} />
+        <Route path="/gold-rate-today-ghatkopar" element={PAGE_ELEMENTS.gold_rate} />
+        <Route path="/bridal-jewellery" element={PAGE_ELEMENTS.bridal} />
+        <Route path="/old-gold-exchange" element={PAGE_ELEMENTS.old_gold_exchange} />
+        <Route path="/silver-jewellery" element={PAGE_ELEMENTS.silver} />
+        <Route path="/gold-dream-scheme" element={PAGE_ELEMENTS.gold_dream_scheme} />
+        <Route path="*" element={PAGE_ELEMENTS.not_found} />
       </Routes>
     </main>
     <Footer />
@@ -270,9 +341,9 @@ export const AppShell = () => (
 
 // --- MAIN APP ---
 const App = () => (
-  <HashRouter>
+  <BrowserRouter>
     <AppShell />
-  </HashRouter>
+  </BrowserRouter>
 );
 
 export default App;

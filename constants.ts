@@ -17,6 +17,10 @@ export const STORE_INFO: StoreInfo = {
   mapIframeSrc: "https://maps.google.com/maps?q=Soni%20Khimraj%20Lalji%20Jewellers%2C%20Jivdaya%20Lane%2C%20Ghatkopar%20West%2C%20Mumbai%20400086&z=17&output=embed",
   instagram: "https://www.instagram.com/sonikhimrajlalji/",
   facebook: "https://www.facebook.com/102854275017661/",
+  // TODO(owner): paste the review link from Google Business Profile → Read reviews → Get more reviews.
+  // Review links stay hidden while this is empty.
+  reviewUrl: "",
+  vcardUrl: "/soni-khimraj-lalji-jewellers.vcf",
 };
 
 export const NEARBY_AREAS = [

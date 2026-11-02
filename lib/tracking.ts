@@ -1,6 +1,9 @@
 // GTM/GA4 event tracking contract.
-// Every CTA on the site pushes one of these four events to `window.dataLayer`;
-// GTM-KJGS93VK has matching triggers that forward to GA4 (G-4R59PN3Y3V).
+// Every CTA pushes one of these events to `window.dataLayer`; GTM-KJGS93VK has
+// matching GA4 event tags (G-4R59PN3Y3V). New events need new GTM tags — see
+// docs/gtm-ga4-actions.md. Page views come from gtag('config') + GA4 enhanced
+// measurement (history changes), so we do not push page_view ourselves.
+import { pageTypeFor } from './routes';
 
 export type CtaLocation =
   | "hero_slide_1"
@@ -13,6 +16,7 @@ export type CtaLocation =
   | "footer_phone_1"
   | "footer_phone_2"
   | "footer_address"
+  | "footer_contact"
   | "header"
   | "mobile_menu"
   | "store_address"
@@ -22,13 +26,21 @@ export type CtaLocation =
   | "gold_rate_chip"
   | "services"
   | "gold_rate_section"
-  | "faq";
+  | "faq"
+  | "page_hero"
+  | "page_cta"
+  | "page_faq";
 
 export type LeadIntent =
   | "chat_general"
   | "private_viewing"
   | "video_request"
-  | "catalogue_browse";
+  | "catalogue_browse"
+  | "gold_rate"
+  | "old_gold_valuation"
+  | "book_visit"
+  | "silver_catalogue"
+  | "scheme_enquiry";
 
 export type CollectionCategory =
   | "necklaces"
@@ -48,6 +60,8 @@ export type CollectionCategory =
 
 export type ContentTopic = "bis_hallmark" | "diamond_4cs";
 
+export type VisitPurpose = "bridal" | "general" | "old_gold_exchange" | "custom_order";
+
 declare global {
   interface Window {
     dataLayer?: Array<Record<string, unknown>>;
@@ -57,7 +71,7 @@ declare global {
 function push(payload: Record<string, unknown>) {
   if (typeof window === "undefined") return;
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push(payload);
+  window.dataLayer.push({ page_type: pageTypeFor(window.location.pathname), ...payload });
 }
 
 export function trackWhatsAppClick(args: {
@@ -87,12 +101,19 @@ export function trackContentInquiryClick(args: {
   push({ event: "content_inquiry_click", ...args });
 }
 
-export function trackPageView() {
-  if (typeof window === "undefined") return;
-  push({
-    event: "page_view",
-    page_path: window.location.pathname + window.location.search + window.location.hash,
-    page_location: window.location.href,
-    page_title: document.title,
-  });
+export function trackAppointmentRequest(args: {
+  cta_location: CtaLocation;
+  visit_purpose: VisitPurpose;
+  visit_day: string;
+  visit_time: string;
+}) {
+  push({ event: "appointment_request", ...args });
+}
+
+export function trackSaveContactClick(args: { cta_location: CtaLocation }) {
+  push({ event: "save_contact_click", ...args });
+}
+
+export function trackReviewClick(args: { cta_location: CtaLocation }) {
+  push({ event: "review_click", ...args });
 }
