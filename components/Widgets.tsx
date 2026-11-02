@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, MapPin, Play } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { CAROUSEL_SLIDES, STORE_INFO } from '../constants';
 import {
   openWhatsApp,
@@ -14,7 +13,7 @@ import type { CtaLocation, CollectionCategory } from '@/lib/tracking';
 
 const HERO_SLOTS: readonly CtaLocation[] = ['hero_slide_1', 'hero_slide_2', 'hero_slide_3'];
 const HERO_CATEGORIES: readonly CollectionCategory[] = ['shahi_dulhan', 'heritage_gold', 'nakshatra_diamonds'];
-const SPOTLIGHT_PRODUCT = 'nizams_emerald_choker';
+const SPOTLIGHT_PRODUCT = 'gemstone_gold_pendant';
 
 const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?: string; fill?: string }) => (
   <img
@@ -26,8 +25,9 @@ const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?:
 );
 
 // --- HERO CAROUSEL (Cinematic) ---
+// Slides only swap the background image + slide caption. The <h1> is static so the page
+// has exactly one, keyword-bearing H1 in the prerendered HTML.
 export const HeroCarousel = () => {
-  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -60,77 +60,82 @@ export const HeroCarousel = () => {
     return () => clearInterval(timer);
   }, [nextSlide]);
 
-  return (
-    <div className="relative w-full h-[65vh] md:h-[88vh] overflow-hidden bg-maroon-950 group">
-      {/* Slides */}
-      {CAROUSEL_SLIDES.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-        >
-          {/* Image with Ken Burns Effect */}
-          <div className="absolute inset-0 overflow-hidden">
-            <img
-              src={slide.image}
-              alt={slide.title}
-              width="1600"
-              height="900"
-              fetchPriority={index === 0 ? "high" : "low"}
-              loading={index === 0 ? "eager" : "lazy"}
-              className={`w-full h-full object-cover object-center transition-transform duration-[8000ms] ease-linear ${index === currentSlide ? 'scale-110' : 'scale-100'}`}
-            />
-            {/* Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-maroon-950/90 via-maroon-950/20 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-maroon-950/50 to-transparent"></div>
-          </div>
+  const slide = CAROUSEL_SLIDES[currentSlide];
+  const slot = HERO_SLOTS[currentSlide] ?? 'hero_slide_1';
 
-          {/* Content */}
-          <div className={`absolute bottom-16 md:bottom-28 left-4 md:left-20 right-4 md:right-auto max-w-3xl text-white transition-all duration-1000 delay-300 transform ${index === currentSlide ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <div className="flex items-center gap-3 mb-4 md:mb-6">
-              <div className="h-px w-10 md:w-16 bg-gold-400"></div>
-              <span className="text-gold-300 font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-[10px] md:text-xs">The House of Soni Khimraj</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl md:text-8xl font-serif mb-4 md:mb-6 leading-[1.1] md:leading-[0.9] text-white drop-shadow-2xl">
-              {slide.title}
-            </h1>
-            <p className="text-base md:text-xl text-white/80 mb-8 md:mb-10 font-light max-w-lg leading-relaxed border-l border-gold-500/50 pl-4 md:pl-6">
-              {slide.subtitle}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
-              <TrackedButton
-                track={{
-                  cta: 'whatsapp',
-                  location: HERO_SLOTS[index] ?? 'hero_slide_1',
-                  intent: 'chat_general',
-                  category: HERO_CATEGORIES[index],
-                }}
-                onClick={() => openWhatsApp(createSlideMessage(slide.title))}
-                className="group/cta inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-maroon-950 px-5 md:px-7 py-3 md:py-4 rounded-sm font-semibold tracking-wide transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-              >
-                <WhatsAppGlyph className="w-5 h-5 md:w-5 md:h-5" fill="%23450a0a" />
-                <span className="text-sm md:text-base">Chat with Mr. Soni</span>
-              </TrackedButton>
-              <TrackedLink
-                href={STORE_INFO.mapEmbedUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                track={{ cta: 'directions', location: HERO_SLOTS[index] ?? 'hero_slide_1' }}
-                className="inline-flex items-center gap-2 text-white/90 hover:text-gold-200 px-3 py-3 md:py-4 border-b border-white/30 hover:border-gold-300 transition-colors"
-              >
-                <MapPin size={16} />
-                <span className="text-sm md:text-base uppercase tracking-widest">Visit us in Ghatkopar</span>
-              </TrackedLink>
-            </div>
-            <div className="flex items-center gap-2 mt-4 text-white/70 text-xs md:text-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              <span>Mr. Soni usually replies within 10 minutes</span>
-            </div>
-          </div>
+  return (
+    <div className="relative w-full h-[70vh] md:h-[88vh] overflow-hidden bg-maroon-950 group">
+      {/* Slide images */}
+      {CAROUSEL_SLIDES.map((s, index) => (
+        <div
+          key={s.id}
+          aria-hidden={index !== currentSlide}
+          className={`absolute inset-0 overflow-hidden transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+        >
+          <img
+            src={s.image}
+            alt={s.alt}
+            width="1600"
+            height="1067"
+            fetchPriority={index === 0 ? "high" : "low"}
+            loading={index === 0 ? "eager" : "lazy"}
+            decoding={index === 0 ? "sync" : "async"}
+            className={`w-full h-full object-cover object-center transition-transform duration-[8000ms] ease-linear ${index === currentSlide ? 'scale-110' : 'scale-100'}`}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-maroon-950/90 via-maroon-950/30 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-maroon-950/60 to-transparent"></div>
         </div>
       ))}
+
+      {/* Content */}
+      <div className="absolute z-20 bottom-16 md:bottom-28 left-4 md:left-20 right-4 md:right-auto max-w-3xl text-white">
+        <div className="flex items-center gap-3 mb-4 md:mb-6">
+          <div className="h-px w-10 md:w-16 bg-gold-400 flex-shrink-0"></div>
+          <h1 className="text-gold-300 font-sans font-bold uppercase tracking-[0.15em] md:tracking-[0.25em] text-[11px] md:text-sm leading-snug">
+            Gold &amp; Diamond Jewellers in Ghatkopar West, Mumbai
+          </h1>
+        </div>
+        <div key={slide.id} className="animate-fade-up">
+          <p className="text-4xl sm:text-5xl md:text-8xl font-serif mb-4 md:mb-6 leading-[1.1] md:leading-[0.9] text-white drop-shadow-2xl">
+            {slide.title}
+          </p>
+          <p className="text-base md:text-xl text-white/85 mb-8 md:mb-10 font-light max-w-lg leading-relaxed border-l border-gold-500/50 pl-4 md:pl-6">
+            {slide.subtitle}
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
+          <TrackedButton
+            track={{
+              cta: 'whatsapp',
+              location: slot,
+              intent: 'chat_general',
+              category: HERO_CATEGORIES[currentSlide],
+            }}
+            onClick={() => openWhatsApp(createSlideMessage(slide.title))}
+            className="group/cta inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-maroon-950 px-5 md:px-7 py-3 md:py-4 rounded-sm font-semibold tracking-wide transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+          >
+            <WhatsAppGlyph className="w-5 h-5 md:w-5 md:h-5" fill="%23450a0a" />
+            <span className="text-sm md:text-base">Chat with Mr. Soni</span>
+          </TrackedButton>
+          <TrackedLink
+            href={STORE_INFO.mapEmbedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            track={{ cta: 'directions', location: slot }}
+            className="inline-flex items-center gap-2 text-white/90 hover:text-gold-200 px-3 py-3 md:py-4 border-b border-white/30 hover:border-gold-300 transition-colors"
+          >
+            <MapPin size={16} />
+            <span className="text-sm md:text-base uppercase tracking-widest">Visit us in Ghatkopar</span>
+          </TrackedLink>
+        </div>
+        <div className="flex items-center gap-2 mt-4 text-white/75 text-xs md:text-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          </span>
+          <span>Mr. Soni usually replies within 10 minutes</span>
+        </div>
+      </div>
 
       {/* Progress Line */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
@@ -169,7 +174,7 @@ export const Spotlight = () => (
         <div className="absolute -bottom-6 -right-6 w-full h-full border border-gold-500/20 z-0 transition-transform duration-700 group-hover:-translate-x-4 group-hover:-translate-y-4"></div>
 
         <div className="relative z-10 aspect-[3/4] shadow-2xl overflow-hidden">
-          <img src="/assest/month.png" width="500" height="667" loading="lazy" className="object-cover w-full h-full hover:scale-105 transition duration-[1.5s]" alt="Elegant Pearl Pendant" />
+          <img src="/images/gemstone-gold-pendant.webp" width="400" height="600" loading="lazy" className="object-cover w-full h-full hover:scale-105 transition duration-[1.5s]" alt="Green gemstone pendant on a gold chain at Soni Khimraj Lalji Jewellers, Ghatkopar West" />
         </div>
       </div>
 
@@ -177,21 +182,21 @@ export const Spotlight = () => (
       <div className="w-full md:w-1/2 space-y-6 md:space-y-8 text-center md:text-left">
         <div className="flex items-center gap-4 justify-center md:justify-start">
           <span className="h-px w-8 md:w-12 bg-gold-400"></span>
-          <span className="text-gold-300 uppercase tracking-widest text-[10px] md:text-xs font-bold">Shrestha Ratna - Our Finest Pick</span>
+          <span className="text-gold-300 uppercase tracking-widest text-[10px] md:text-xs font-bold">Shrestha Ratna – Our Finest Pick</span>
         </div>
-        <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif leading-tight md:leading-none">The Nizam's <br /><span className="italic text-gold-200">Emerald Choker</span></h2>
+        <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif leading-tight md:leading-none">Gemstone <br /><span className="italic text-gold-200">Pendants</span></h2>
         <p className="text-maroon-100 font-light leading-relaxed md:leading-loose text-base md:text-lg max-w-lg mx-auto md:mx-0">
-          An ode to the royal courts of Hyderabad. Featuring uncut Colombian emeralds nestled in 22K hallmarks gold, accented with Basra pearls.
-          This piece represents over 200 hours of artisanal labor using the ancient 'Kundan' setting technique.
+          A rich green gemstone set in BIS hallmarked gold – one of the statement pieces waiting at our Ghatkopar West store.
+          Tell us the colour, stone and budget you have in mind, and we will show you pendants, chokers and Kundan sets to match.
         </p>
         <div className="grid grid-cols-2 gap-6 md:gap-12 pt-6 justify-items-center md:justify-items-start border-t border-white/10 mt-8">
           <div>
-            <p className="text-[10px] uppercase text-gold-300 tracking-wider mb-2">Total Weight</p>
-            <p className="font-serif text-2xl md:text-3xl">84.5g</p>
+            <p className="text-[10px] uppercase text-gold-300 tracking-wider mb-2">Metal</p>
+            <p className="font-serif text-2xl md:text-3xl">Hallmarked Gold</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase text-gold-300 tracking-wider mb-2">Gemstones</p>
-            <p className="font-serif text-2xl md:text-3xl">Emerald & Polki</p>
+            <p className="text-[10px] uppercase text-gold-300 tracking-wider mb-2">Made to order</p>
+            <p className="font-serif text-2xl md:text-3xl">Any stone</p>
           </div>
         </div>
         <div className="pt-4 flex flex-col sm:flex-row items-center md:items-start gap-4">
@@ -202,7 +207,7 @@ export const Spotlight = () => (
               intent: 'private_viewing',
               product: SPOTLIGHT_PRODUCT,
             }}
-            onClick={() => openWhatsApp(createSpotlightMessage("Nizam's Emerald Choker"))}
+            onClick={() => openWhatsApp(createSpotlightMessage("gemstone pendants"))}
             className="inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-maroon-950 px-6 md:px-8 py-3 md:py-4 rounded-sm font-semibold tracking-wide transition-all duration-300 shadow-xl hover:-translate-y-0.5"
           >
             <WhatsAppGlyph className="w-5 h-5" fill="%23450a0a" />
@@ -215,7 +220,7 @@ export const Spotlight = () => (
               intent: 'video_request',
               product: SPOTLIGHT_PRODUCT,
             }}
-            onClick={() => openWhatsApp(createVideoRequestMessage("Nizam's Emerald Choker"))}
+            onClick={() => openWhatsApp(createVideoRequestMessage("gemstone pendants"))}
             className="inline-flex items-center gap-2 text-gold-200 hover:text-white px-3 py-2 border border-gold-500/40 hover:border-gold-300 rounded-sm transition-colors"
           >
             <Play size={14} className="fill-current" />
@@ -223,7 +228,7 @@ export const Spotlight = () => (
           </TrackedButton>
         </div>
         <p className="text-[11px] uppercase tracking-[0.2em] text-gold-300/80">
-          One-of-a-kind · Currently at our Ghatkopar store
+          Available to view at our Ghatkopar West store
         </p>
       </div>
     </div>
@@ -237,22 +242,16 @@ export const CategoryShowcase = () => {
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 mb-4 block">Our Collections</span>
-          <h2 className="text-4xl md:text-6xl font-serif text-maroon-900">Timeless Elegance</h2>
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto font-light">Handcrafted masterpieces that celebrate your special moments</p>
+          <h2 className="text-4xl md:text-6xl font-serif text-maroon-900">Gold &amp; Diamond Jewellery Collections</h2>
+          <p className="text-gray-600 mt-4 max-w-2xl mx-auto font-light">Necklaces, rings, earrings and bangles – browse the latest designs on WhatsApp or see them in our Ghatkopar store.</p>
         </div>
 
         {/* Asymmetric Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[300px] md:auto-rows-[400px]">
 
           {/* Large Featured Card */}
-          <TrackedButton
-            type="button"
-            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'necklaces' }}
-            onClick={() => openWhatsApp(createCategoryMessage('Necklaces'))}
-            aria-label="See our Necklaces catalogue on WhatsApp"
-            className="md:col-span-2 md:row-span-1 relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
-          >
-            <img src="/assest/dhulan collection.png" width="800" height="400" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Elegant Gold Necklaces" />
+          <div className="md:col-span-2 md:row-span-1 relative group overflow-hidden bg-gray-100">
+            <img src="/images/bridal-pearl-necklace-ghatkopar.webp" width="1200" height="800" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Pearl necklace in a jewellery box – necklaces collection" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
             <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
               <span className="text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2 block text-gold-300">Signature Collection</span>
@@ -262,17 +261,18 @@ export const CategoryShowcase = () => {
                 See catalogue on WhatsApp →
               </span>
             </div>
-          </TrackedButton>
+            <TrackedButton
+              type="button"
+              track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'necklaces' }}
+              onClick={() => openWhatsApp(createCategoryMessage('Necklaces'))}
+              aria-label="See our Necklaces catalogue on WhatsApp"
+              className="absolute inset-0 z-10 cursor-pointer"
+            />
+          </div>
 
           {/* Tall Vertical Card */}
-          <TrackedButton
-            type="button"
-            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'rings' }}
-            onClick={() => openWhatsApp(createCategoryMessage('Rings'))}
-            aria-label="See our Rings catalogue on WhatsApp"
-            className="md:row-span-2 relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
-          >
-            <img src="/assest/ring.png" width="400" height="800" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Diamond Rings" />
+          <div className="md:row-span-2 relative group overflow-hidden bg-gray-100">
+            <img src="/images/diamond-halo-ring.webp" width="800" height="533" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Diamond halo engagement ring in rose gold" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
             <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
               <h3 className="font-serif text-3xl md:text-4xl italic">Rings</h3>
@@ -281,17 +281,18 @@ export const CategoryShowcase = () => {
                 See catalogue on WhatsApp →
               </span>
             </div>
-          </TrackedButton>
+            <TrackedButton
+              type="button"
+              track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'rings' }}
+              onClick={() => openWhatsApp(createCategoryMessage('Rings'))}
+              aria-label="See our Rings catalogue on WhatsApp"
+              className="absolute inset-0 z-10 cursor-pointer"
+            />
+          </div>
 
           {/* Standard Card 1 */}
-          <TrackedButton
-            type="button"
-            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'earrings' }}
-            onClick={() => openWhatsApp(createCategoryMessage('Earrings'))}
-            aria-label="See our Earrings catalogue on WhatsApp"
-            className="relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
-          >
-            <img src="/assest/earing.png" width="400" height="400" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Gold Earrings" />
+          <div className="relative group overflow-hidden bg-gray-100">
+            <img src="/images/gold-gemstone-earrings.webp" width="687" height="1031" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Gold hoop earring with coloured gemstones" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
             <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
               <h3 className="font-serif text-2xl md:text-3xl italic">Earrings</h3>
@@ -300,17 +301,18 @@ export const CategoryShowcase = () => {
                 See catalogue →
               </span>
             </div>
-          </TrackedButton>
+            <TrackedButton
+              type="button"
+              track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'earrings' }}
+              onClick={() => openWhatsApp(createCategoryMessage('Earrings'))}
+              aria-label="See our Earrings catalogue on WhatsApp"
+              className="absolute inset-0 z-10 cursor-pointer"
+            />
+          </div>
 
           {/* Standard Card 2 */}
-          <TrackedButton
-            type="button"
-            track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'bangles' }}
-            onClick={() => openWhatsApp(createCategoryMessage('Bangles'))}
-            aria-label="See our Bangles catalogue on WhatsApp"
-            className="relative group cursor-pointer overflow-hidden bg-gray-100 text-left"
-          >
-            <img src="/assest/Bangles.png" width="400" height="400" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Gold Bangles" />
+          <div className="relative group overflow-hidden bg-gray-100">
+            <img src="/images/gold-bangle.webp" width="800" height="533" loading="lazy" className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt="Rose gold bangle with filigree design" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
             <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 text-white">
               <h3 className="font-serif text-2xl md:text-3xl italic">Bangles</h3>
@@ -319,7 +321,14 @@ export const CategoryShowcase = () => {
                 See catalogue →
               </span>
             </div>
-          </TrackedButton>
+            <TrackedButton
+              type="button"
+              track={{ cta: 'whatsapp', location: 'collections', intent: 'catalogue_browse', category: 'bangles' }}
+              onClick={() => openWhatsApp(createCategoryMessage('Bangles'))}
+              aria-label="See our Bangles catalogue on WhatsApp"
+              className="absolute inset-0 z-10 cursor-pointer"
+            />
+          </div>
 
         </div>
 

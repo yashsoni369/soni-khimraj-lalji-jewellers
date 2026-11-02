@@ -38,3 +38,6 @@ export const createVisitMessage = () =>
 
 export const createHelloMessage = () =>
   `${GREETING}, I came across your store online and wanted to say hello.`;
+
+export const createServiceMessage = (service: string) =>
+  `${GREETING}, I'd like to know more about ${service} at your Ghatkopar store.`;

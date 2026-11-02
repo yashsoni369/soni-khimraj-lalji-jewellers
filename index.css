@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  /* Keep anchor targets clear of the sticky header */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
   body {
     @apply bg-cream-50 text-maroon-950 antialiased;
     font-family: 'Lato', sans-serif;

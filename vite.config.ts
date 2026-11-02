@@ -2,7 +2,7 @@ import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, isSsrBuild }) => {
   const env = loadEnv(mode, '.', '');
   return {
     server: {
@@ -20,7 +20,8 @@ export default defineConfig(({ mode }) => {
       cssMinify: true,
       reportCompressedSize: false,
       chunkSizeWarningLimit: 2000,
-      rollupOptions: {
+      // Vendor splitting only for the browser bundle; the SSR (prerender) build externalises deps.
+      rollupOptions: isSsrBuild ? {} : {
         output: {
           manualChunks: {
             'vendor-react': ['react', 'react-dom', 'react-router-dom'],

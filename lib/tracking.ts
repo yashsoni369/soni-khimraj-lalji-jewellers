@@ -19,7 +19,10 @@ export type CtaLocation =
   | "sticky_mobile_whatsapp"
   | "sticky_mobile_call"
   | "sticky_mobile_directions"
-  | "gold_rate_chip";
+  | "gold_rate_chip"
+  | "services"
+  | "gold_rate_section"
+  | "faq";
 
 export type LeadIntent =
   | "chat_general"
@@ -34,7 +37,14 @@ export type CollectionCategory =
   | "bangles"
   | "shahi_dulhan"
   | "heritage_gold"
-  | "nakshatra_diamonds";
+  | "nakshatra_diamonds"
+  | "gold"
+  | "diamond"
+  | "silver"
+  | "bridal"
+  | "mangalsutra"
+  | "custom"
+  | "exchange";
 
 export type ContentTopic = "bis_hallmark" | "diamond_4cs";
 
