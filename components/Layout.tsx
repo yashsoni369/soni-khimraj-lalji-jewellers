@@ -476,7 +476,8 @@ export const StickyMobileCTA = () => {
 // Floating WhatsApp prompt for the most common Indian-jeweller enquiry.
 export const GoldRateChip = () => {
   const [visible, setVisible] = useState(false);
-  const rate = useGoldRate();
+  const goldRate = useGoldRate();
+  const rate = goldRate.status === 'loading' ? null : goldRate.rate;
 
   useEffect(() => {
     const show = () => setVisible(window.scrollY > 600);
@@ -495,9 +496,9 @@ export const GoldRateChip = () => {
       className={`hidden lg:inline-flex fixed bottom-8 right-8 z-40 items-center gap-2 bg-maroon-900 hover:bg-maroon-800 text-white px-5 py-3 rounded-full shadow-2xl border border-gold-400/60 transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
     >
       <TrendingUp size={16} className="text-gold-300" />
-      {rate.status === 'ok' ? (
+      {rate ? (
         <span className="text-xs uppercase tracking-widest font-semibold">
-          IBJA 22K {formatInr(rate.rate.gold.k22.price)}<span className="normal-case tracking-normal font-normal">/10g</span>
+          IBJA 22K {formatInr(rate.gold.k22.price)}<span className="normal-case tracking-normal font-normal">/10g</span>
         </span>
       ) : (
         <span className="text-xs uppercase tracking-widest font-semibold">Today's 22K Gold Rate</span>

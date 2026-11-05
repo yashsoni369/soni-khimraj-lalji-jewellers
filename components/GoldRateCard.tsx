@@ -1,5 +1,5 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
-import { useGoldRate } from '@/hooks/useGoldRate';
+import { todayInIndia, useGoldRate } from '@/hooks/useGoldRate';
 import { formatInr, formatRateDate, type MetalPrice } from '@/lib/goldRate';
 import type { CtaLocation } from '@/lib/tracking';
 import { createGoldRateMessage, whatsappUrl } from '@/services/whatsappService';
@@ -37,14 +37,21 @@ const Row = ({ label, sub, price, unit }: { label: string; sub: string; price?: 
   </div>
 );
 
-/** Live IBJA benchmark rate with a WhatsApp CTA for the shop's own rate. Falls back to CTA-only on error. */
+/**
+ * IBJA benchmark rate with a WhatsApp CTA for the shop's own rate. The first paint
+ * uses the rate baked in at build time (readable without JavaScript); the live
+ * rate replaces it. A "Refresh rate" button shows when the rate is not today's
+ * or the live fetch failed. With no rate at all, only the CTA is shown.
+ */
 export const GoldRateCard = ({ location }: { location: CtaLocation }) => {
   const state = useGoldRate();
-  const rate = state.status === 'ok' ? state.rate : null;
+  const rate = state.status === 'loading' ? null : state.rate;
+  const stale = !!rate && rate.date < todayInIndia();
+  const showRefresh = state.status === 'error' || (state.status === 'ok' && state.live && stale);
 
   return (
     <div className="text-left">
-      {state.status !== 'error' && (
+      {(state.status !== 'error' || rate) && (
         <>
           <p className="text-center text-sm text-maroon-100 mb-4" aria-live="polite">
             {rate ? (
@@ -64,6 +71,19 @@ export const GoldRateCard = ({ location }: { location: CtaLocation }) => {
           <p className="text-center text-xs text-maroon-100/80 leading-relaxed mb-8">
             Benchmark rate published by the India Bullion &amp; Jewellers Association (IBJA), excluding 3% GST and making
             charges. Our shop rate may differ.
+            {showRefresh && (
+              <>
+                {' '}
+                <button
+                  type="button"
+                  onClick={state.refresh}
+                  disabled={state.refreshing}
+                  className="underline underline-offset-2 text-gold-300 hover:text-gold-200 disabled:opacity-60"
+                >
+                  {state.refreshing ? 'Refreshing…' : 'Refresh rate'}
+                </button>
+              </>
+            )}
           </p>
         </>
       )}

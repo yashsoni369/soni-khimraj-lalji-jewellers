@@ -8,6 +8,8 @@ import { AppShell } from './App';
 
 export { ROUTES, NOT_FOUND_ROUTE, SITE_URL, canonicalUrl } from './lib/routes';
 export { pageJsonLd } from './lib/structuredData';
+export { fetchGoldRate } from './lib/goldRate';
+export { seedGoldRate, SEED_ELEMENT_ID } from './hooks/useGoldRate';
 
 export function render(url = '/') {
   return renderToString(

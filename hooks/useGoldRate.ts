@@ -1,14 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fetchGoldRate, type GoldRate } from '@/lib/goldRate';
 
-type State = { status: 'loading' } | { status: 'ok'; rate: GoldRate } | { status: 'error' };
+type State =
+  | { status: 'loading' }
+  | { status: 'ok'; rate: GoldRate; live: boolean }
+  | { status: 'error'; rate: GoldRate | null };
 
 const STORAGE_KEY = 'skl-gold-rate';
 const STORAGE_TTL_MS = 10 * 60 * 1000;
+export const SEED_ELEMENT_ID = 'skl-gold-rate';
 
-// Session cache: reloads, new tabs and page changes within 10 min reuse the rate
-// instead of calling the API again. Storage can be blocked (private mode), so
-// every access is guarded.
+// --- Build-time seed ---------------------------------------------------------
+// scripts/prerender.mjs fetches the IBJA rate once per build, calls seedGoldRate()
+// before rendering and writes the same JSON into <script id="skl-gold-rate">.
+// Server render and first client render both start from that rate, so the HTML
+// contains real prices for crawlers that don't run JavaScript (ChatGPT, Claude,
+// Perplexity) and hydration still matches.
+let serverSeed: GoldRate | null = null;
+
+export function seedGoldRate(rate: GoldRate | null) {
+  serverSeed = rate;
+}
+
+function readSeed(): GoldRate | null {
+  if (typeof document === 'undefined') return serverSeed;
+  try {
+    const el = document.getElementById(SEED_ELEMENT_ID);
+    const rate = el?.textContent ? (JSON.parse(el.textContent) as GoldRate) : null;
+    return rate?.gold?.k22?.price ? rate : null;
+  } catch {
+    return null;
+  }
+}
+
+// --- Session cache -----------------------------------------------------------
+// Reloads, new tabs and page changes within 10 min reuse the live rate instead of
+// calling the API again. Storage can be blocked (private mode), so every access
+// is guarded.
 function readStored(): GoldRate | null {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
@@ -28,6 +56,14 @@ function store(rate: GoldRate) {
   }
 }
 
+function clearStored() {
+  try {
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* storage unavailable – fine */
+  }
+}
+
 // One request per page load, shared by every component that shows the rate.
 let pending: Promise<GoldRate> | null = null;
 
@@ -39,7 +75,7 @@ function load(): Promise<GoldRate> {
       : (import.meta.env.DEV
           ? fetchGoldRate() // no /api in `vite dev`; the upstream allows CORS
           : fetch('/api/gold-rate').then((r) => {
-              if (!r.ok) throw new Error(`gold rate ${r.status}`); // 429/503 → WhatsApp-only fallback
+              if (!r.ok) throw new Error(`gold rate ${r.status}`); // 429/503 → keep the seed / WhatsApp CTA
               return r.json() as Promise<GoldRate>;
             })
         ).then((rate) => {
@@ -53,18 +89,47 @@ function load(): Promise<GoldRate> {
   return pending;
 }
 
-/** Always 'loading' on the server and first client render, so hydration matches. */
-export function useGoldRate(): State {
-  const [state, setState] = useState<State>({ status: 'loading' });
+function initialState(): State {
+  const seed = readSeed();
+  return seed ? { status: 'ok', rate: seed, live: false } : { status: 'loading' };
+}
+
+/** Today's date in India (YYYY-MM-DD), the calendar IBJA publishes on. */
+export function todayInIndia(now = new Date()): string {
+  return new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+/**
+ * Starts from the build-time seed (same on server and first client render), then
+ * swaps in the live rate. `refresh()` drops the session cache and fetches again.
+ */
+export function useGoldRate(): State & { refresh: () => void; refreshing: boolean } {
+  const [state, setState] = useState<State>(initialState);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const run = useCallback((isAlive: () => boolean) => {
+    return load().then(
+      (rate) => isAlive() && setState({ status: 'ok', rate, live: true }),
+      () =>
+        isAlive() &&
+        setState((prev) => ({ status: 'error', rate: prev.status === 'loading' ? null : prev.rate })),
+    );
+  }, []);
+
   useEffect(() => {
     let alive = true;
-    load().then(
-      (rate) => alive && setState({ status: 'ok', rate }),
-      () => alive && setState({ status: 'error' }),
-    );
+    run(() => alive);
     return () => {
       alive = false;
     };
-  }, []);
-  return state;
+  }, [run]);
+
+  const refresh = useCallback(() => {
+    clearStored();
+    pending = null;
+    setRefreshing(true);
+    run(() => true).finally(() => setRefreshing(false));
+  }, [run]);
+
+  return { ...state, refresh, refreshing };
 }

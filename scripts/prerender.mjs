@@ -12,7 +12,23 @@ const root = process.cwd();
 const dist = path.join(root, 'dist');
 const ssrEntry = path.join(root, 'dist-ssr', 'entry-server.js');
 
-const { render, ROUTES, NOT_FOUND_ROUTE, SITE_URL, canonicalUrl, pageJsonLd } = await import(pathToFileURL(ssrEntry).href);
+const { render, ROUTES, NOT_FOUND_ROUTE, SITE_URL, canonicalUrl, pageJsonLd, fetchGoldRate, seedGoldRate, SEED_ELEMENT_ID } =
+  await import(pathToFileURL(ssrEntry).href);
+
+// Bake the IBJA rate into the HTML once per build, so crawlers that don't run
+// JavaScript (ChatGPT, Claude, Perplexity) see real prices. Browsers still fetch
+// the live rate. A failed fetch never fails the build: pages show "Loading…".
+let goldRate = null;
+try {
+  goldRate = await fetchGoldRate();
+  console.log(`prerender: IBJA rate ${goldRate.date} (22K ₹${goldRate.gold.k22.price}/10g)`);
+} catch (err) {
+  console.warn(`prerender: WARNING gold rate not baked in (${err?.message ?? err}); pages show "Loading…"`);
+}
+seedGoldRate(goldRate);
+const goldRateScript = goldRate
+  ? `<script id="${SEED_ELEMENT_ID}" type="application/json">${JSON.stringify(goldRate).replace(/</g, '\\u003c')}</script>`
+  : '';
 
 const template = readFileSync(path.join(dist, 'index.html'), 'utf-8');
 const marker = '<div id="root"></div>';
@@ -61,6 +77,8 @@ function buildPage(route, url) {
     html = html.replace('</head>', `  <script type="application/ld+json">${json}</script>\n</head>`);
   }
 
+  if (goldRateScript) html = html.replace('</head>', `  ${goldRateScript}\n</head>`);
+
   return { html: html.replace(marker, `<div id="root">${appHtml}</div>`), kb: appHtml.length / 1024 };
 }
 
@@ -75,7 +93,10 @@ const notFound = buildPage(NOT_FOUND_ROUTE, '/__not-found__');
 writeFileSync(path.join(dist, '404.html'), notFound.html);
 console.log('prerender: (unknown paths)'.padEnd(40), '→ 404.html');
 
-const today = new Date().toISOString().slice(0, 10);
+// lastmod = when the page content really changed (route.updated), not the build
+// time; the gold-rate page changes whenever the baked-in rate does.
+// changefreq/priority are left out: Google and Bing ignore them.
+const lastmod = (r) => (r.key === 'gold_rate' && goldRate && goldRate.date > r.updated ? goldRate.date : r.updated);
 const indexable = ROUTES.filter((r) => r.indexable);
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -83,9 +104,7 @@ ${indexable
   .map(
     (r) => `  <url>
     <loc>${canonicalUrl(r)}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${r.changefreq}</changefreq>
-    <priority>${r.priority.toFixed(1)}</priority>
+    <lastmod>${lastmod(r)}</lastmod>
   </url>`,
   )
   .join('\n')}

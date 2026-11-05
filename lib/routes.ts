@@ -24,8 +24,8 @@ export interface SiteRoute {
   name: string;
   /** false = noindex, left out of the sitemap and nav */
   indexable: boolean;
-  priority: number;
-  changefreq: 'daily' | 'weekly' | 'monthly';
+  /** Date the page content last really changed (sitemap <lastmod>). Bump it when you edit the page. */
+  updated: string;
 }
 
 export const ROUTES: SiteRoute[] = [
@@ -37,8 +37,7 @@ export const ROUTES: SiteRoute[] = [
       "BIS hallmarked 916 gold, diamond, silver & bridal jewellery in Ghatkopar West, Mumbai for 25+ years. Visit us on Jivdaya Lane or WhatsApp for today's gold rate.",
     name: 'Home',
     indexable: true,
-    priority: 1.0,
-    changefreq: 'weekly',
+    updated: '2026-11-05',
   },
   {
     key: 'gold_rate',
@@ -48,8 +47,7 @@ export const ROUTES: SiteRoute[] = [
       "Today's IBJA gold rate for 24K (999), 22K (916) and 18K (750) per 10 grams, plus silver per kg. Get our Ghatkopar West shop rate on WhatsApp.",
     name: 'Gold Rate Today',
     indexable: true,
-    priority: 0.9,
-    changefreq: 'daily',
+    updated: '2026-11-05',
   },
   {
     key: 'bridal',
@@ -59,8 +57,7 @@ export const ROUTES: SiteRoute[] = [
       'Bridal Kundan & Polki sets, BIS hallmarked gold necklaces, mangalsutras and custom bridal jewellery in Ghatkopar West. Book a relaxed visit with your family.',
     name: 'Bridal Jewellery',
     indexable: true,
-    priority: 0.8,
-    changefreq: 'monthly',
+    updated: '2026-11-05',
   },
   {
     key: 'old_gold_exchange',
@@ -70,8 +67,7 @@ export const ROUTES: SiteRoute[] = [
       'Exchange your old gold for new jewellery in Ghatkopar West. Purity tested in front of you and its value given against new BIS hallmarked designs.',
     name: 'Old Gold Exchange',
     indexable: true,
-    priority: 0.8,
-    changefreq: 'monthly',
+    updated: '2026-11-05',
   },
   {
     key: 'silver',
@@ -81,8 +77,7 @@ export const ROUTES: SiteRoute[] = [
       'Silver jewellery, gift articles and pooja items at Soni Khimraj Lalji Jewellers, Jivdaya Lane, Ghatkopar West. Ask for our latest silver catalogue on WhatsApp.',
     name: 'Silver Jewellery',
     indexable: true,
-    priority: 0.7,
-    changefreq: 'monthly',
+    updated: '2026-11-05',
   },
   {
     // TODO(owner): set indexable: true once the scheme terms are on the page.
@@ -93,8 +88,7 @@ export const ROUTES: SiteRoute[] = [
       'Save every month towards your gold jewellery with the Gold Dream Scheme at Soni Khimraj Lalji Jewellers, Ghatkopar West.',
     name: 'Gold Dream Scheme',
     indexable: false,
-    priority: 0.7,
-    changefreq: 'monthly',
+    updated: '2026-11-05',
   },
 ];
 
@@ -105,8 +99,7 @@ export const NOT_FOUND_ROUTE: SiteRoute = {
   description: 'This page does not exist. Visit our homepage for jewellery, gold rates and our Ghatkopar West shop address.',
   name: 'Page not found',
   indexable: false,
-  priority: 0,
-  changefreq: 'monthly',
+  updated: '2026-11-05',
 };
 
 const normalise = (pathname: string) => (pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname);
