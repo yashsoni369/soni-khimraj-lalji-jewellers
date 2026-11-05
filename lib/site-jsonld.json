@@ -1,0 +1,167 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "JewelryStore",
+      "@id": "https://www.sonikhimrajlaljijewellers.com/#store",
+      "name": "Soni Khimraj Lalji Jewellers",
+      "alternateName": "सोनी खिमराज लालजी ज्वेलर्स",
+      "description": "Family jewellers in Ghatkopar West, Mumbai for over 25 years, offering BIS hallmarked 22K (916) gold jewellery, diamond jewellery, silver, bridal Kundan & Polki sets, mangalsutras, custom jewellery and old gold exchange.",
+      "url": "https://www.sonikhimrajlaljijewellers.com/",
+      "logo": "https://www.sonikhimrajlaljijewellers.com/images/soni-khimraj-lalji-jewellers-logo.png",
+      "image": [
+        "https://www.sonikhimrajlaljijewellers.com/images/og-image.jpg",
+        "https://www.sonikhimrajlaljijewellers.com/images/soni-khimraj-lalji-jewellers-shop-ghatkopar-west.webp"
+      ],
+      "telephone": "+91-91361-75991",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Shop No 9, Dr. Lakhani Estate, Jivdaya Lane, Ghatkopar West",
+        "addressLocality": "Mumbai",
+        "addressRegion": "Maharashtra",
+        "postalCode": "400086",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 19.0883773,
+        "longitude": 72.9054623
+      },
+      "hasMap": "https://www.google.com/maps?cid=5412913753962171265",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "10:00",
+          "closes": "21:30"
+        }
+      ],
+      "priceRange": "₹₹–₹₹₹₹",
+      "currenciesAccepted": "INR",
+      "areaServed": [
+        {
+          "@type": "Place",
+          "name": "Ghatkopar West, Mumbai"
+        },
+        {
+          "@type": "Place",
+          "name": "Ghatkopar East, Mumbai"
+        },
+        {
+          "@type": "Place",
+          "name": "Vidyavihar, Mumbai"
+        },
+        {
+          "@type": "Place",
+          "name": "Asalpha, Mumbai"
+        },
+        {
+          "@type": "Place",
+          "name": "Kurla, Mumbai"
+        },
+        {
+          "@type": "Place",
+          "name": "Vikhroli, Mumbai"
+        },
+        {
+          "@type": "Place",
+          "name": "Chembur, Mumbai"
+        },
+        {
+          "@type": "City",
+          "name": "Mumbai"
+        }
+      ],
+      "knowsAbout": [
+        "BIS hallmark",
+        "HUID",
+        "22K gold jewellery",
+        "916 gold",
+        "Diamond jewellery",
+        "Silver jewellery",
+        "Kundan jewellery",
+        "Polki jewellery",
+        "Bridal jewellery",
+        "Mangalsutra"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Jewellery & services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "BIS hallmarked 22K & 18K gold jewellery"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "Diamond jewellery"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "Silver jewellery & articles"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "Bridal Kundan & Polki jewellery"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "Mangalsutra"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Custom & made-to-order jewellery"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Old gold exchange"
+            }
+          }
+        ]
+      },
+      "sameAs": [
+        "https://www.instagram.com/sonikhimrajlalji/",
+        "https://www.facebook.com/102854275017661/",
+        "https://www.google.com/maps?cid=5412913753962171265"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.sonikhimrajlaljijewellers.com/#website",
+      "url": "https://www.sonikhimrajlaljijewellers.com/",
+      "name": "Soni Khimraj Lalji Jewellers",
+      "inLanguage": "en-IN",
+      "publisher": {
+        "@id": "https://www.sonikhimrajlaljijewellers.com/#store"
+      }
+    }
+  ]
+}

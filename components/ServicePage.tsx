@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ChevronDown, ChevronRight, MessageCircle } from 'lucide-react';
 import type { PageCta, ServicePageContent } from '@/content/pages';
 import { routeByKey } from '@/lib/routes';

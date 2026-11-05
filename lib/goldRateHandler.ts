@@ -4,19 +4,15 @@
 //   1. GET/HEAD only                    → 405 otherwise
 //   2. no query strings                 → 400 (stops cache-busting / junk)
 //   3. per-IP rate limit (in-memory)    → 429 with Retry-After
-//   4. 10-min in-memory cache, one shared upstream fetch, last-good fallback
+//   4. 10-min in-memory cache, one shared upstream fetch, last-good fallback (lib/goldRateCache.ts)
 //   5. upstream timeout + value sanity checks (lib/goldRate.ts)
 // `.js` extensions: the function runs as native ESM ("type": "module").
-import { fetchGoldRate, type GoldRate } from './goldRate.js';
+import { getGoldRate } from './goldRateCache.js';
 import { clientIp, createRateLimiter } from './rateLimit.js';
 
-const CACHE_TTL_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 30; // requests per IP per window (a real visitor needs ~1 per 10 min)
 const RATE_WINDOW_S = 60;
 const limiter = createRateLimiter({ limit: RATE_LIMIT, windowMs: RATE_WINDOW_S * 1000 });
-
-let cached: { rate: GoldRate; fetchedAt: number } | null = null;
-let inflight: Promise<GoldRate> | null = null;
 
 const BASE_HEADERS = {
   'Content-Type': 'application/json; charset=utf-8',
@@ -26,26 +22,6 @@ const BASE_HEADERS = {
 
 function json(body: unknown, status: number, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), { status, headers: { ...BASE_HEADERS, ...headers } });
-}
-
-async function getRate(now: number): Promise<GoldRate> {
-  if (cached && now - cached.fetchedAt < CACHE_TTL_MS) return cached.rate;
-  if (!inflight) {
-    inflight = fetchGoldRate()
-      .then((rate) => {
-        cached = { rate, fetchedAt: Date.now() };
-        return rate;
-      })
-      .finally(() => {
-        inflight = null;
-      });
-  }
-  try {
-    return await inflight;
-  } catch (err) {
-    if (cached) return cached.rate; // upstream down or bad data: serve the last good rate
-    throw err;
-  }
 }
 
 export async function handleGoldRate(request: Request): Promise<Response> {
@@ -71,7 +47,7 @@ export async function handleGoldRate(request: Request): Promise<Response> {
   }
 
   try {
-    const rate = await getRate(Date.now());
+    const rate = await getGoldRate();
     // Browser-only caching: no shared/CDN cache, so every request reaches the rate limiter.
     return json(rate, 200, { ...limitHeaders, 'Cache-Control': 'private, max-age=300' });
   } catch {
@@ -79,11 +55,4 @@ export async function handleGoldRate(request: Request): Promise<Response> {
   }
 }
 
-/** Test hooks. */
-export function __resetGoldRateCache() {
-  cached = null;
-  inflight = null;
-}
-export function __expireGoldRateCache() {
-  if (cached) cached.fetchedAt = 0;
-}
+export { __resetGoldRateCache, __expireGoldRateCache } from './goldRateCache.js';

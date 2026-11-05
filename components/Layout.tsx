@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { Instagram, Facebook, MapPin, Phone, Clock, Menu, X, TrendingUp, UserPlus, Star } from 'lucide-react';
 import { STORE_INFO, NEARBY_AREAS } from '../constants';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../services/whatsappService';
 import { TrackedLink } from './TrackedCTA';
 import { BookVisitButton } from './BookVisit';
-import { useGoldRate } from '@/hooks/useGoldRate';
+import { useGoldRate, useLoaderRate } from '@/hooks/useGoldRate';
 import { formatInr } from '@/lib/goldRate';
 import { ROUTES } from '@/lib/routes';
 
@@ -476,7 +476,8 @@ export const StickyMobileCTA = () => {
 // Floating WhatsApp prompt for the most common Indian-jeweller enquiry.
 export const GoldRateChip = () => {
   const [visible, setVisible] = useState(false);
-  const rate = useGoldRate();
+  const goldRate = useGoldRate(useLoaderRate());
+  const rate = goldRate.status === 'loading' ? null : goldRate.rate;
 
   useEffect(() => {
     const show = () => setVisible(window.scrollY > 600);
@@ -495,9 +496,9 @@ export const GoldRateChip = () => {
       className={`hidden lg:inline-flex fixed bottom-8 right-8 z-40 items-center gap-2 bg-maroon-900 hover:bg-maroon-800 text-white px-5 py-3 rounded-full shadow-2xl border border-gold-400/60 transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
     >
       <TrendingUp size={16} className="text-gold-300" />
-      {rate.status === 'ok' ? (
+      {rate ? (
         <span className="text-xs uppercase tracking-widest font-semibold">
-          IBJA 22K {formatInr(rate.rate.gold.k22.price)}<span className="normal-case tracking-normal font-normal">/10g</span>
+          IBJA 22K {formatInr(rate.gold.k22.price)}<span className="normal-case tracking-normal font-normal">/10g</span>
         </span>
       ) : (
         <span className="text-xs uppercase tracking-widest font-semibold">Today's 22K Gold Rate</span>

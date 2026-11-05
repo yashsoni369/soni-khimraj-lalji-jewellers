@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router';
 import { MessageCircle, TrendingUp, ChevronDown, ChevronRight } from 'lucide-react';
 import { SERVICES, FAQS, STORE_INFO } from './constants';
 import { Header, Footer, StoreAddress, StickyMobileCTA, GoldRateChip } from './components/Layout';
 import { HeroCarousel, Spotlight, CategoryShowcase } from './components/Widgets';
 import { TrackedLink } from './components/TrackedCTA';
 import { GoldRateCard } from './components/GoldRateCard';
-import { ServicePage } from './components/ServicePage';
-import { usePageMeta } from './hooks/usePageMeta';
-import { PAGE_CONTENT } from './content/pages';
-import { ROUTES, type PageType } from './lib/routes';
+import { ROUTES } from './lib/routes';
 import {
   whatsappUrl,
   createKnowledgeMessage,
@@ -17,27 +14,6 @@ import {
   createServiceMessage,
   createOldGoldValuationMessage,
 } from './services/whatsappService';
-
-// On navigation: jump to #section if present, else to the top. Also syncs head tags.
-// (GA4 page_view comes from gtag + enhanced measurement history events.)
-const ScrollToTop = () => {
-  const { pathname, search, hash } = useLocation();
-
-  useEffect(() => {
-    if (hash) {
-      const target = document.querySelector(hash);
-      if (target) {
-        target.scrollIntoView();
-        return;
-      }
-    }
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [pathname, search, hash]);
-
-  usePageMeta();
-
-  return null;
-};
 
 // Homepage service cards that have their own page.
 const SERVICE_PAGES: Partial<Record<string, string>> = {
@@ -193,7 +169,7 @@ const FaqSection = () => (
 );
 
 // --- PAGE: HOME ---
-const HomePage = () => {
+export const HomePage = () => {
   return (
     <div className="bg-white">
       <HeroCarousel />
@@ -289,7 +265,7 @@ const HomePage = () => {
 };
 
 // --- PAGE: 404 ---
-const NotFoundPage = () => (
+export const NotFoundPage = () => (
   <section className="py-24 md:py-32 container mx-auto px-6 text-center">
     <h1 className="text-4xl md:text-6xl font-serif text-maroon-900 mb-6">Page not found</h1>
     <p className="text-gray-600 mb-10">The page you were looking for doesn't exist.</p>
@@ -305,45 +281,13 @@ const NotFoundPage = () => (
   </section>
 );
 
-const PAGE_ELEMENTS: Record<PageType, React.ReactNode> = {
-  home: <HomePage />,
-  gold_rate: <ServicePage content={PAGE_CONTENT.gold_rate} />,
-  bridal: <ServicePage content={PAGE_CONTENT.bridal} />,
-  old_gold_exchange: <ServicePage content={PAGE_CONTENT.old_gold_exchange} />,
-  silver: <ServicePage content={PAGE_CONTENT.silver} />,
-  gold_dream_scheme: <ServicePage content={PAGE_CONTENT.gold_dream_scheme} />,
-  not_found: <NotFoundPage />,
-};
-
-// Everything inside the router. Rendered by BrowserRouter in the browser and by
-// StaticRouter in entry-server.tsx at build time (prerender, one HTML file per route).
-export const AppShell = () => (
+// Site chrome around every page. Rendered by app/root.tsx with the matched route in <Outlet/>.
+export const AppShell = ({ children }: { children: React.ReactNode }) => (
   <div className="min-h-screen flex flex-col overflow-x-clip font-sans bg-white text-gray-900 selection:bg-gold-200 selection:text-maroon-900">
-    <ScrollToTop />
     <Header />
-    <main className="flex-grow pb-16 lg:pb-0">
-      <Routes>
-        {/* One <Route> per entry in lib/routes.ts */}
-        <Route path="/" element={PAGE_ELEMENTS.home} />
-        <Route path="/gold-rate-today-ghatkopar" element={PAGE_ELEMENTS.gold_rate} />
-        <Route path="/bridal-jewellery" element={PAGE_ELEMENTS.bridal} />
-        <Route path="/old-gold-exchange" element={PAGE_ELEMENTS.old_gold_exchange} />
-        <Route path="/silver-jewellery" element={PAGE_ELEMENTS.silver} />
-        <Route path="/gold-dream-scheme" element={PAGE_ELEMENTS.gold_dream_scheme} />
-        <Route path="*" element={PAGE_ELEMENTS.not_found} />
-      </Routes>
-    </main>
+    <main className="flex-grow pb-16 lg:pb-0">{children}</main>
     <Footer />
     <StickyMobileCTA />
     <GoldRateChip />
   </div>
 );
-
-// --- MAIN APP ---
-const App = () => (
-  <BrowserRouter>
-    <AppShell />
-  </BrowserRouter>
-);
-
-export default App;
