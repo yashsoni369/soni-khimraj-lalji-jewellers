@@ -1,12 +1,12 @@
 import { STORE_INFO } from '../constants';
 
 const GREETING = 'Namaste Mr. Soni';
+// Lets the shop label website enquiries in WhatsApp Business.
+const SOURCE_TAG = '\n\n(sent from website)';
 
-export const openWhatsApp = (message: string) => {
-  const encodedMessage = encodeURIComponent(message);
-  const url = `https://wa.me/${STORE_INFO.whatsapp.replace(/\+/g, '')}?text=${encodedMessage}`;
-  window.open(url, '_blank');
-};
+/** wa.me link with a pre-filled message. Used as a real <a href>, so long-press / new tab work. */
+export const whatsappUrl = (message: string) =>
+  `https://wa.me/${STORE_INFO.whatsapp.replace(/\+/g, '')}?text=${encodeURIComponent(message + SOURCE_TAG)}`;
 
 export const createEnquiryMessage = (customMessage?: string) => {
   if (customMessage) {
@@ -31,10 +31,19 @@ export const createKnowledgeMessage = (topic: string) =>
   `${GREETING}, could you help me understand ${topic}?`;
 
 export const createGoldRateMessage = () =>
-  `${GREETING}, could you share today's 22K gold rate?`;
-
-export const createVisitMessage = () =>
-  `${GREETING}, I'd like to visit your Ghatkopar store. What would be a good time?`;
+  `${GREETING}, could you share today's 22K and 18K gold rate at your shop?`;
 
 export const createHelloMessage = () =>
   `${GREETING}, I came across your store online and wanted to say hello.`;
+
+export const createServiceMessage = (service: string) =>
+  `${GREETING}, I'd like to know more about ${service} at your Ghatkopar store.`;
+
+export const createOldGoldValuationMessage = () =>
+  `${GREETING}, I'd like to get my old gold valued for exchange. Approximate weight: ___ g. I can share a photo here.`;
+
+export const createSchemeMessage = () =>
+  `${GREETING}, please share the details of the Gold Dream Scheme.`;
+
+export const createAppointmentMessage = (purpose: string, day: string, time: string) =>
+  `${GREETING}, I'd like to book a visit to your Ghatkopar West shop.\nPurpose: ${purpose}\nDay: ${day}\nTime: ${time}\nPlease confirm if this works.`;

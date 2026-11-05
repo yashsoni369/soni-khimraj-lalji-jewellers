@@ -1,13 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Instagram, MapPin, Mail, Phone, Clock, Menu, X, TrendingUp } from 'lucide-react';
-import { STORE_INFO } from '../constants';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Instagram, Facebook, MapPin, Phone, Clock, Menu, X, TrendingUp, UserPlus, Star } from 'lucide-react';
+import { STORE_INFO, NEARBY_AREAS } from '../constants';
 import {
-  openWhatsApp,
+  whatsappUrl,
   createEnquiryMessage,
   createGoldRateMessage,
 } from '../services/whatsappService';
-import { TrackedButton, TrackedLink } from './TrackedCTA';
+import { TrackedLink } from './TrackedCTA';
+import { BookVisitButton } from './BookVisit';
+import { useGoldRate } from '@/hooks/useGoldRate';
+import { formatInr } from '@/lib/goldRate';
+import { ROUTES } from '@/lib/routes';
+
+// Header/footer links: '/#id' scrolls on the homepage (or goes there first);
+// plain paths are client-side navigations to the other pages.
+function useNavTo() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  return (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const hash = path.startsWith('/#') ? path.slice(1) : '';
+    if (hash && pathname === '/') {
+      document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+      window.history.replaceState(null, '', path);
+    } else {
+      navigate(path);
+    }
+  };
+}
+
+const PAGE_LINKS = ROUTES.filter((r) => r.indexable && r.path !== '/');
 
 const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?: string; fill?: string }) => (
   <img
@@ -23,7 +47,7 @@ const WhatsAppGlyph = ({ className = 'w-5 h-5', fill = '%23fff' }: { className?:
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  const navTo = useNavTo();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -35,13 +59,13 @@ export const Header = () => {
   }, []);
 
   // Use the dark logo for the white header background by default
-  const logoSrc = '/assest/logo dark.png';
+  const logoSrc = '/images/soni-khimraj-lalji-logo.webp';
 
   const navLinks = [
     { name: 'The Heritage', path: '/#heritage' },
     { name: 'Collections', path: '/#collections' },
-    { name: 'Exclusives', path: '/#spotlight' },
-    { name: 'Expertise', path: '/#knowledge' },
+    { name: 'Gold Rate', path: '/gold-rate-today-ghatkopar' },
+    { name: 'Bridal', path: '/bridal-jewellery' },
     { name: 'Why Us', path: '/#why-us' },
   ];
 
@@ -72,16 +96,12 @@ export const Header = () => {
           </div>
 
           {/* DESKTOP: Left Nav */}
-          <nav className="hidden lg:flex gap-8 xl:gap-12 items-center justify-end flex-1 pr-8">
+          <nav className="hidden lg:flex gap-6 xl:gap-12 items-center justify-end flex-1 pr-8">
             {leftNav.map((link) => (
               <a
                 key={link.name}
-                href={link.path.replace('/', '')}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const target = document.querySelector(link.path.replace('/', ''));
-                  if (target) target.scrollIntoView({ behavior: 'smooth' });
-                }}
+                href={link.path}
+                onClick={(e) => navTo(e, link.path)}
                 className="text-sm xl:text-base uppercase tracking-[0.15em] hover:text-maroon-800 transition-colors relative group py-2 whitespace-nowrap text-gray-600"
               >
                 {link.name}
@@ -91,27 +111,23 @@ export const Header = () => {
           </nav>
 
           {/* CENTER: Logo */}
-          <div className="flex-shrink-0 z-40 cursor-pointer flex items-center justify-center p-1" onClick={() => navigate('/')}>
+          <Link to="/" aria-label="Soni Khimraj Lalji Jewellers – home" className="flex-shrink-0 z-40 flex items-center justify-center p-1">
             <img
               src={logoSrc}
-              alt="Soni Khimraj Lalji Logo"
-              width="300"
-              height="84"
+              alt="Soni Khimraj Lalji Jewellers logo"
+              width="600"
+              height="264"
               className={`w-auto object-contain transition-all duration-500 transform ${isScrolled ? 'h-10 md:h-12' : 'h-12 md:h-20 lg:h-24'}`}
             />
-          </div>
+          </Link>
 
           {/* DESKTOP: Right Nav */}
-          <nav className="hidden lg:flex gap-8 xl:gap-12 items-center justify-start flex-1 pl-8">
+          <nav className="hidden lg:flex gap-6 xl:gap-12 items-center justify-start flex-1 pl-8 pr-40">
             {rightNav.map((link) => (
               <a
                 key={link.name}
-                href={link.path.replace('/', '')}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const target = document.querySelector(link.path.replace('/', ''));
-                  if (target) target.scrollIntoView({ behavior: 'smooth' });
-                }}
+                href={link.path}
+                onClick={(e) => navTo(e, link.path)}
                 className="text-sm xl:text-base uppercase tracking-[0.15em] hover:text-maroon-800 transition-colors relative group py-2 whitespace-nowrap text-gray-600"
               >
                 {link.name}
@@ -122,9 +138,11 @@ export const Header = () => {
 
           {/* RIGHT: WhatsApp Contact - Absolute positioned on mobile for centering logo */}
           <div className="absolute right-4 lg:right-12 flex items-center gap-2 lg:gap-3 z-50">
-            <TrackedButton
+            <TrackedLink
               track={{ cta: 'whatsapp', location: 'header', intent: 'chat_general' }}
-              onClick={() => openWhatsApp(createEnquiryMessage())}
+              href={whatsappUrl(createEnquiryMessage())}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 text-maroon-900 hover:text-gold-600 transition-colors bg-cream-50 hover:bg-gold-50 px-2 md:px-4 py-1.5 md:py-2 rounded-sm border border-maroon-200"
             >
               <img
@@ -135,7 +153,7 @@ export const Header = () => {
                 className="w-5 h-5 md:w-5 md:h-5"
               />
               <span className="hidden md:inline text-sm font-medium">Contact</span>
-            </TrackedButton>
+            </TrackedLink>
           </div>
 
         </div>
@@ -146,24 +164,22 @@ export const Header = () => {
             {navLinks.map((link) => (
               <a
                 key={link.name}
-                href={link.path.replace('/', '')}
+                href={link.path}
                 onClick={(e) => {
-                  e.preventDefault();
                   setIsMenuOpen(false);
-                  const target = document.querySelector(link.path.replace('/', ''));
-                  if (target) target.scrollIntoView({ behavior: 'smooth' });
+                  navTo(e, link.path);
                 }}
                 className="text-lg uppercase tracking-[0.2em] text-gray-700 hover:text-maroon-900 border-b border-gray-50 pb-2"
               >
                 {link.name}
               </a>
             ))}
-            <TrackedButton
+            <TrackedLink
               track={{ cta: 'whatsapp', location: 'mobile_menu', intent: 'chat_general' }}
-              onClick={() => {
-                setIsMenuOpen(false);
-                openWhatsApp(createEnquiryMessage());
-              }}
+              href={whatsappUrl(createEnquiryMessage())}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
               className="mt-4 flex items-center justify-center gap-3 bg-maroon-900 text-white px-6 py-4 rounded-sm tracking-widest uppercase text-sm font-bold"
             >
               <img
@@ -174,7 +190,7 @@ export const Header = () => {
                 className="w-5 h-5"
               />
               Chat Now
-            </TrackedButton>
+            </TrackedLink>
           </nav>
         </div>
       </header>
@@ -185,14 +201,17 @@ export const Header = () => {
 // --- STORE ADDRESS SECTION ---
 export const StoreAddress = () => {
   return (
-    <section className="py-16 md:py-24 bg-maroon-950">
+    <section id="visit" className="py-16 md:py-24 bg-maroon-950">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-5xl font-serif text-white mb-4">Store Address</h2>
-          <div className="w-16 md:w-20 h-px bg-gold-400 mx-auto"></div>
+          <h2 className="text-3xl md:text-5xl font-serif text-white mb-4">Visit Our Jewellery Shop in Ghatkopar West</h2>
+          <div className="w-16 md:w-20 h-px bg-gold-400 mx-auto mb-6"></div>
+          <p className="text-maroon-100 font-light max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+            A short walk from Ghatkopar station (West). Serving families from {NEARBY_AREAS.slice(0, -1).join(', ')} and {NEARBY_AREAS[NEARBY_AREAS.length - 1]}.
+          </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-sm overflow-hidden shadow-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               {/* Store Image */}
@@ -204,11 +223,12 @@ export const StoreAddress = () => {
                 className="h-64 md:h-auto overflow-hidden relative block group/img"
               >
                 <img
-                  src="/assest/shopimg.png"
-                  width="600"
-                  height="400"
+                  src="/images/soni-khimraj-lalji-jewellers-shop-ghatkopar-west.webp"
+                  width="840"
+                  height="840"
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110"
-                  alt="Soni Khimraj Lalji Jewellers Store"
+                  alt="Soni Khimraj Lalji Jewellers shop front on Jivdaya Lane, Ghatkopar West, Mumbai"
                 />
                 <div className="absolute inset-0 bg-maroon-900/10 group-hover/img:bg-transparent transition-colors"></div>
               </TrackedLink>
@@ -216,7 +236,7 @@ export const StoreAddress = () => {
               {/* Store Details */}
               <div className="p-6 md:p-12 flex flex-col justify-center">
                 <h3 className="text-2xl md:text-3xl font-serif text-maroon-900 mb-6 pb-4 border-b-2 border-gold-200 leading-tight">Soni Khimraj Lalji Jewellers</h3>
-                <div className="space-y-4 mb-8">
+                <address className="not-italic space-y-4 mb-8">
                   <TrackedLink
                     href={STORE_INFO.mapEmbedUrl}
                     target="_blank"
@@ -225,43 +245,75 @@ export const StoreAddress = () => {
                     className="flex items-start gap-3 group/addr"
                   >
                     <MapPin size={18} className="text-gold-600 mt-1 flex-shrink-0 group-hover/addr:scale-110 transition-transform" />
-                    <p className="text-sm text-gray-700 leading-relaxed group-hover:text-gold-700 transition-colors">
-                      {STORE_INFO.address}
-                    </p>
+                    <span className="text-sm text-gray-700 leading-relaxed group-hover:text-gold-800 transition-colors">
+                      {STORE_INFO.streetAddress},<br />{STORE_INFO.locality}, {STORE_INFO.region} {STORE_INFO.postalCode}
+                    </span>
                   </TrackedLink>
                   <div className="flex items-center gap-3">
                     <Phone size={18} className="text-gold-600 flex-shrink-0" />
                     <TrackedLink
                       href={`tel:${STORE_INFO.phone}`}
                       track={{ cta: 'phone', location: 'footer_phone_1', phoneNumber: STORE_INFO.phone }}
-                      className="text-sm text-gray-700 hover:text-gold-600 transition-colors"
+                      className="text-sm text-gray-700 hover:text-gold-800 transition-colors"
                     >
-                      {STORE_INFO.phone}
+                      {STORE_INFO.phoneDisplay}
                     </TrackedLink>
                   </div>
                   <div className="flex items-center gap-3">
                     <Clock size={18} className="text-gold-600 flex-shrink-0" />
-                    <p className="text-sm text-gray-700">{STORE_INFO.hours}</p>
+                    <p className="text-sm text-gray-700">Open {STORE_INFO.hours}</p>
                   </div>
-                </div>
+                </address>
 
                 {/* WhatsApp Contact Button */}
-                <TrackedButton
+                <TrackedLink
                   track={{ cta: 'whatsapp', location: 'store_address', intent: 'chat_general' }}
-                  onClick={() => openWhatsApp(createEnquiryMessage("I would like to visit your store"))}
-                  className="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white px-5 py-3 md:px-6 md:py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl group"
+                  href={whatsappUrl(createEnquiryMessage("I would like to visit your store"))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 bg-green-700 hover:bg-green-800 text-white px-5 py-3 md:px-6 md:py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl group"
                 >
-                  <img
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23fff' d='M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.7 17.8 69.4 27.2 106.2 27.2 122.4 0 222-99.6 222-222 0-59.3-23-115.1-65-157.1zM223.9 446.3c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 365.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.5-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-82.7 184.6-184.5 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.2-8.5-44.2-27.2-16.4-14.6-27.4-32.7-30.6-38.2-3.2-5.6-.3-8.6 2.4-11.3 2.5-2.4 5.6-6.5 8.3-9.7 2.8-3.3 3.7-5.5 5.5-9.2 1.9-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z'/%3E%3C/svg%3E"
-                    alt="WhatsApp"
-                    width="24"
-                    height="24"
-                    className="w-6 h-6 group-hover:scale-110 transition-transform"
+                  <WhatsAppGlyph className="w-6 h-6 group-hover:scale-110 transition-transform" fill="%23fff" />
+                  <span className="font-semibold text-lg">WhatsApp {STORE_INFO.phoneDisplay}</span>
+                </TrackedLink>
+                <div className="grid grid-cols-2 gap-3 mt-3">
+                  <BookVisitButton
+                    location="store_address"
+                    className="flex items-center justify-center gap-2 border border-maroon-900 text-maroon-900 hover:bg-maroon-50 px-3 py-3 rounded-lg text-sm font-semibold transition-colors"
                   />
-                  <span className="font-semibold text-lg">{STORE_INFO.phone}</span>
-                </TrackedButton>
+                  <TrackedLink
+                    href={STORE_INFO.vcardUrl}
+                    download
+                    track={{ cta: 'save_contact', location: 'store_address' }}
+                    className="flex items-center justify-center gap-2 border border-maroon-900 text-maroon-900 hover:bg-maroon-50 px-3 py-3 rounded-lg text-sm font-semibold transition-colors"
+                  >
+                    <UserPlus size={18} aria-hidden="true" /> Save Our Number
+                  </TrackedLink>
+                </div>
+                {STORE_INFO.reviewUrl && (
+                  <TrackedLink
+                    href={STORE_INFO.reviewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    track={{ cta: 'review', location: 'store_address' }}
+                    className="mt-4 inline-flex items-center justify-center gap-2 text-sm text-gray-700 hover:text-maroon-900 underline underline-offset-4"
+                  >
+                    <Star size={16} aria-hidden="true" /> Visited us? Leave a Google review
+                  </TrackedLink>
+                )}
               </div>
             </div>
+
+            {/* Map */}
+            <iframe
+              title="Map to Soni Khimraj Lalji Jewellers, Ghatkopar West"
+              src={STORE_INFO.mapIframeSrc}
+              width="100%"
+              height="320"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="block w-full border-0 border-t border-gold-200"
+            ></iframe>
           </div>
         </div>
       </div>
@@ -270,22 +322,24 @@ export const StoreAddress = () => {
 };
 
 export const Footer = () => {
+  const navTo = useNavTo();
   return (
     <footer className="bg-[#FFFCF5] text-maroon-900 pt-16 md:pt-24 pb-12 border-t-2 border-gold-300">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col items-center text-center mb-16 md:mb-20">
-          <h2 className="text-3xl md:text-6xl font-serif mb-6 leading-tight">Soni Khimraj Lalji Jewellers</h2>
+          <p className="text-3xl md:text-6xl font-serif mb-6 leading-tight">Soni Khimraj Lalji Jewellers</p>
           <p className="text-gray-600 font-light max-w-lg leading-relaxed text-sm md:text-base mb-6">
-            Purveyors of fine gold and diamond jewellery for over 25 years.
-            Preserving the art of Indian craftsmanship in the heart of Ghatkopar West, Mumbai.
+            BIS hallmarked gold, diamond and silver jewellery for over 25 years.
+            Your trusted jewellers on Jivdaya Lane, Ghatkopar West, Mumbai.
           </p>
 
           {/* BIS Logo */}
           <img
-            src="/assest/BIS_original.png"
-            alt="BIS Hallmark"
-            width="160"
-            height="40"
+            src="/images/bis-logo.webp"
+            alt="BIS hallmark logo – Bureau of Indian Standards certified jeweller"
+            width="320"
+            height="226"
+            loading="lazy"
             className="h-8 md:h-10 w-auto mb-6 opacity-90"
           />
 
@@ -293,7 +347,7 @@ export const Footer = () => {
 
           <div className="flex gap-8">
             <a href={STORE_INFO.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Follow us on Instagram"><Instagram size={20} strokeWidth={1.5} /></a>
-            <a href={`mailto:${STORE_INFO.email}`} className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Send us an Email"><Mail size={20} strokeWidth={1.5} /></a>
+            <a href={STORE_INFO.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Follow us on Facebook"><Facebook size={20} strokeWidth={1.5} /></a>
             <TrackedLink href={STORE_INFO.mapEmbedUrl} target="_blank" rel="noopener noreferrer" track={{ cta: 'directions', location: 'footer_address' }} className="text-gray-600 hover:text-maroon-900 transition-colors" aria-label="Find us on Google Maps"><MapPin size={20} strokeWidth={1.5} /></TrackedLink>
           </div>
         </div>
@@ -302,29 +356,56 @@ export const Footer = () => {
           <div className="flex flex-col items-center md:items-start">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Explore</h3>
             <ul className="space-y-3 text-xs uppercase tracking-widest text-gray-700">
-              <li><a href="#heritage" className="hover:text-gold-600 transition-colors">The Heritage</a></li>
-              <li><a href="#why-us" className="hover:text-gold-600 transition-colors">Why Us</a></li>
-              <li><a href="#collections" className="hover:text-gold-600 transition-colors">Collections</a></li>
-              <li><a href="#knowledge" className="hover:text-gold-600 transition-colors">Knowledge</a></li>
+              {[
+                ...PAGE_LINKS.map((r) => ({ name: r.name, path: r.path })),
+                { name: 'What We Offer', path: '/#services' },
+                { name: 'Collections', path: '/#collections' },
+                { name: 'FAQs', path: '/#faq' },
+              ].map((l) => (
+                <li key={l.path}>
+                  <a href={l.path} onClick={(e) => navTo(e, l.path)} className="hover:text-gold-600 transition-colors">
+                    {l.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="flex flex-col items-center md:items-start max-w-sm mx-auto md:mx-0">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Visit</h3>
-            <p className="text-sm text-gray-700 leading-relaxed mb-4">{STORE_INFO.address}</p>
+            <address className="not-italic text-sm text-gray-700 leading-relaxed mb-4">{STORE_INFO.address}</address>
             <TrackedLink
               href={STORE_INFO.mapEmbedUrl}
               target="_blank"
               rel="noopener noreferrer"
               track={{ cta: 'directions', location: 'footer_address' }}
-              className="text-xs uppercase tracking-widest text-gold-600 border-b-2 border-gold-600 pb-1 hover:text-maroon-900 hover:border-maroon-900 transition-all font-medium inline-block"
+              className="text-xs uppercase tracking-widest text-gold-800 border-b-2 border-gold-800 pb-1 hover:text-maroon-900 hover:border-maroon-900 transition-all font-medium inline-block"
             >
               Get Directions
             </TrackedLink>
           </div>
           <div className="flex flex-col items-center md:items-start lg:col-span-1">
             <h3 className="font-serif text-lg mb-6 text-maroon-900">Contact</h3>
-            <p className="text-sm text-gray-700 mb-2">{STORE_INFO.phone}</p>
-            <p className="text-sm text-gray-700">{STORE_INFO.hours}</p>
+            <TrackedLink href={`tel:${STORE_INFO.phone}`} track={{ cta: 'phone', location: 'footer_phone_2', phoneNumber: STORE_INFO.phone }} className="text-sm text-gray-700 mb-2 hover:text-gold-800">{STORE_INFO.phoneDisplay}</TrackedLink>
+            <p className="text-sm text-gray-700 mb-4">{STORE_INFO.hours}</p>
+            <TrackedLink
+              href={STORE_INFO.vcardUrl}
+              download
+              track={{ cta: 'save_contact', location: 'footer_contact' }}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold-800 hover:text-maroon-900 mb-3"
+            >
+              <UserPlus size={14} aria-hidden="true" /> Save our number
+            </TrackedLink>
+            {STORE_INFO.reviewUrl && (
+              <TrackedLink
+                href={STORE_INFO.reviewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                track={{ cta: 'review', location: 'footer_contact' }}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold-800 hover:text-maroon-900"
+              >
+                <Star size={14} aria-hidden="true" /> Leave a Google review
+              </TrackedLink>
+            )}
           </div>
         </div>
 
@@ -355,18 +436,20 @@ export const StickyMobileCTA = () => {
       aria-label="Quick contact"
     >
       <div className="bg-white/95 backdrop-blur-md border-t border-gold-200 shadow-2xl grid grid-cols-3">
-        <TrackedButton
+        <TrackedLink
           track={{ cta: 'whatsapp', location: 'sticky_mobile_whatsapp', intent: 'chat_general' }}
-          onClick={() => openWhatsApp(createEnquiryMessage())}
-          className="flex flex-col items-center justify-center gap-1 py-3 bg-green-600 text-white active:bg-green-700 transition-colors"
+          href={whatsappUrl(createEnquiryMessage())}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center justify-center gap-1 py-3 bg-green-700 text-white active:bg-green-800 transition-colors"
           aria-label="Chat with Mr. Soni on WhatsApp"
         >
           <WhatsAppGlyph className="w-5 h-5" fill="%23fff" />
           <span className="text-[10px] uppercase tracking-widest font-semibold">WhatsApp</span>
-        </TrackedButton>
+        </TrackedLink>
         <TrackedLink
           href={`tel:${STORE_INFO.phone}`}
-          track={{ cta: 'phone', location: 'footer_phone_2', phoneNumber: STORE_INFO.phone }}
+          track={{ cta: 'phone', location: 'sticky_mobile_call', phoneNumber: STORE_INFO.phone }}
           className="flex flex-col items-center justify-center gap-1 py-3 text-maroon-900 active:bg-maroon-50 transition-colors"
           aria-label="Call the store"
         >
@@ -393,6 +476,7 @@ export const StickyMobileCTA = () => {
 // Floating WhatsApp prompt for the most common Indian-jeweller enquiry.
 export const GoldRateChip = () => {
   const [visible, setVisible] = useState(false);
+  const rate = useGoldRate();
 
   useEffect(() => {
     const show = () => setVisible(window.scrollY > 600);
@@ -402,15 +486,23 @@ export const GoldRateChip = () => {
   }, []);
 
   return (
-    <TrackedButton
-      track={{ cta: 'whatsapp', location: 'gold_rate_chip', intent: 'chat_general' }}
-      onClick={() => openWhatsApp(createGoldRateMessage())}
-      aria-label="Get today's gold rate on WhatsApp"
+    <TrackedLink
+      track={{ cta: 'whatsapp', location: 'gold_rate_chip', intent: 'gold_rate' }}
+      href={whatsappUrl(createGoldRateMessage())}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Get today's 22K gold rate from our shop on WhatsApp"
       className={`hidden lg:inline-flex fixed bottom-8 right-8 z-40 items-center gap-2 bg-maroon-900 hover:bg-maroon-800 text-white px-5 py-3 rounded-full shadow-2xl border border-gold-400/60 transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
     >
       <TrendingUp size={16} className="text-gold-300" />
-      <span className="text-xs uppercase tracking-widest font-semibold">Today's 22K Gold Rate</span>
-      <span className="text-[10px] text-gold-300 uppercase tracking-widest">on WhatsApp</span>
-    </TrackedButton>
+      {rate.status === 'ok' ? (
+        <span className="text-xs uppercase tracking-widest font-semibold">
+          IBJA 22K {formatInr(rate.rate.gold.k22.price)}<span className="normal-case tracking-normal font-normal">/10g</span>
+        </span>
+      ) : (
+        <span className="text-xs uppercase tracking-widest font-semibold">Today's 22K Gold Rate</span>
+      )}
+      <span className="text-[10px] text-gold-300 uppercase tracking-widest">Shop rate on WhatsApp</span>
+    </TrackedLink>
   );
 };

@@ -4,7 +4,11 @@ import {
   trackPhoneCallClick,
   trackGetDirectionsClick,
   trackContentInquiryClick,
+  trackAppointmentRequest,
+  trackSaveContactClick,
+  trackReviewClick,
   type CtaLocation,
+  type VisitPurpose,
   type LeadIntent,
   type CollectionCategory,
   type ContentTopic,
@@ -35,7 +39,25 @@ type ContentInquiryCta = {
   topic: ContentTopic;
 };
 
-export type CtaSpec = WhatsAppCta | PhoneCta | DirectionsCta | ContentInquiryCta;
+type AppointmentCta = {
+  cta: 'appointment';
+  location: CtaLocation;
+  purpose: VisitPurpose;
+  day: string;
+  time: string;
+};
+
+type SaveContactCta = { cta: 'save_contact'; location: CtaLocation };
+type ReviewCta = { cta: 'review'; location: CtaLocation };
+
+export type CtaSpec =
+  | WhatsAppCta
+  | PhoneCta
+  | DirectionsCta
+  | ContentInquiryCta
+  | AppointmentCta
+  | SaveContactCta
+  | ReviewCta;
 
 function fire(spec: CtaSpec) {
   switch (spec.cta) {
@@ -58,6 +80,17 @@ function fire(spec: CtaSpec) {
         cta_location: spec.location,
         content_topic: spec.topic,
       });
+    case 'appointment':
+      return trackAppointmentRequest({
+        cta_location: spec.location,
+        visit_purpose: spec.purpose,
+        visit_day: spec.day,
+        visit_time: spec.time,
+      });
+    case 'save_contact':
+      return trackSaveContactClick({ cta_location: spec.location });
+    case 'review':
+      return trackReviewClick({ cta_location: spec.location });
   }
 }
 

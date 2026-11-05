@@ -48,7 +48,16 @@ export default {
         ring: "#920a0a",
         background: "#FFFBF5",
         foreground: "#450202",
-      }
+      },
+      keyframes: {
+        'fade-up': {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'fade-up': 'fade-up 0.9s ease-out both',
+      },
     },
   },
   plugins: [],
