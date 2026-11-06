@@ -1,44 +1,28 @@
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import { reactRouter } from '@react-router/dev/vite';
 
-export default defineConfig(({ mode, isSsrBuild }) => {
-  const env = loadEnv(mode, '.', '');
-  return {
-    server: {
-      port: 3000,
-      host: '0.0.0.0',
-    },
-    build: {
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-        },
-      },
-      cssMinify: true,
-      reportCompressedSize: false,
-      chunkSizeWarningLimit: 2000,
-      // Vendor splitting only for the browser bundle; the SSR (prerender) build externalises deps.
-      rollupOptions: isSsrBuild ? {} : {
-        output: {
-          manualChunks: {
-            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-            'vendor-icons': ['lucide-react'],
-          },
-        },
+export default defineConfig({
+  server: {
+    port: 3000,
+    host: '0.0.0.0',
+  },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
       },
     },
-    plugins: [react()],
-    define: {
-      'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+    cssMinify: true,
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 2000,
+  },
+  plugins: [reactRouter()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, '.'),
     },
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, '.'),
-      }
-    }
-  };
+  },
 });

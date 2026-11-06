@@ -1,5 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
-import { useGoldRate } from '@/hooks/useGoldRate';
+import { useEffect, useState } from 'react';
+import { todayInIndia, useGoldRate, useLoaderRate } from '@/hooks/useGoldRate';
 import { formatInr, formatRateDate, type MetalPrice } from '@/lib/goldRate';
 import type { CtaLocation } from '@/lib/tracking';
 import { createGoldRateMessage, whatsappUrl } from '@/services/whatsappService';
@@ -37,14 +38,25 @@ const Row = ({ label, sub, price, unit }: { label: string; sub: string; price?: 
   </div>
 );
 
-/** Live IBJA benchmark rate with a WhatsApp CTA for the shop's own rate. Falls back to CTA-only on error. */
+/**
+ * IBJA benchmark rate with a WhatsApp CTA for the shop's own rate. On server-rendered
+ * pages the rate comes from the route loader (in the HTML); elsewhere it is fetched
+ * in the browser. "Refresh rate" shows when the rate is over 3 days old or the fetch
+ * failed. With no rate at all, only the CTA is shown.
+ */
 export const GoldRateCard = ({ location }: { location: CtaLocation }) => {
-  const state = useGoldRate();
-  const rate = state.status === 'ok' ? state.rate : null;
+  const state = useGoldRate(useLoaderRate());
+  const rate = state.status === 'loading' ? null : state.rate;
+  // IBJA skips Sundays and holidays, so only call it stale after 3 days.
+  const stale = !!rate && rate.date < todayInIndia(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000));
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  // "Today" is only known in the browser; render the button after hydration so server and client HTML match.
+  const showRefresh = mounted && (state.status === 'error' || stale);
 
   return (
     <div className="text-left">
-      {state.status !== 'error' && (
+      {(state.status !== 'error' || rate) && (
         <>
           <p className="text-center text-sm text-maroon-100 mb-4" aria-live="polite">
             {rate ? (
@@ -64,6 +76,19 @@ export const GoldRateCard = ({ location }: { location: CtaLocation }) => {
           <p className="text-center text-xs text-maroon-100/80 leading-relaxed mb-8">
             Benchmark rate published by the India Bullion &amp; Jewellers Association (IBJA), excluding 3% GST and making
             charges. Our shop rate may differ.
+            {showRefresh && (
+              <>
+                {' '}
+                <button
+                  type="button"
+                  onClick={state.refresh}
+                  disabled={state.refreshing}
+                  className="underline underline-offset-2 text-gold-300 hover:text-gold-200 disabled:opacity-60"
+                >
+                  {state.refreshing ? 'Refreshing…' : 'Refresh rate'}
+                </button>
+              </>
+            )}
           </p>
         </>
       )}

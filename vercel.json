@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
+  "framework": "react-router",
+  "regions": ["bom1"],
   "trailingSlash": false,
   "headers": [
     {
