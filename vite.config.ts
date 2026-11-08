@@ -39,6 +39,15 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
   },
   plugins: [reactRouter(), dropImageSidecars()],
+  // Bundle the animation libraries into the server build. Left external, Vercel's strict Node ESM
+  // function crashes on every request: gsap/* and @gsap/react resolve to CommonJS entries
+  // ("Named export 'useGSAP' / 'ScrollTrigger' not found"). Locally the import happened to work.
+  ssr: {
+    noExternal: ['gsap', '@gsap/react', 'lenis'],
+  },
+  environments: {
+    ssr: { resolve: { noExternal: ['gsap', '@gsap/react', 'lenis'] } },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),
