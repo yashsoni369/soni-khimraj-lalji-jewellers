@@ -1,0 +1,362 @@
+{
+  "tool": "build-phase",
+  "version": 2,
+  "startedAt": "2026-11-08T08:35:16.877Z",
+  "comp": ".impeccable/mocks/home-a.png",
+  "direction": "ea10919a",
+  "breakpoint": "2528x1696",
+  "artifact": null,
+  "phase": "review",
+  "phases": {
+    "comps": {
+      "status": "closed",
+      "openedAt": "2026-11-08T08:35:16.877Z",
+      "closedAt": "2026-11-08T09:08:36.099Z",
+      "attempts": 3,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "3 comps, 1 approved",
+        "approved": ".impeccable/mocks/home-a.png",
+        "at": "2026-11-08T09:08:36.098Z"
+      },
+      "forced": null
+    },
+    "spec": {
+      "status": "closed",
+      "openedAt": "2026-11-08T09:08:36.144Z",
+      "closedAt": "2026-11-08T09:59:54.686Z",
+      "attempts": 3,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "13 regions, 1 plates, 8 text regions measured",
+        "at": "2026-11-08T09:59:54.686Z"
+      },
+      "forced": null
+    },
+    "plates": {
+      "status": "closed",
+      "openedAt": "2026-11-08T09:59:54.686Z",
+      "closedAt": "2026-11-08T10:01:54.015Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "1/1 plates",
+        "at": "2026-11-08T10:01:54.015Z"
+      },
+      "forced": null
+    },
+    "hero": {
+      "status": "closed",
+      "openedAt": "2026-11-08T10:01:54.015Z",
+      "closedAt": "2026-11-08T10:11:51.917Z",
+      "attempts": 5,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "hero 85% (match)",
+        "score": 0.8549,
+        "verdict": "match",
+        "report": ".impeccable/review/diff/hero/report.json",
+        "sideBySide": "E:/work/clients/soni-khimraj-lalji-jewellers/.impeccable/review/diff/hero/side-by-side.png",
+        "worst": [
+          "deva-name drift 62%",
+          "sub drift 64%",
+          "phone drift 68%"
+        ],
+        "worstIds": [
+          "deva-name",
+          "sub",
+          "phone"
+        ],
+        "worstCrops": [
+          {
+            "id": "deva-name",
+            "verdict": "drift",
+            "score": {
+              "overall": 0.6206,
+              "structure": 0.6985,
+              "color": 0.7134,
+              "colorIntersection": 0.5195,
+              "paletteMatch": 0.8179,
+              "detail": 0.3976,
+              "detailRaw": 0.481,
+              "detailAdded": 0.1667,
+              "bands": 0.3333
+            },
+            "file": ".impeccable/review/diff/hero/regions/deva-name.png"
+          },
+          {
+            "id": "sub",
+            "verdict": "drift",
+            "score": {
+              "overall": 0.6387,
+              "structure": 0.7391,
+              "color": 0.8433,
+              "colorIntersection": 0.7186,
+              "paletteMatch": 0.9104,
+              "detail": 0.3891,
+              "detailRaw": 0.5141,
+              "detailAdded": 0.25,
+              "bands": 0
+            },
+            "file": ".impeccable/review/diff/hero/regions/sub.png"
+          },
+          {
+            "id": "phone",
+            "verdict": "drift",
+            "score": {
+              "overall": 0.6771,
+              "structure": 0.5357,
+              "color": 0.9426,
+              "colorIntersection": 0.8984,
+              "paletteMatch": 0.9664,
+              "detail": 0.7234,
+              "detailRaw": 0.7494,
+              "detailAdded": 0.0521,
+              "bands": 0.6508
+            },
+            "file": ".impeccable/review/diff/hero/regions/phone.png"
+          }
+        ],
+        "advisories": [
+          "(advisory, unchanged for 3+ attempts) text cta-oldgold: letter-spacing is wider than the comp's (gap 0.398 vs 0.199 of the cap height); set letter-spacing to close it by about 6px"
+        ],
+        "regionVerdicts": {
+          "hero-photo": "match",
+          "header-bar": "match",
+          "wordmark": "drift",
+          "nav": "match",
+          "phone": "drift",
+          "wa-icon": "match",
+          "deva-name": "drift",
+          "headline-1": "match",
+          "headline-2": "drift",
+          "sub": "drift",
+          "cta-whatsapp": "drift",
+          "cta-oldgold": "match",
+          "rate-label": "drift"
+        },
+        "at": "2026-11-08T10:11:51.916Z"
+      },
+      "forced": null,
+      "records": 3,
+      "readingsSeen": {
+        "text sub: cap height 20px in the build, 27.8px in the comp (-28%); set font-size so the cap height renders at 27.8px (font-match ranked Karla 400 at 40px)": 1,
+        "text nav: the face renders 53% heavier than the comp's (ink density 0.58 vs 0.38); drop a weight step or use the ranked face": 1,
+        "text cta-oldgold: the face renders 49% heavier than the comp's (ink density 0.62 vs 0.42); drop a weight step or use the ranked face": 1,
+        "text deva-name: ink is #b79867 in the build, #735e39 in the comp; use the comp's colour": 1,
+        "text wordmark: its first line starts 15px lower than in the comp (19px vs 4px into the region box); the spacing above it is too large": 2,
+        "text nav: its first line starts 13px lower than in the comp (23px vs 10px into the region box); the spacing above it is too large": 1,
+        "text sub: its first line starts 21px lower than in the comp (28px vs 7px into the region box); the spacing above it is too large": 1,
+        "text cta-oldgold: its first line starts 13px lower than in the comp (21px vs 8px into the region box); the spacing above it is too large": 1,
+        "control cta-whatsapp: its rule sits 1px into the box in the comp and 11px in the build (+10px), so the strip is taller than the comp's; match the height, not only the position": 1,
+        "control rate-label: its rule sits 61px into the box in the comp and 54px in the build (-7px), so the strip is shorter than the comp's; match the height, not only the position": 1,
+        "text cta-oldgold: letter-spacing is wider than the comp's (gap 0.398 vs 0.199 of the cap height); set letter-spacing to close it by about 6px": 4,
+        "text nav: its first line starts 14px lower than in the comp (24px vs 10px into the region box); the spacing above it is too large": 1,
+        "text phone: ink is #a3a3a3 in the build, #e4e4e4 in the comp; use the comp's colour": 1,
+        "text cta-oldgold: letter-spacing is wider than the comp's (gap 0.397 vs 0.199 of the cap height); set letter-spacing to close it by about 6px": 1,
+        "text cta-oldgold: letter-spacing is wider than the comp's (gap 0.397 vs 0.199 of the cap height); set letter-spacing to close it by about 5px": 1,
+        "control rate-label: its rule sits 61px into the box in the comp and 8px in the build (-53px), so the strip is shorter than the comp's; match the height, not only the position": 2
+      },
+      "history": [
+        {
+          "at": "2026-11-08T10:10:03.472Z",
+          "score": 0.8661,
+          "worstIds": [
+            "phone",
+            "deva-name",
+            "sub"
+          ],
+          "regionVerdicts": {
+            "hero-photo": "match",
+            "header-bar": "match",
+            "wordmark": "drift",
+            "nav": "match",
+            "phone": "drift",
+            "wa-icon": "drift",
+            "deva-name": "drift",
+            "headline-1": "match",
+            "headline-2": "drift",
+            "sub": "drift",
+            "cta-whatsapp": "drift",
+            "cta-oldgold": "drift",
+            "rate-label": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-08T10:10:27.427Z",
+          "score": 0.8278,
+          "worstIds": [
+            "deva-name",
+            "wa-icon",
+            "phone"
+          ],
+          "regionVerdicts": {
+            "hero-photo": "match",
+            "header-bar": "drift",
+            "wordmark": "drift",
+            "nav": "drift",
+            "phone": "drift",
+            "wa-icon": "missing",
+            "deva-name": "drift",
+            "headline-1": "drift",
+            "headline-2": "drift",
+            "sub": "drift",
+            "cta-whatsapp": "drift",
+            "cta-oldgold": "drift",
+            "rate-label": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-08T10:10:55.305Z",
+          "score": 0.8365,
+          "worstIds": [
+            "wa-icon",
+            "headline-2",
+            "deva-name"
+          ],
+          "regionVerdicts": {
+            "hero-photo": "match",
+            "header-bar": "drift",
+            "wordmark": "drift",
+            "nav": "drift",
+            "phone": "drift",
+            "wa-icon": "missing",
+            "deva-name": "contradicted",
+            "headline-1": "drift",
+            "headline-2": "drift",
+            "sub": "drift",
+            "cta-whatsapp": "contradicted",
+            "cta-oldgold": "drift",
+            "rate-label": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-08T10:11:27.047Z",
+          "score": 0.8555,
+          "worstIds": [
+            "rate-label",
+            "deva-name",
+            "sub"
+          ],
+          "regionVerdicts": {
+            "hero-photo": "match",
+            "header-bar": "match",
+            "wordmark": "drift",
+            "nav": "match",
+            "phone": "drift",
+            "wa-icon": "match",
+            "deva-name": "drift",
+            "headline-1": "match",
+            "headline-2": "drift",
+            "sub": "drift",
+            "cta-whatsapp": "drift",
+            "cta-oldgold": "match",
+            "rate-label": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-08T10:11:51.916Z",
+          "score": 0.8549,
+          "worstIds": [
+            "deva-name",
+            "sub",
+            "phone"
+          ],
+          "regionVerdicts": {
+            "hero-photo": "match",
+            "header-bar": "match",
+            "wordmark": "drift",
+            "nav": "match",
+            "phone": "drift",
+            "wa-icon": "match",
+            "deva-name": "drift",
+            "headline-1": "match",
+            "headline-2": "drift",
+            "sub": "drift",
+            "cta-whatsapp": "drift",
+            "cta-oldgold": "match",
+            "rate-label": "drift"
+          },
+          "artifactHash": null
+        }
+      ]
+    },
+    "sections": {
+      "status": "closed",
+      "openedAt": "2026-11-08T10:11:51.917Z",
+      "closedAt": "2026-11-08T10:42:48.358Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "no mechanical gate",
+        "at": "2026-11-08T10:42:48.358Z"
+      },
+      "forced": null
+    },
+    "motion": {
+      "status": "closed",
+      "openedAt": "2026-11-08T10:42:48.358Z",
+      "closedAt": "2026-11-08T10:47:30.114Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "no mechanical gate",
+        "at": "2026-11-08T10:47:30.114Z"
+      },
+      "forced": null
+    },
+    "responsive": {
+      "status": "closed",
+      "openedAt": "2026-11-08T10:47:30.114Z",
+      "closedAt": "2026-11-08T10:58:35.165Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "desktop 85% (match)",
+        "score": 0.8495,
+        "sideBySide": "E:/work/clients/soni-khimraj-lalji-jewellers/.impeccable/review/diff/desktop/side-by-side.png",
+        "at": "2026-11-08T10:58:35.165Z"
+      },
+      "forced": null
+    },
+    "review": {
+      "status": "closed",
+      "openedAt": "2026-11-08T10:58:35.165Z",
+      "closedAt": "2026-11-08T12:41:47.465Z",
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    }
+  },
+  "finish": {
+    "disposition": "ship",
+    "at": "2026-11-08T12:41:47.465Z",
+    "phaseAtFinish": "review"
+  },
+  "plates": {
+    "hero-photo": {
+      "status": "ok",
+      "score": 0.7952,
+      "size": "2752x1536"
+    }
+  }
+}

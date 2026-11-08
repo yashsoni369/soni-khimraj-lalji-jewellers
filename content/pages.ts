@@ -34,6 +34,25 @@ export interface ServicePageContent {
   serviceType?: string;
 }
 
+/** The three non-service pages (our story, collections, gemstones): head and schema data only; their body lives in components/pages. */
+export const EDITORIAL_PAGES: Record<
+  'our_story' | 'collections' | 'gemstones',
+  { h1: string; image: { src: string; alt: string } }
+> = {
+  our_story: {
+    h1: 'Our Story: Family Jewellers on Jivdaya Lane, Ghatkopar West',
+    image: { src: '/images/redesign/hero-our-story-1920.webp', alt: 'Our story' },
+  },
+  collections: {
+    h1: 'Gold & Diamond Jewellery Designs in Ghatkopar',
+    image: { src: '/images/redesign/hero-collections-1920.webp', alt: 'Collections' },
+  },
+  gemstones: {
+    h1: 'Rashi Gemstones in Ghatkopar',
+    image: { src: '/images/redesign/hero-gemstones-1920.webp', alt: 'Gemstones' },
+  },
+};
+
 const G = 'Namaste Mr. Soni';
 
 export const PAGE_CONTENT: Record<'gold_rate' | 'bridal' | 'old_gold_exchange' | 'silver' | 'gold_dream_scheme', ServicePageContent> = {

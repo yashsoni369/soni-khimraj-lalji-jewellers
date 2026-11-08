@@ -7,7 +7,9 @@ import {
   trackAppointmentRequest,
   trackSaveContactClick,
   trackReviewClick,
+  trackSocialClick,
   type CtaLocation,
+  type SocialPlatform,
   type VisitPurpose,
   type LeadIntent,
   type CollectionCategory,
@@ -49,6 +51,7 @@ type AppointmentCta = {
 
 type SaveContactCta = { cta: 'save_contact'; location: CtaLocation };
 type ReviewCta = { cta: 'review'; location: CtaLocation };
+type SocialCta = { cta: 'social'; location: CtaLocation; platform: SocialPlatform; url: string };
 
 export type CtaSpec =
   | WhatsAppCta
@@ -57,7 +60,8 @@ export type CtaSpec =
   | ContentInquiryCta
   | AppointmentCta
   | SaveContactCta
-  | ReviewCta;
+  | ReviewCta
+  | SocialCta;
 
 function fire(spec: CtaSpec) {
   switch (spec.cta) {
@@ -91,6 +95,8 @@ function fire(spec: CtaSpec) {
       return trackSaveContactClick({ cta_location: spec.location });
     case 'review':
       return trackReviewClick({ cta_location: spec.location });
+    case 'social':
+      return trackSocialClick({ cta_location: spec.location, platform: spec.platform, link_url: spec.url });
   }
 }
 

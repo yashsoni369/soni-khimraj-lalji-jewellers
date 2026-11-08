@@ -14,6 +14,9 @@ export default {
     '/old-gold-exchange',
     '/silver-jewellery',
     '/gold-dream-scheme',
+    '/our-story',
+    '/collections',
+    '/gemstones',
   ],
   presets: [vercelPreset()],
   future: {

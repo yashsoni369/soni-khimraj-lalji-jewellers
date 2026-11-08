@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { CalendarDays, X } from 'lucide-react';
 import { trackAppointmentRequest, type CtaLocation, type VisitPurpose } from '@/lib/tracking';
 import { createAppointmentMessage, whatsappUrl } from '@/services/whatsappService';
+import { WhatsAppIcon } from './site/icons';
 
 const PURPOSES: { value: VisitPurpose; label: string }[] = [
   { value: 'bridal', label: 'Bridal jewellery' },
@@ -45,6 +46,7 @@ export const BookVisitButton = ({
   const open = () => {
     setDays(nextDays(14));
     dialogRef.current?.showModal();
+    document.dispatchEvent(new Event('skl:modal-open'));
   };
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
@@ -64,7 +66,9 @@ export const BookVisitButton = ({
     dialogRef.current?.close();
   };
 
-  const field = 'w-full border border-gold-300 bg-white px-3 py-2.5 text-gray-900 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-500';
+  const field =
+    'w-full min-h-[48px] appearance-auto rounded-md border border-brass/50 bg-counter-3 px-3 py-2.5 text-[1rem] text-glass focus:border-brass-hi';
+  const labelClass = 'mb-1.5 block text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-[#c6aa78]';
 
   return (
     <>
@@ -78,23 +82,31 @@ export const BookVisitButton = ({
       <dialog
         ref={dialogRef}
         aria-labelledby={`book-visit-title-${location}`}
-        className="w-[calc(100%-2rem)] max-w-md p-0 rounded-sm shadow-2xl backdrop:bg-maroon-950/70"
+        aria-describedby={`book-visit-desc-${location}`}
+        className="w-[calc(100%-2rem)] max-w-md rounded-lg border border-brass/40 bg-counter-2 p-0 text-glass shadow-2xl backdrop:bg-black/75"
         onClick={(e) => e.target === dialogRef.current && dialogRef.current?.close()}
+        onClose={() => document.dispatchEvent(new Event('skl:modal-close'))}
+        data-lenis-prevent
       >
-        <form onSubmit={submit} className="p-6 md:p-8 bg-cream-50 text-left">
-          <div className="flex items-start justify-between gap-4 mb-2">
-            <p id={`book-visit-title-${location}`} className="font-serif text-2xl text-maroon-900">
+        <form onSubmit={submit} className="p-6 text-left md:p-8">
+          <div className="mb-2 flex items-start justify-between gap-4">
+            <p id={`book-visit-title-${location}`} className="font-display text-[1.9rem] leading-tight text-glass">
               Book a visit
             </p>
-            <button type="button" onClick={() => dialogRef.current?.close()} className="p-1 text-gray-600 hover:text-maroon-900" aria-label="Close">
-              <X size={20} />
+            <button
+              type="button"
+              onClick={() => dialogRef.current?.close()}
+              className="-mr-2 -mt-1 grid size-11 shrink-0 place-items-center rounded-full text-glass-soft hover:text-glass"
+              aria-label="Close"
+            >
+              <X size={22} aria-hidden="true" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mb-6">
+          <p id={`book-visit-desc-${location}`} className="mb-6 text-[0.95rem] leading-relaxed text-glass-soft">
             Choose a time and we’ll confirm on WhatsApp. Open every day, 10 AM – 9:30 PM.
           </p>
 
-          <label className="block text-xs uppercase tracking-widest text-gray-700 mb-1.5" htmlFor={`bv-purpose-${location}`}>
+          <label className={labelClass} htmlFor={`bv-purpose-${location}`}>
             Purpose
           </label>
           <select id={`bv-purpose-${location}`} name="purpose" defaultValue={defaultPurpose} className={`${field} mb-4`}>
@@ -105,7 +117,7 @@ export const BookVisitButton = ({
             ))}
           </select>
 
-          <label className="block text-xs uppercase tracking-widest text-gray-700 mb-1.5" htmlFor={`bv-day-${location}`}>
+          <label className={labelClass} htmlFor={`bv-day-${location}`}>
             Day
           </label>
           <select id={`bv-day-${location}`} name="day" required className={`${field} mb-4`}>
@@ -116,7 +128,7 @@ export const BookVisitButton = ({
             ))}
           </select>
 
-          <label className="block text-xs uppercase tracking-widest text-gray-700 mb-1.5" htmlFor={`bv-time-${location}`}>
+          <label className={labelClass} htmlFor={`bv-time-${location}`}>
             Time
           </label>
           <select id={`bv-time-${location}`} name="time" className={`${field} mb-6`}>
@@ -129,9 +141,11 @@ export const BookVisitButton = ({
 
           <button
             type="submit"
-            className="w-full bg-green-700 hover:bg-green-800 text-white py-3.5 rounded-sm font-semibold tracking-wide transition-colors"
+            className="btn btn-glass min-h-[52px] w-full text-[1rem]"
           >
-            Send on WhatsApp
+            <span className="btn-in">
+              <WhatsAppIcon className="size-5" /> Send on WhatsApp
+            </span>
           </button>
         </form>
       </dialog>

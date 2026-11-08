@@ -29,7 +29,23 @@ export type CtaLocation =
   | "faq"
   | "page_hero"
   | "page_cta"
-  | "page_faq";
+  | "page_faq"
+  // Velvet Counter redesign (2026-11)
+  | "hero"
+  | "counter_rail"
+  | "rate_card"
+  | "old_gold_story"
+  | "occasions"
+  | "categories"
+  | "visit_block"
+  | "story_page"
+  | "collections_page"
+  | "gemstones_page"
+  // Instagram (2026-11)
+  | "instagram_strip"
+  | "footer_social";
+
+export type SocialPlatform = "instagram" | "facebook";
 
 export type LeadIntent =
   | "chat_general"
@@ -136,4 +152,10 @@ export function trackSaveContactClick(args: { cta_location: CtaLocation }) {
 
 export function trackReviewClick(args: { cta_location: CtaLocation }) {
   push({ event: "review_click", ...args });
+}
+
+// One event for every social profile/post link; `platform` tells them apart, so a single
+// custom dimension covers Instagram now and Facebook later.
+export function trackSocialClick(args: { cta_location: CtaLocation; platform: SocialPlatform; link_url: string }) {
+  push({ event: "social_click", ...args });
 }

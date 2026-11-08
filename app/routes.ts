@@ -13,6 +13,9 @@ export default [
   route(path('old_gold_exchange'), 'routes/service.tsx', { id: 'old_gold_exchange' }),
   route(path('silver'), 'routes/service.tsx', { id: 'silver' }),
   route(path('gold_dream_scheme'), 'routes/service.tsx', { id: 'gold_dream_scheme' }),
+  route(path('our_story'), 'routes/our-story.tsx'),
+  route(path('collections'), 'routes/collections.tsx'),
+  route(path('gemstones'), 'routes/gemstones.tsx'),
   route('sitemap.xml', 'routes/sitemap.ts'),
   // Resource route (JSON API)
   route('api/gold-rate', 'routes/api.gold-rate.ts'),

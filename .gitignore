@@ -28,3 +28,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Design research screenshots (third-party sites, not for the repo)
+.impeccable/research/
+
+# raw Instagram downloads (sources for public/images/instagram crops)
+.impeccable/ig-draft/
+
+# Design working files stay local (heavy binaries; sources are recreated from the prompts):
+# keep the text records (state, spec, surfaces, design.json, comp sidecars, prompt.txt)
+.impeccable/**/*.png
+.impeccable/**/*.jpg
+.impeccable/**/*.webp
+.impeccable/**/*.mp4
+.impeccable/review/
+.impeccable/questions/
+assets/plates/*.png

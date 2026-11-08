@@ -6,12 +6,16 @@ import type { Route } from './+types/root';
 import { AppShell } from '../App';
 import siteJsonLd from '../lib/site-jsonld.json';
 import '../index.css';
+import './motion/motion.css';
+import { MotionLayer } from './motion/MotionLayer';
 
 const MAIN_HOST = 'www.sonikhimrajlaljijewellers.com';
 const OG_IMAGE = `https://${MAIN_HOST}/images/og-image.jpg`;
 const OG_IMAGE_ALT = 'Soni Khimraj Lalji Jewellers shop front in Ghatkopar West, Mumbai';
+// Faces chosen by measuring the approved mockup (impeccable font-match): Inria Serif for display,
+// Karla for text, Tiro Devanagari Hindi for the shop-sign name.
 const FONTS_URL =
-  'https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap';
+  'https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600&family=Tiro+Devanagari+Hindi&display=swap';
 
 // Runs before first paint:
 //  - anti-clickjacking (OWASP frame breaker): the page stays hidden unless it is the
@@ -31,7 +35,8 @@ const LOAD_FONTS = `(function(){var l=document.createElement('link');l.rel='styl
 const GTAG = `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'G-4R59PN3Y3V');`;
+// only the live domain reports; previews and local builds send nothing
+if (location.hostname === '${MAIN_HOST}') gtag('config', 'G-4R59PN3Y3V');`;
 
 export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
@@ -58,7 +63,7 @@ export function Layout({ children }: { children: ReactNode }) {
         </noscript>
         <script dangerouslySetInnerHTML={{ __html: HEAD_GUARD }} />
         <Meta />
-        <meta name="theme-color" content="#760505" />
+        <meta name="theme-color" content="#131917" />
         {/* Local signals */}
         <meta name="geo.region" content="IN-MH" />
         <meta name="geo.placename" content="Ghatkopar West, Mumbai" />
@@ -91,7 +96,6 @@ export function Layout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: GTAG }} />
       </head>
       <body>
-        <div className="bg-noise" />
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -104,6 +108,8 @@ export default function App() {
   return (
     <AppShell>
       <Outlet />
+      {/* after <Outlet/> so its per-route effects run after the route's and before <ScrollRestoration/> */}
+      <MotionLayer />
     </AppShell>
   );
 }
@@ -113,11 +119,17 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   if (import.meta.env.DEV) console.error(error);
   return (
     <AppShell>
-      <section className="py-24 md:py-32 container mx-auto px-6 text-center">
-        <h1 className="text-4xl md:text-6xl font-serif text-maroon-900 mb-6">Something went wrong</h1>
-        <p className="text-gray-600">
-          Please refresh the page, or <a className="underline" href="/">go to the homepage</a>.
-        </p>
+      <section className="sec bg-counter-3 text-center">
+        <div className="wrap max-w-[760px]">
+          <h1 className="display font-bold tracking-[-0.025em] text-[clamp(2.4rem,5vw,4.5rem)] leading-[1.05]">Something went wrong</h1>
+          <p className="mx-auto mt-6 max-w-[48ch] text-[clamp(1.05rem,1.3vw,1.25rem)] font-light leading-relaxed text-glass-soft">
+            Please refresh the page, or{' '}
+            <a className="inline-flex min-h-[44px] items-center text-brass-hi underline underline-offset-4" href="/">
+              go to the homepage
+            </a>
+            .
+          </p>
+        </div>
       </section>
     </AppShell>
   );

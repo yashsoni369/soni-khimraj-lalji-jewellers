@@ -19,11 +19,12 @@ Every event also carries `page_type`: `home`, `gold_rate`, `bridal`, `old_gold_e
 | `content_inquiry_click` | "Ask Mr. Soni" knowledge buttons | `cta_location`, `content_topic` | No |
 | `save_contact_click` | "Save our number" (vCard) | `cta_location` | No |
 | `review_click` | "Leave a Google review" (shows once the review link is added) | `cta_location` | No |
+| `social_click` | Instagram links: the home "From our Instagram" strip (each post and the follow button) and the footer icon | `cta_location` (`instagram_strip`, `footer_social`), `platform` (`instagram`), `link_url` | No |
 
 A fast double tap on the same button counts once (1-second guard in `lib/tracking.ts`).
 
 ## GA4 setup (done, checked 2026-11-08)
-- **Custom dimensions (event scope):** `page_type`, `cta_location`, `lead_intent`, `collection_category`, `product_name`, `phone_number`, `content_topic`, `visit_purpose`. `visit_day`/`visit_time` are sent but deliberately not registered (too many distinct values).
+- **Custom dimensions (event scope):** `page_type`, `cta_location`, `lead_intent`, `collection_category`, `product_name`, `phone_number`, `content_topic`, `visit_purpose`, `platform`. `visit_day`/`visit_time` and `link_url` are sent but deliberately not registered (too many distinct values).
 - **Key events:** `whatsapp_click`, `phone_call_click`, `get_directions_click`, `appointment_request`. The default `purchase`, `qualify_lead` and `close_convert_lead` are unused.
 - **Enhanced measurement:** on, including page changes based on browser history.
 - **Data retention:** 14 months.

@@ -1,0 +1,8 @@
+{
+    "image_id":  "0cdacc02-3e43-4202-a94c-16e424257fa6",
+    "prompt":  "Velvet Counter tall page: centred \"Know your gold.\" over touchstone and bangle; \"On the counter today\" velvet tray rail with Ask on WhatsApp; visit block with shop front. The shop front is AI-made; the build uses the real photo.",
+    "model":  "nano-banana-2-1",
+    "tool":  "BrandGen",
+    "batch_id":  "03bd22af-4de3-455c-8287-472fbdc277fa",
+    "approvedParts":  "everything except the hero; hero reusable on an item page"
+}
