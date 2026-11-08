@@ -1,7 +1,7 @@
 // Per-page JSON-LD, injected at build time by scripts/prerender.mjs.
 // The site-wide JewelryStore + WebSite graph stays static in index.html.
 import { FAQS, NEARBY_AREAS } from '../constants';
-import { PAGE_CONTENT, type PageFaq } from '../content/pages';
+import { EDITORIAL_PAGES, PAGE_CONTENT, type PageFaq } from '../content/pages';
 import { SITE_URL, canonicalUrl, type SiteRoute } from './routes';
 
 const STORE_ID = `${SITE_URL}/#store`;
@@ -25,7 +25,9 @@ export function pageJsonLd(route: SiteRoute): Record<string, unknown> | null {
   }
   if (route.key === 'not_found') return null;
 
-  const content = PAGE_CONTENT[route.key];
+  const editorial = route.key === 'our_story' || route.key === 'collections' || route.key === 'gemstones' ? EDITORIAL_PAGES[route.key] : null;
+  const content = editorial ? null : PAGE_CONTENT[route.key as keyof typeof PAGE_CONTENT];
+  const image = editorial ? editorial.image : content!.image;
   const graph: Record<string, unknown>[] = [
     {
       '@type': 'WebPage',
@@ -37,7 +39,7 @@ export function pageJsonLd(route: SiteRoute): Record<string, unknown> | null {
       isPartOf: { '@id': WEBSITE_ID },
       about: { '@id': STORE_ID },
       breadcrumb: { '@id': `${url}#breadcrumb` },
-      primaryImageOfPage: `${SITE_URL}${content.image.src}`,
+      primaryImageOfPage: `${SITE_URL}${image.src}`,
     },
     {
       '@type': 'BreadcrumbList',
@@ -49,7 +51,7 @@ export function pageJsonLd(route: SiteRoute): Record<string, unknown> | null {
     },
   ];
 
-  if (content.serviceType) {
+  if (content?.serviceType) {
     graph.push({
       '@type': 'Service',
       '@id': `${url}#service`,
@@ -61,7 +63,7 @@ export function pageJsonLd(route: SiteRoute): Record<string, unknown> | null {
       areaServed: NEARBY_AREAS.map((name) => ({ '@type': 'Place', name: `${name}, Mumbai` })),
     });
   }
-  if (content.faqs.length) graph.push(faqPage(`${url}#faq`, content.faqs));
+  if (content && content.faqs.length) graph.push(faqPage(`${url}#faq`, content.faqs));
 
   return { '@context': 'https://schema.org', '@graph': graph };
 }

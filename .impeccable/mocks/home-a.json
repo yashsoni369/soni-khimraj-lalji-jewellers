@@ -1,0 +1,11 @@
+{
+    "source":  "decision round 2 pick card (r2-model-pick.png)",
+    "batch_id":  "be5caeea-7bb4-417f-89c9-9e53b45b44f6",
+    "prompt":  "Velvet Counter first viewport: overhead counter photo, velvet tray with kundan necklace and bangles, touchstone, scale, loupe; headline \"Tested in front of you. Weighed in front of you.\"; WhatsApp Mr. Soni; IBJA rate label.",
+    "model":  "nano-banana-2-1",
+    "tool":  "BrandGen",
+    "image_id":  "2d06f91b-fbf0-47e6-83b3-659740f6f921",
+    "approved":  true,
+    "approvedAt":  "2026-11-08",
+    "composition":  "User-approved composite: hero from home-a.png; gold-rate section from home-b.png (brass-framed rate card on velvet); all other homepage sections from home-c.png (On the counter today tray rail, visit block with the REAL shop-front photo). home-c hero (Know your gold / touchstone) may be reused on an individual page such as Old Gold. Not literalised: AI cart/search icons, cursors, fake shop front, placeholder 24K/18K/silver values."
+}

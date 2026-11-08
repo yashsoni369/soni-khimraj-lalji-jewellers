@@ -11,6 +11,9 @@ export type PageType =
   | 'old_gold_exchange'
   | 'silver'
   | 'gold_dream_scheme'
+  | 'our_story'
+  | 'collections'
+  | 'gemstones'
   | 'not_found';
 
 export interface SiteRoute {
@@ -32,63 +35,94 @@ export const ROUTES: SiteRoute[] = [
   {
     key: 'home',
     path: '/',
-    title: 'Jewellers in Ghatkopar West, Mumbai | Soni Khimraj Lalji Jewellers',
+    title: 'Jewellers in Ghatkopar West, Mumbai | Soni Khimraj Lalji',
     description:
-      "BIS hallmarked 916 gold, diamond, silver & bridal jewellery in Ghatkopar West, Mumbai for 25+ years. Visit us on Jivdaya Lane or WhatsApp for today's gold rate.",
+      'BIS hallmarked 916 gold, diamond, silver & bridal jewellery in Ghatkopar West, Mumbai for 25+ years. Open every day, Thursday too, near Ghatkopar station.',
     name: 'Home',
     indexable: true,
-    updated: '2026-11-05',
+    updated: '2026-11-08',
   },
   {
     key: 'gold_rate',
     path: '/gold-rate-today-ghatkopar',
-    title: 'Gold Rate Today in Ghatkopar, Mumbai (22K, 24K, 18K) | Soni Khimraj Lalji',
+    title: 'Gold Rate Today in Ghatkopar, Mumbai: 22K 916, 24K, 18K',
     description:
       "Today's IBJA gold rate for 24K (999), 22K (916) and 18K (750) per 10 grams, plus silver per kg. Get our Ghatkopar West shop rate on WhatsApp.",
     name: 'Gold Rate Today',
     indexable: true,
-    updated: '2026-11-05',
+    updated: '2026-11-08',
   },
   {
     key: 'bridal',
     path: '/bridal-jewellery',
-    title: 'Bridal Jewellery in Ghatkopar West, Mumbai | Soni Khimraj Lalji Jewellers',
+    title: 'Bridal Jewellery in Ghatkopar West, Mumbai | Soni Khimraj Lalji',
     description:
       'Bridal Kundan & Polki sets, BIS hallmarked gold necklaces, mangalsutras and custom bridal jewellery in Ghatkopar West. Book a relaxed visit with your family.',
     name: 'Bridal Jewellery',
     indexable: true,
-    updated: '2026-11-05',
+    updated: '2026-11-08',
   },
   {
     key: 'old_gold_exchange',
     path: '/old-gold-exchange',
-    title: 'Old Gold Exchange in Ghatkopar West, Mumbai | Soni Khimraj Lalji Jewellers',
+    title: 'Old Gold Exchange in Ghatkopar West, Mumbai | Soni Khimraj Lalji',
     description:
       'Exchange your old gold for new jewellery in Ghatkopar West. Purity tested in front of you and its value given against new BIS hallmarked designs.',
     name: 'Old Gold Exchange',
     indexable: true,
-    updated: '2026-11-05',
+    updated: '2026-11-08',
   },
   {
     key: 'silver',
     path: '/silver-jewellery',
-    title: 'Silver Jewellery & Articles in Ghatkopar, Mumbai | Soni Khimraj Lalji',
+    title: 'Silver Jewellery & Articles in Ghatkopar, Mumbai',
     description:
       'Silver jewellery, gift articles and pooja items at Soni Khimraj Lalji Jewellers, Jivdaya Lane, Ghatkopar West. Ask for our latest silver catalogue on WhatsApp.',
     name: 'Silver Jewellery',
     indexable: true,
-    updated: '2026-11-05',
+    updated: '2026-11-08',
   },
   {
     // TODO(owner): set indexable: true once the scheme terms are on the page.
     key: 'gold_dream_scheme',
     path: '/gold-dream-scheme',
-    title: 'Gold Dream Scheme – Monthly Gold Savings | Soni Khimraj Lalji Jewellers',
+    title: 'Gold Dream Scheme – Monthly Gold Savings | Soni Khimraj Lalji',
     description:
       'Save every month towards your gold jewellery with the Gold Dream Scheme at Soni Khimraj Lalji Jewellers, Ghatkopar West.',
     name: 'Gold Dream Scheme',
     indexable: false,
-    updated: '2026-11-05',
+    updated: '2026-11-08',
+  },
+  {
+    key: 'our_story',
+    path: '/our-story',
+    title: 'Our Story – Family Jewellers in Ghatkopar West | Soni Khimraj Lalji',
+    description:
+      'Meet Mr. Soni, the family jeweller on Jivdaya Lane, Ghatkopar West for 25+ years. BIS hallmarked gold, tested and weighed in front of you. WhatsApp us.',
+    name: 'Our Story',
+    indexable: true,
+    updated: '2026-11-08',
+  },
+  {
+    key: 'collections',
+    path: '/collections',
+    title: 'Gold & Diamond Jewellery Designs in Ghatkopar | Soni Khimraj Lalji',
+    description:
+      'Browse necklaces, bangles, earrings, rings, mangalsutras and chains from our Jivdaya Lane shop, Ghatkopar West. BIS hallmarked gold. Ask for photos on WhatsApp.',
+    name: 'Collections',
+    indexable: true,
+    updated: '2026-11-08',
+  },
+  {
+    // TODO(owner): set indexable: true once the owner confirms the shop sells rashi gemstones.
+    key: 'gemstones',
+    path: '/gemstones',
+    title: 'Rashi Gemstones in Ghatkopar | Soni Khimraj Lalji',
+    description:
+      'Gemstone pendants and the traditional stone for each rashi at Jivdaya Lane, Ghatkopar West. Gold settings are BIS hallmarked. Ask Mr. Soni on WhatsApp.',
+    name: 'Gemstones',
+    indexable: false,
+    updated: '2026-11-08',
   },
 ];
 
@@ -99,7 +133,7 @@ export const NOT_FOUND_ROUTE: SiteRoute = {
   description: 'This page does not exist. Visit our homepage for jewellery, gold rates and our Ghatkopar West shop address.',
   name: 'Page not found',
   indexable: false,
-  updated: '2026-11-05',
+  updated: '2026-11-08',
 };
 
 const normalise = (pathname: string) => (pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname);

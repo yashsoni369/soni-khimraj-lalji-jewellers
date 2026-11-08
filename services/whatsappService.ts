@@ -39,6 +39,17 @@ export const createHelloMessage = () =>
 export const createServiceMessage = (service: string) =>
   `${GREETING}, I'd like to know more about ${service} at your Ghatkopar store.`;
 
+export const createOccasionMessage = (occasion: string) =>
+  `${GREETING}, I'm looking for ${occasion}. Could you share some designs on WhatsApp?`;
+
+export const createPhotosMessage = (item: string) =>
+  `${GREETING}, could you please share photos of your current ${item} on WhatsApp?`;
+
+export const createGemstoneMessage = (stone: string, sign?: string) =>
+  sign
+    ? `${GREETING}, I am ${sign} rashi. Could you advise me about a ${stone} and show me what you have?`
+    : `${GREETING}, I would like to know about ${stone}. Could you advise me on WhatsApp?`;
+
 export const createOldGoldValuationMessage = () =>
   `${GREETING}, I'd like to get my old gold valued for exchange. Approximate weight: ___ g. I can share a photo here.`;
 

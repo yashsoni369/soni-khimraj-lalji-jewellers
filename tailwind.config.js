@@ -9,13 +9,25 @@ export default {
     "./lib/**/*.{js,ts,jsx,tsx}",
     "./services/**/*.{js,ts,jsx,tsx}",
   ],
+  // `hover:` utilities only apply on devices that can hover (no sticky hover after a tap).
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
+      // Velvet Counter world (measured from the approved mockup; see .impeccable/build/spec.json).
       fontFamily: {
-        sans: ['Lato', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
+        // "… Fallback" faces (index.css) are local fonts resized to the web fonts' metrics, so text
+        // doesn't reflow when the web fonts arrive
+        sans: ['Karla', '"Karla Fallback"', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        serif: ['"Inria Serif"', '"Inria Fallback"', 'Georgia', 'serif'],
+        display: ['"Inria Serif"', '"Inria Fallback"', 'Georgia', 'serif'],
+        deva: ['"Tiro Devanagari Hindi"', '"Noto Serif Devanagari"', 'serif'],
       },
       colors: {
+        counter: { DEFAULT: '#131917', 2: '#181c1a', 3: '#0c0f0e' },
+        velvet: { DEFAULT: '#17392d', deep: '#0f2a21', hi: '#1f4a3b' },
+        brass: { DEFAULT: '#ba995c', hi: '#d9bd84', soft: '#8a7347', ink: '#16130b' },
+        glass: { DEFAULT: '#f7f7f5', soft: '#c3c9c5', mute: '#8d9690' },
+        teak: '#7a4a24',
         maroon: {
           50: '#fdf2f2',
           100: '#fde8e8',

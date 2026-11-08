@@ -7,7 +7,7 @@ import { PAGE_CONTENT } from '../../content/pages';
 import { metaFor, routeByKey, type PageType } from '../../lib/routes';
 import { pageJsonLd } from '../../lib/structuredData';
 
-type ServiceKey = Exclude<PageType, 'home' | 'gold_rate' | 'not_found'>;
+type ServiceKey = Exclude<PageType, 'home' | 'gold_rate' | 'not_found' | 'our_story' | 'collections' | 'gemstones'>;
 
 export const meta: Route.MetaFunction = ({ matches }) => {
   const route = routeByKey(matches[matches.length - 1].id as ServiceKey);

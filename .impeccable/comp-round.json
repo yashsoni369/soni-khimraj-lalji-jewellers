@@ -1,0 +1,40 @@
+{
+  "title": "The Velvet Counter: choose the homepage layout",
+  "question": "Three homepage layouts in the Velvet Counter world. Approve one, combine them, or ask for changes. The build has to match the one you approve.",
+  "options": [
+    {
+      "id": "home-a",
+      "label": "A · The counter, overhead",
+      "lineage": "your chosen direction card",
+      "thesis": "One full-screen counter photo with the promise set on the velvet: 'Tested in front of you. Weighed in front of you.'",
+      "palette": ["#0F3B2E", "#121212", "#C9A34E", "#F7F7F5", "#7A4A24"],
+      "materials": ["full-bleed photo", "text on velvet", "glass rate label"],
+      "viewport": "A full-bleed overhead counter: tray, touchstone, scale and loupe; headline left; rate label bottom right.",
+      "risk": "First screen only; the hero rests on one big photograph, so the image quality carries everything.",
+      "comp": ".impeccable/mocks/home-a.png"
+    },
+    {
+      "id": "home-b",
+      "label": "B · Sit at our counter (split + trays)",
+      "lineage": "layout variation",
+      "thesis": "A split hero with three labelled velvet trays (Bridal, Daily wear, Silver), then a brass-framed rate card on velvet, then the old-gold Tested / Weighed / Valued row.",
+      "palette": ["#121212", "#0F3B2E", "#C9A34E", "#FFFFFF"],
+      "materials": ["split hero", "brass-framed rate card", "three-step photo row"],
+      "viewport": "Text left on black, the counter with three named trays right; the full rate table directly below.",
+      "risk": "The most orderly of the three and the least dramatic first screen. The 24K, 18K and silver figures are placeholders; the build uses live data.",
+      "comp": ".impeccable/mocks/home-b.png"
+    },
+    {
+      "id": "home-c",
+      "label": "C · Know your gold (touchstone hero + tray rail)",
+      "lineage": "layout variation",
+      "thesis": "A centred 'Know your gold.' over the touchstone streak, then 'On the counter today' as a swipeable rail of velvet trays, then the shop front with the visit block.",
+      "palette": ["#121212", "#0F3B2E", "#C9A34E", "#FFFFFF", "#7A4A24"],
+      "materials": ["macro hero", "velvet tray cards", "shop-front visit block"],
+      "viewport": "Touchstone left and bangle right, headline centred over them, WhatsApp and See today's rate as the buttons.",
+      "risk": "The AI added a cart icon, cursors and a fake shop front. None ship: no cart, and the real shop-front photo replaces the fake one.",
+      "comp": ".impeccable/mocks/home-c.png"
+    }
+  ],
+  "steer": true
+}

@@ -2,15 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Metric-matched fallbacks (measured against the loaded web fonts in Chrome): the text keeps its
+   size and line height when Inria Serif / Karla swap in, so the page doesn't shift (CLS). */
+@font-face {
+  font-family: 'Inria Fallback';
+  src: local('Georgia'), local('Noto Serif'), local('Droid Serif');
+  size-adjust: 101.4%;
+  ascent-override: 96.6%;
+  descent-override: 24.6%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Karla Fallback';
+  src: local('Arial'), local('Roboto'), local('Helvetica Neue');
+  size-adjust: 101.5%;
+  ascent-override: 90.6%;
+  descent-override: 24.6%;
+  line-gap-override: 0%;
+}
+
 @layer base {
-  /* Keep anchor targets clear of the sticky header */
+  :root {
+    --hdr: clamp(64px, 6.72vw, 170px);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    color-scheme: dark;
+  }
+
+  html {
+    /* keep focused/anchored content clear of the fixed header */
+    scroll-padding-top: calc(var(--hdr) + 16px);
+  }
+
+  /* Keep anchor targets clear of the fixed header */
   [id] {
-    scroll-margin-top: 6rem;
+    scroll-margin-top: calc(var(--hdr) + 16px);
   }
 
   body {
-    @apply bg-cream-50 text-maroon-950 antialiased;
-    font-family: 'Lato', sans-serif;
+    @apply bg-counter text-glass antialiased font-sans;
   }
 
   h1,
@@ -19,7 +48,249 @@
   h4,
   h5,
   h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inria Serif', 'Inria Fallback', Georgia, serif;
+  }
+
+  /* Two-tone focus ring: visible on black, velvet and photographs */
+  :focus-visible {
+    outline: 2px solid #ba995c;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #0b0b0b;
+  }
+}
+
+@layer components {
+  /* Small brass section heading: carries the keyword H2 text, word for word */
+  /* Keyword heading (SEO text, word for word). It reads as a brass serif subtitle under the
+     display line, in the case it was written in: never a tracked-caps label above a heading. */
+  .kicker {
+    @apply font-display text-brass-hi;
+    font-weight: 400;
+    letter-spacing: 0;
+    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  /* Large display line that sits under a keyword heading */
+  .display {
+    @apply font-display text-glass;
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+  }
+
+  /* Brass underline that draws in from the left */
+  .link-draw {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-draw::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s var(--ease-out-expo);
+  }
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Pill buttons: glass (primary) and brass outline (secondary), with a brass "pour" on hover */
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full font-sans font-semibold;
+    isolation: isolate;
+    transition: transform 0.08s ease-out;
+    touch-action: manipulation;
+  }
+  .btn > .btn-in {
+    @apply relative z-[1] inline-flex items-center gap-3;
+    transition: color 0.3s;
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: #ba995c;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+  .btn:active {
+    transform: translateY(1px) scale(0.98);
+  }
+  .btn:focus-visible::before {
+    transform: scaleY(1);
+  }
+  @media (hover: hover) {
+    .btn:hover::before {
+      transform: scaleY(1);
+    }
+  }
+  .btn-glass {
+    @apply bg-glass text-counter;
+  }
+  .btn-ghost {
+    @apply text-glass;
+    box-shadow: inset 0 0 0 1px #ba995c;
+  }
+  .btn-ghost:hover > .btn-in,
+  .btn-ghost:focus-visible > .btn-in {
+    color: #16130b;
+  }
+  /* Solid brass (secondary action on dark); pours glass white on hover */
+  .btn-brass {
+    @apply bg-brass text-brass-ink;
+  }
+  .btn-brass::before {
+    background: #f7f7f5;
+  }
+
+  /* ---------- Velvet Counter sections ---------- */
+  .wrap {
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: max(16px, 4vw);
+  }
+  .sec {
+    padding-block: clamp(64px, 9vw, 136px);
+  }
+  /* Bottle-green velvet ground (one soft plate stretched to cover; the small tile shows seams
+     when repeated). Flat colour if the plate fails to load. */
+  .velvet-ground {
+    background-color: #17392d;
+    background-image:
+      linear-gradient(rgba(16, 42, 33, 0.35), rgba(16, 42, 33, 0.35)),
+      image-set(url('/images/redesign/velvet-texture-1280.webp') 1x, url('/images/redesign/velvet-texture-1920.webp') 2x);
+    background-size: cover;
+    background-position: center;
+  }
+  /* Tones a transparent PNG/WebP (logo, Why-us marks) to flat brass */
+  .tone-brass {
+    filter: brightness(0) saturate(100%) invert(74%) sepia(19%) saturate(737%) hue-rotate(359deg) brightness(90%) contrast(86%);
+  }
+
+  /* Horizontal tray rail: native swipe on phones, aligned to .wrap */
+  .rail {
+    --rail-pad: calc(max(0px, (100vw - 1320px) / 2) + max(16px, 4vw));
+    display: flex;
+    gap: clamp(18px, 2vw, 28px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--rail-pad);
+    padding: 8px var(--rail-pad) 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #8a7347 transparent;
+    overscroll-behavior-x: contain;
+  }
+  .rail > li {
+    scroll-snap-align: start;
+  }
+  /* A velvet tray: inset rim drawn over the photo */
+  .tray-box {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    background: #0f2a21;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s var(--ease-out-expo);
+  }
+  .tray-box > .tray-photo {
+    border-radius: inherit;
+    overflow: hidden;
+    position: absolute;
+    inset: 0;
+  }
+  .tray-box > .tray-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(186, 153, 92, 0.28);
+    pointer-events: none;
+  }
+  /* Brass name tag pinned to the tray's front edge */
+  .tray-tag {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 50%);
+    max-width: 92%;
+    width: max-content;
+    padding: 6px 12px;
+    border-radius: 3px;
+    background: #ba995c;
+    color: #16130b;
+    font-family: Karla, 'Karla Fallback', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    text-align: center;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    transition: transform 0.35s var(--ease-out-expo);
+  }
+  @media (hover: hover) {
+    .tray:hover .tray-box {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 34px rgba(0, 0, 0, 0.5);
+    }
+    .tray:hover .tray-tag {
+      transform: translate(-50%, 40%);
+    }
+  }
+
+  /* Brass-framed glass rate card on velvet */
+  /* the frame is a bevelled brass raster (rate-frame.png, rebuilt from mockup B), drawn as a 9-slice */
+  .rate-card {
+    position: relative;
+    border: 14px solid transparent;
+    border-image: url('/images/redesign/rate-frame.png') 28 / 14px stretch;
+    background:
+      linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0 22%, rgba(255, 255, 255, 0) 22.2% 100%),
+      linear-gradient(180deg, rgba(25, 62, 49, 0.94), rgba(12, 38, 30, 0.97));
+    background-clip: padding-box;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45), 0 26px 50px rgba(0, 0, 0, 0.5);
+  }
+  /* hinge tabs on the top edge (rate-hinge.png, 2x); positioned against the padding box */
+  .rate-card .hinge {
+    position: absolute;
+    top: -21px;
+    width: 56px;
+    height: 8px;
+    background: url('/images/redesign/rate-hinge.png') center / 100% 100% no-repeat;
+  }
+
+  /* "Skip the collection": visible only when focused */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+  }
+  .skip-link:focus {
+    left: max(16px, 4vw);
+    top: 12px;
+    z-index: 5;
+    background: #f7f7f5;
+    color: #131917;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  /* FAQ disclosure marker */
+  .faq summary::-webkit-details-marker {
+    display: none;
   }
 }
 
@@ -33,8 +304,18 @@
     scrollbar-width: none;
   }
 
-  .bg-noise {
-    @apply fixed top-0 left-0 w-screen h-screen pointer-events-none z-50 opacity-[0.04];
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn::before,
+  .btn > .btn-in,
+  .link-draw::after,
+  .tray-box,
+  .tray-tag {
+    transition: none !important;
   }
 }

@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-08T00:00:00Z",
+  "title": "Design System: Soni Khimraj Lalji Jewellers",
+  "extensions": {
+    "colorMeta": {
+      "counter": { "role": "neutral", "displayName": "Counter Black", "canonical": "#131917", "tonalRamp": ["#050706", "#0c0f0e", "#131917", "#181c1a", "#2a312e", "#4a524e", "#8d9690", "#c3c9c5"] },
+      "velvet": { "role": "secondary", "displayName": "Bottle-Green Velvet", "canonical": "#17392d", "tonalRamp": ["#071510", "#0f2a21", "#17392d", "#1f4a3b", "#2f6552", "#4a8570", "#7fb09d", "#bcd6cb"] },
+      "brass": { "role": "primary", "displayName": "Brass", "canonical": "#ba995c", "tonalRamp": ["#16130b", "#4a3d24", "#8a7347", "#ba995c", "#c6aa78", "#d9bd84", "#e8d6ae", "#f4ecd9"] },
+      "glass": { "role": "neutral", "displayName": "Glass White", "canonical": "#f7f7f5", "tonalRamp": ["#8d9690", "#a4aca7", "#c3c9c5", "#dbdfdc", "#eceeec", "#f7f7f5", "#fbfbfa", "#ffffff"] },
+      "teak": { "role": "tertiary", "displayName": "Teak", "canonical": "#7a4a24", "tonalRamp": ["#1f1208", "#3d2412", "#5b3719", "#7a4a24", "#9a6538", "#b9835a", "#d3a888", "#ead0bd"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Large Inria Serif line over every section and page hero. A paragraph, never a heading." },
+      "kicker": { "displayName": "Keyword subtitle", "purpose": "The real H1/H2 in sentence-case brass serif, shown beneath the display line." },
+      "body": { "displayName": "Body", "purpose": "Karla running copy." },
+      "lede": { "displayName": "Lede", "purpose": "Light Karla intro line under heads." },
+      "label": { "displayName": "Tray tag", "purpose": "Brass name tag on a tray." },
+      "shop-name": { "displayName": "Shop sign", "purpose": "Devanagari shop name only." }
+    },
+    "shadows": [
+      { "name": "tray-rest", "value": "0 12px 28px rgba(0,0,0,0.4)", "purpose": "Velvet tray at rest." },
+      { "name": "tray-lift", "value": "0 18px 34px rgba(0,0,0,0.5)", "purpose": "Tray hover on fine pointers." },
+      { "name": "under-glass", "value": "inset 0 0 0 1px rgba(0,0,0,0.45), 0 26px 50px rgba(0,0,0,0.5)", "purpose": "Rate card panel." },
+      { "name": "name-tag", "value": "0 4px 10px rgba(0,0,0,0.35)", "purpose": "Brass tray tag." },
+      { "name": "focus", "value": "0 0 0 2px #ba995c, 0 0 0 5px #0b0b0b", "purpose": "Two-tone focus ring (2px brass outline, 2px offset, dark halo)." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Brass pour, link draw, tray lift." },
+      { "name": "gsap-power3", "value": "power3.out / power3.inOut", "purpose": "Scroll reveals, page shutter, hero settle." },
+      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce", "purpose": "Static page; CSS transitions removed; GSAP inside matchMedia." }
+    ],
+    "breakpoints": [
+      { "name": "motion-split", "value": "821px" },
+      { "name": "desktop-motion", "value": "900px (with hover and fine pointer)" },
+      { "name": "wrap-max", "value": "1320px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Glass white pill; the main action. Brass pours up on hover.",
+      "html": "<button class=\"ds-btn ds-btn-glass\"><span class=\"ds-in\">WhatsApp Mr. Soni</span></button>",
+      "css": ".ds-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate;border:0;border-radius:999px;padding:14px 28px;font:600 1rem Karla,Arial,sans-serif;cursor:pointer;transition:transform .08s ease-out}.ds-btn::before{content:'';position:absolute;inset:0;z-index:0;background:#ba995c;transform:scaleY(0);transform-origin:bottom;transition:transform .3s cubic-bezier(.16,1,.3,1)}.ds-btn:hover::before,.ds-btn:focus-visible::before{transform:scaleY(1)}.ds-btn:active{transform:translateY(1px) scale(.98)}.ds-btn:focus-visible{outline:2px solid #ba995c;outline-offset:2px}.ds-in{position:relative;z-index:1}.ds-btn-glass{background:#f7f7f5;color:#131917}"
+    },
+    {
+      "name": "Brass Button",
+      "kind": "button",
+      "refersTo": "button-brass",
+      "description": "Solid brass pill; glass white pours up on hover.",
+      "html": "<button class=\"ds-btn ds-btn-brass\"><span class=\"ds-in\">Bring your old gold</span></button>",
+      "css": ".ds-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate;border:0;border-radius:999px;padding:14px 28px;font:600 1rem Karla,Arial,sans-serif;cursor:pointer}.ds-btn::before{content:'';position:absolute;inset:0;background:#f7f7f5;transform:scaleY(0);transform-origin:bottom;transition:transform .3s cubic-bezier(.16,1,.3,1)}.ds-btn:hover::before,.ds-btn:focus-visible::before{transform:scaleY(1)}.ds-btn:focus-visible{outline:2px solid #ba995c;outline-offset:2px}.ds-in{position:relative;z-index:1}.ds-btn-brass{background:#ba995c;color:#16130b}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Brass-ringed pill on dark; fills brass on hover.",
+      "html": "<button class=\"ds-btn ds-btn-ghost\"><span class=\"ds-in\">Call the shop</span></button>",
+      "css": ".ds-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate;border:0;border-radius:999px;padding:14px 28px;font:600 1rem Karla,Arial,sans-serif;cursor:pointer}.ds-btn::before{content:'';position:absolute;inset:0;background:#ba995c;transform:scaleY(0);transform-origin:bottom;transition:transform .3s cubic-bezier(.16,1,.3,1)}.ds-btn:hover::before,.ds-btn:focus-visible::before{transform:scaleY(1)}.ds-in{position:relative;z-index:1;transition:color .3s}.ds-btn-ghost{background:transparent;color:#f7f7f5;box-shadow:inset 0 0 0 1px #ba995c}.ds-btn-ghost:hover .ds-in{color:#16130b}.ds-btn:focus-visible{outline:2px solid #ba995c;outline-offset:2px}"
+    },
+    {
+      "name": "Velvet Tray Card",
+      "kind": "card",
+      "refersTo": "tray-box",
+      "description": "Square velvet tray with an inset brass rim and a brass name tag on the front edge.",
+      "html": "<div class=\"ds-tray\"><div class=\"ds-photo\"></div><span class=\"ds-tag\">Kundan necklace</span></div>",
+      "css": ".ds-tray{position:relative;width:220px;aspect-ratio:1;border-radius:6px;background:#0f2a21;box-shadow:0 12px 28px rgba(0,0,0,.4);transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s cubic-bezier(.16,1,.3,1)}.ds-tray:hover{transform:translateY(-3px);box-shadow:0 18px 34px rgba(0,0,0,.5)}.ds-photo{position:absolute;inset:0;border-radius:6px;overflow:hidden;background:linear-gradient(135deg,#1f4a3b,#0f2a21);box-shadow:inset 0 0 0 1px rgba(186,153,92,.28)}.ds-tag{position:absolute;left:50%;bottom:0;transform:translate(-50%,50%);width:max-content;max-width:92%;padding:6px 12px;border-radius:3px;background:#ba995c;color:#16130b;font:600 .8rem/1.25 Karla,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.35)}"
+    },
+    {
+      "name": "Rate Card",
+      "kind": "card",
+      "refersTo": "rate-card",
+      "description": "Brass-framed glass panel for rates and facts. The real component uses a bevelled raster 9-slice; this snippet approximates the frame with a brass border.",
+      "html": "<div class=\"ds-rate\"><p class=\"ds-rate-cap\">22K gold, IBJA benchmark</p><p class=\"ds-rate-fig\">per 10 g</p></div>",
+      "css": ".ds-rate{position:relative;max-width:420px;padding:28px 32px;border:6px solid #ba995c;background:linear-gradient(115deg,rgba(255,255,255,.12) 0 22%,rgba(255,255,255,0) 22.2% 100%),linear-gradient(180deg,rgba(25,62,49,.94),rgba(12,38,30,.97));box-shadow:inset 0 0 0 1px rgba(0,0,0,.45),0 26px 50px rgba(0,0,0,.5);color:#f7f7f5;font-family:'Inria Serif',Georgia,serif}.ds-rate-cap{margin:0;color:#d9bd84;font-size:1.2rem}.ds-rate-fig{margin:8px 0 0;font-weight:700;font-size:2rem;letter-spacing:-.025em}"
+    },
+    {
+      "name": "Section Head",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Display line over a brass keyword subtitle. In the real DOM the heading comes first and is reversed with flex col-reverse.",
+      "html": "<div class=\"ds-head\"><h2 class=\"ds-kicker\">Gold Jewellery Showroom in Ghatkopar</h2><p class=\"ds-display\">Pieces you can hold before you decide.</p></div>",
+      "css": ".ds-head{display:flex;flex-direction:column-reverse;max-width:40rem}.ds-kicker{margin:12px 0 0;font:400 1.3rem/1.3 'Inria Serif',Georgia,serif;color:#c6aa78}.ds-display{margin:0;font:700 3rem/1.06 'Inria Serif',Georgia,serif;letter-spacing:-.025em;color:#f7f7f5;max-width:18ch}"
+    },
+    {
+      "name": "Header Link",
+      "kind": "nav",
+      "refersTo": "button-ghost",
+      "description": "Header nav link with a brass underline that draws in on hover.",
+      "html": "<a class=\"ds-link\" href=\"#\">Collections</a>",
+      "css": ".ds-link{position:relative;color:#f7f7f5;text-decoration:none;font:500 1rem Karla,Arial,sans-serif}.ds-link::after{content:'';position:absolute;left:0;right:0;bottom:-3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .35s cubic-bezier(.16,1,.3,1)}.ds-link:hover::after,.ds-link:focus-visible::after{transform:scaleX(1);transform-origin:left}.ds-link:focus-visible{outline:2px solid #ba995c;outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Velvet Counter",
+    "overview": "The site is the jeweller's counter you sit at. Pieces lie on bottle-green velvet trays, gold is tested on the touchstone and weighed on the scale in front of you, and the day's rate sits under glass. Near-black counter, velvet sections, brass for type, rules and frames, glass white for what you act on. Calm, generous density; honest, unhurried, tactile. It refuses the maroon-and-gold-serif jeweller template and the cart-led e-commerce shell.",
+    "keyCharacteristics": [
+      "Near-black counter ground, bottle-green velvet sections, brass as a material.",
+      "Facts and rates sit on brass-framed glass panels.",
+      "Large Inria Serif display line, with the keyword heading beneath it as a brass subtitle.",
+      "Pill buttons that fill with a brass pour on hover.",
+      "Photography is the only gold; every image is a generated stand-in awaiting the owner's photographs."
+    ],
+    "rules": [
+      { "name": "The Brass Is Material Rule", "body": "Brass is a metal that frames and tags things, not a line or a wash. Facts sit on brass-framed glass panels. No gold gradients, no glow, no brass hairline used as decoration.", "section": "colors" },
+      { "name": "The Gold Lives In Photographs Rule", "body": "Gold appears as jewellery in images and as flat brass type and rules. Never as a gradient fill.", "section": "colors" },
+      { "name": "The Subtitle Heading Rule", "body": "Keyword H1, H2 and H3 text is locked word for word. The heading comes first in the DOM, and flex-col-reverse or order shows the display line above it. The display line is never a heading. No tracked-caps eyebrow sits above a heading.", "section": "typography" },
+      { "name": "The Sign Over The Door Rule", "body": "Devanagari is set in Tiro and only for the shop name.", "section": "typography" },
+      { "name": "The Objects Cast Shadows Rule", "body": "Shadows belong to physical things (trays, glass, tags). Text blocks and sections stay flat.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep keyword H1/H2/H3 text word for word, first in the DOM, shown beneath a <p class=\"display\"> as a sentence-case brass subtitle.",
+      "Do put facts on .rate-card brass-framed glass panels.",
+      "Do set display in Inria Serif 700 at about -0.025em and body in Karla.",
+      "Do keep the hero image and H1 visible from the first paint: never hidden or faded, all content in the server HTML.",
+      "Do write alt text that says what the image shows plus a local phrase (Ghatkopar, Jivdaya Lane); keep provenance embedded in each generated raster until the owner's photos replace them.",
+      "Do make every CTA a TrackedLink with a cta_location; GA4 sends only from www.sonikhimrajlaljijewellers.com.",
+      "Do keep a 44px minimum touch target (48px on the sticky bar)."
+    ],
+    "donts": [
+      "Don't put a tracked-caps eyebrow above a heading.",
+      "Don't make the display line a heading element.",
+      "Don't use gold gradients, glow, or brass as a thin decorative line.",
+      "Don't add cart or search icons, cursors, a fake shop front, or invented rates, prices, reviews or pieces.",
+      "Don't fade or delay-reveal the LCP image or H1.",
+      "Don't use the legacy maroon, gold and cream palette on any redesigned surface."
+    ]
+  }
+}

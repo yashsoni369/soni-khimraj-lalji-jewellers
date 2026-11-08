@@ -1,0 +1,8 @@
+{
+    "image_id":  "39dc9cfc-8445-449b-89cf-7bddfb49eabc",
+    "prompt":  "Velvet Counter tall page: split hero \"Sit at our counter.\" with three labelled velvet trays (Bridal, Daily wear, Silver); brass-framed IBJA rate card on velvet; old gold Tested / Weighed / Valued row. Rate values other than 22K are illustrative.",
+    "model":  "nano-banana-2-1",
+    "tool":  "BrandGen",
+    "batch_id":  "d8c54b1e-3a67-4170-99ff-6ac2cca048dd",
+    "approvedParts":  "gold-rate section"
+}

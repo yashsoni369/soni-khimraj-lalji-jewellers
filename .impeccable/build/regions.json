@@ -1,0 +1,17 @@
+{
+  "regions": [
+    { "id": "hero-photo", "kind": "plate", "grid": "A1:J9", "bleed": true, "note": "full-bleed overhead photograph of a glass jewellery counter with teak frame: bottle-green velvet tray holding a kundan necklace and two carved gold bangles, a black touchstone with a gold streak, a brass loupe and a digital scale; the left 40% is dark empty counter for text" },
+    { "id": "header-bar", "kind": "chrome", "grid": "A0:J0", "container": true, "note": "near-black header strip with a hairline bottom edge" },
+    { "id": "wordmark", "kind": "text", "grid": "A0:B0", "box": { "x": 0.0293, "y": 0.0242, "w": 0.1337, "h": 0.0389 }, "note": "wordmark SONI KHIMRAJ LALJI / JEWELLERS in brass serif caps" },
+    { "id": "nav", "kind": "text", "grid": "D0:H0", "box": { "x": 0.2963, "y": 0.0289, "w": 0.4090, "h": 0.0271 }, "note": "nav links Gold Rate · Bridal · Collections · Old Gold · Our Story · Visit in light grey sans" },
+    { "id": "phone", "kind": "text", "grid": "I0:I0", "box": { "x": 0.8323, "y": 0.0313, "w": 0.1028, "h": 0.0230 }, "note": "phone number +91 91361 75991 in light grey sans" },
+    { "id": "wa-icon", "kind": "control", "grid": "J0:J0", "box": { "x": 0.9422, "y": 0.0212, "w": 0.0293, "h": 0.0430 }, "note": "round dark WhatsApp icon button" },
+    { "id": "deva-name", "kind": "text", "grid": "A3:C3", "box": { "x": 0.0645, "y": 0.3084, "w": 0.1883, "h": 0.0313 }, "note": "shop name in Devanagari सोनी खिमराज लालजी ज्वेलर्स in muted brass" },
+    { "id": "headline-1", "kind": "text", "grid": "A4:E4", "box": { "x": 0.0645, "y": 0.3591, "w": 0.4403, "h": 0.0731 }, "note": "display line 1 'Tested in front of you.' in brass serif" },
+    { "id": "headline-2", "kind": "text", "grid": "A4:F5", "box": { "x": 0.0645, "y": 0.4416, "w": 0.4826, "h": 0.0725 }, "note": "display line 2 'Weighed in front of you.' in white serif" },
+    { "id": "sub", "kind": "text", "grid": "A5:F5", "box": { "x": 0.0645, "y": 0.5389, "w": 0.4838, "h": 0.0289 }, "note": "line 'BIS 916 hallmarked gold · 25+ years on Jivdaya Lane, Ghatkopar West' in grey sans" },
+    { "id": "cta-whatsapp", "kind": "control", "grid": "A6:C6", "box": { "x": 0.0645, "y": 0.6097, "w": 0.1713, "h": 0.0601 }, "note": "white pill button 'WhatsApp Mr. Soni' with dark text" },
+    { "id": "cta-oldgold", "kind": "text", "grid": "C6:E6", "box": { "x": 0.2528, "y": 0.6262, "w": 0.1495, "h": 0.0289 }, "note": "brass text link 'Bring your old gold →'" },
+    { "id": "rate-label", "kind": "control", "grid": "H9:J9", "box": { "x": 0.7318, "y": 0.9298, "w": 0.2496, "h": 0.0377 }, "note": "translucent glass label with hairline border: Today's 22K rate · IBJA 6 Nov · ₹1,31,500 / 10g" }
+  ]
+}

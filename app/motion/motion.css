@@ -1,0 +1,103 @@
+/* Velvet Counter motion layer styles (see app/motion/MotionLayer.tsx). */
+
+/* page colour shifts between sections (tweened by MotionLayer, static otherwise) */
+#main { background: var(--page-bg, transparent); }
+
+/* ---------- gold chain progress: pure CSS scroll-driven, informational, kept under reduced motion ---------- */
+.chain { position: fixed; z-index: 45; pointer-events: none; background: rgba(186, 153, 92, 0.22); }
+.chain-gold { position: absolute; inset: 0; background: #d9bd84; }
+@media (min-width: 821px) {
+  .chain {
+    right: 18px; top: calc(var(--hdr) + 18px); bottom: 86px; width: 10px;
+    -webkit-mask: var(--link-v) repeat-y center top / 10px 20px; mask: var(--link-v) repeat-y center top / 10px 20px;
+  }
+  .chain-gold { transform-origin: top; transform: scaleY(0); }
+  @supports (animation-timeline: scroll()) {
+    .chain-gold { animation: chain-v linear both; animation-timeline: scroll(root); }
+  }
+}
+@media (max-width: 820px) {
+  .chain {
+    left: 16px; right: 16px; top: var(--hdr); height: 8px;
+    -webkit-mask: var(--link-h) repeat-x left center / 16px 8px; mask: var(--link-h) repeat-x left center / 16px 8px;
+    transition: top 0.45s var(--ease-out-expo);
+  }
+  #site-header[data-hidden='true'] ~ * .chain, html:has(#site-header[data-hidden='true']) .chain { top: 0; }
+  .chain-gold { transform-origin: left; transform: scaleX(0); }
+  @supports (animation-timeline: scroll()) {
+    .chain-gold { animation: chain-h linear both; animation-timeline: scroll(root); }
+  }
+}
+@keyframes chain-v { to { transform: scaleY(1); } }
+@keyframes chain-h { to { transform: scaleX(1); } }
+:root {
+  --link-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20'%3E%3Crect x='2.2' y='1' width='5.6' height='12' rx='2.8' fill='none' stroke='white' stroke-width='1.7'/%3E%3Crect x='4.15' y='11' width='1.7' height='9' rx='.85' fill='white'/%3E%3C/svg%3E");
+  --link-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 10'%3E%3Crect x='1' y='2.2' width='12' height='5.6' rx='2.8' fill='none' stroke='white' stroke-width='1.7'/%3E%3Crect x='11' y='4.15' width='9' height='1.7' rx='.85' fill='white'/%3E%3C/svg%3E");
+}
+
+/* ---------- jhumka companion (desktop, shown only when the motion layer turns it on) ---------- */
+.companion {
+  position: fixed; top: 0; right: 5px; width: 36px; height: auto; z-index: 46; display: none;
+  transform-origin: 50% 0; will-change: transform; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.5));
+}
+html.jhumka-on .companion { display: block; }
+
+/* ---------- loupe ---------- */
+.loupe {
+  position: fixed; left: 0; top: 0; width: 170px; height: 170px; border-radius: 50%; overflow: hidden; z-index: 70;
+  pointer-events: none; visibility: hidden; opacity: 0; background: #0b0d0c; will-change: transform;
+  box-shadow: 0 0 0 1px #000, 0 0 0 3px #ba995c, 0 0 0 6px #5a4518, 0 0 0 7px #d9bd84, 0 14px 34px rgba(0, 0, 0, 0.6);
+}
+.loupe img { position: absolute; left: 0; top: 0; max-width: none; }
+.loupe::after {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.18), transparent 40%), radial-gradient(circle, transparent 62%, rgba(0, 0, 0, 0.35));
+}
+html.loupe-on img[data-loupe] { cursor: zoom-in; }
+
+/* ---------- brass shutter between pages ---------- */
+.shutter {
+  position: fixed; inset: 0; z-index: 80; display: none; transform: scaleY(0); transform-origin: top;
+  background: repeating-linear-gradient(180deg, #1a1d1b 0 22px, #2a2e2b 22px 24px, #121413 24px 26px), #1a1d1b;
+}
+.shutter::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: #ba995c; }
+
+/* ---------- tray rail pinned (desktop) and the gold glint ---------- */
+[data-rail].is-pinned { overflow: visible !important; scroll-snap-type: none !important; width: max-content; }
+.tray .tray-photo::before {
+  content: ''; position: absolute; inset: -20% auto -20% -60%; width: 45%; z-index: 1; pointer-events: none; opacity: 0;
+  background: linear-gradient(100deg, transparent, rgba(255, 240, 200, 0.32), transparent);
+  transform: skewX(-16deg); mix-blend-mode: soft-light;
+}
+.tray.shine .tray-photo::before { animation: glint 0.85s var(--ease-out-expo) 1; }
+@media (hover: hover) { .tray:hover .tray-photo::before { animation: glint 0.85s var(--ease-out-expo) 1; } }
+@keyframes glint {
+  0% { opacity: 1; transform: skewX(-16deg) translateX(0); }
+  100% { opacity: 1; transform: skewX(-16deg) translateX(420%); }
+}
+
+/* ---------- photos drift inside their frames (CSS scroll-driven, free on phones) ---------- */
+.drift, .tray-photo, [data-stack-card] .tray-photo { overflow: clip !important; }
+.drift img, .tray-photo img { scale: 1.12; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .drift img, .tray-photo img { animation: drift linear both; animation-timeline: view(); }
+  }
+}
+@keyframes drift { from { translate: 0 -5%; } to { translate: 0 5%; } }
+
+/* ---------- odometer columns ---------- */
+.odo-col { display: inline-block; height: 1em; overflow: hidden; vertical-align: top; line-height: 1; }
+.odo-col > span { display: block; }
+.odo-col > span > span { display: block; height: 1em; line-height: 1; }
+
+/* ---------- categories follow image ---------- */
+[data-follow-img] { visibility: hidden; opacity: 0; }
+[data-follow-img] img { opacity: 0; transition: opacity 0.3s; }
+[data-follow-img] img.on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shutter, .companion, .loupe { display: none !important; }
+  .tray .tray-photo::before { animation: none !important; }
+  .drift img, .tray-photo img { scale: 1; }
+}
