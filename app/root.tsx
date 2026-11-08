@@ -33,12 +33,6 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-4R59PN3Y3V');`;
 
-const GTM = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KJGS93VK');`;
-
 export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
   { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon-48x48.png' },
@@ -93,18 +87,10 @@ export function Layout({ children }: { children: ReactNode }) {
           <link href={FONTS_URL} rel="stylesheet" />
         </noscript>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-4R59PN3Y3V" />
+        {/* GA4 (page views + CTA events from lib/tracking.ts). No Tag Manager. */}
         <script dangerouslySetInnerHTML={{ __html: GTAG }} />
-        <script dangerouslySetInnerHTML={{ __html: GTM }} />
       </head>
       <body>
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-KJGS93VK"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
         <div className="bg-noise" />
         {children}
         <ScrollRestoration />

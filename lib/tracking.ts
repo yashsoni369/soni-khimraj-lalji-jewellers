@@ -1,8 +1,8 @@
-// GTM/GA4 event tracking contract.
-// Every CTA pushes one of these events to `window.dataLayer`; GTM-KJGS93VK has
-// matching GA4 event tags (G-4R59PN3Y3V). New events need new GTM tags — see
-// docs/gtm-ga4-actions.md. Page views come from gtag('config') + GA4 enhanced
-// measurement (history changes), so we do not push page_view ourselves.
+// GA4 event tracking contract (G-4R59PN3Y3V, loaded in app/root.tsx).
+// Every CTA sends one of these events straight to GA4 with gtag('event'); there is
+// no Tag Manager. Each event also carries `page_type`. Page views come from
+// gtag('config') + GA4 enhanced measurement (history changes), so we do not send
+// page_view ourselves. Event list and GA4 setup: docs/ga4-tracking.md.
 import { pageTypeFor } from './routes';
 
 export type CtaLocation =
@@ -64,7 +64,7 @@ export type VisitPurpose = "bridal" | "general" | "old_gold_exchange" | "custom_
 
 declare global {
   interface Window {
-    dataLayer?: Array<Record<string, unknown>>;
+    gtag?: (command: "event", eventName: string, params: Record<string, unknown>) => void;
   }
 }
 
@@ -83,8 +83,15 @@ function isDuplicate(payload: Record<string, unknown>) {
 function push(payload: Record<string, unknown>) {
   if (typeof window === "undefined") return;
   if (isDuplicate(payload)) return;
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ page_type: pageTypeFor(window.location.pathname), ...payload });
+  // gtag is missing when the Google tag is blocked (ad blocker) or failed to load.
+  if (typeof window.gtag !== "function") return;
+  const { event, ...rest } = payload;
+  const params: Record<string, unknown> = { page_type: pageTypeFor(window.location.pathname) };
+  for (const [key, value] of Object.entries(rest)) if (value !== undefined) params[key] = value;
+  // No transport option needed: GA4 already sends hits with fetch keepalive, which
+  // survives the page leaving for WhatsApp, the dialer or Maps (`transport_type` is a
+  // Universal Analytics leftover that GA4 would log as a junk parameter).
+  window.gtag("event", String(event), params);
 }
 
 export function trackWhatsAppClick(args: {
