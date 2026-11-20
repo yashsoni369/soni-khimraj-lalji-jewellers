@@ -115,6 +115,48 @@ export async function fetchGoldRate(): Promise<GoldRate> {
   };
 }
 
+/** One trading day of IBJA gold rates, per 10 grams. */
+export interface GoldHistoryDay {
+  date: string;
+  k24: number;
+  k22: number;
+  k18: number;
+}
+
+// Calendar days to look back for `days` trading days (Sundays and market holidays have no rate).
+const HISTORY_LOOKBACK_DAYS = 18;
+
+/**
+ * The last `days` trading days of IBJA gold rates, newest first. Walks back from the latest
+ * published date over the daily snapshots (fetched in parallel); days with missing or
+ * out-of-range values are skipped.
+ */
+export async function fetchGoldHistory(days = 10): Promise<GoldHistoryDay[]> {
+  const latest = await getJson(`${BASE}/gold/in/latest.json`);
+  let day = latest?.coverage?.to ?? new Date().toISOString().slice(0, 10);
+  const dates = [day];
+  for (let i = 1; i < HISTORY_LOOKBACK_DAYS; i++) dates.push((day = previousDay(day)));
+
+  const snaps = await Promise.all(dates.map((d) => getJson(`${BASE}/gold/in/${d}.json`).catch(() => null)));
+  const byDate = new Map<string, GoldHistoryDay>();
+  for (const s of [latest, ...snaps]) {
+    if (!isComplete(s)) continue;
+    const [k24, k22, k18] = [find(s, 'XAU.24K')!, find(s, 'XAU.22K')!, find(s, 'XAU.18K')!];
+    const [g24, g22, g18] = [k24.value!, k22.value!, k18.value!];
+    if (![g24, g22, g18].every((v) => inRange(v, GOLD_PER_GRAM)) || !(g24 > g22 && g22 > g18)) continue;
+    if (!byDate.has(k24.date)) {
+      byDate.set(k24.date, { date: k24.date, k24: Math.round(g24 * 10), k22: Math.round(g22 * 10), k18: Math.round(g18 * 10) });
+    }
+  }
+  const out = [...byDate.values()].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, days);
+  if (!out.length) throw new Error('gold history unavailable');
+  return out;
+}
+
+/** "20 Nov" from an ISO date (UTC, so server and client agree). */
+export const formatDayMonth = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+
 const inr = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
 export const formatInr = (n: number) => inr.format(n);
 

@@ -32,6 +32,8 @@ export interface ServicePageContent {
   related: PageType[];
   /** Service schema name; omitted for non-service pages */
   serviceType?: string;
+  /** Gold-rate page only: copy for the per-gram and last-days tables (data comes from the loader) */
+  rateTables?: { perGramHeading: string; perGramNote: string; historyHeading: string; historyNote: string };
 }
 
 /** The three non-service pages (our story, collections, gemstones): head and schema data only; their body lives in components/pages. */
@@ -74,6 +76,12 @@ export const PAGE_CONTENT: Record<'gold_rate' | 'bridal' | 'old_gold_exchange' |
       message: `${G}, could you share today's 22K and 18K gold rate at your shop?`,
       intent: 'gold_rate',
     },
+    rateTables: {
+      perGramHeading: 'Gold rate per gram in Ghatkopar today',
+      perGramNote: 'IBJA benchmark, before 3% GST and making charges.',
+      historyHeading: 'Gold rate in Ghatkopar: last 10 days',
+      historyNote: 'IBJA benchmark per 10 grams on each trading day. Sundays and market holidays have no rate.',
+    },
     sections: [
       {
         heading: 'Which gold rate is shown here?',
@@ -107,6 +115,10 @@ export const PAGE_CONTENT: Record<'gold_rate' | 'bridal' | 'old_gold_exchange' |
       {
         q: 'What is the 22K gold rate today in Ghatkopar?',
         a: 'The live IBJA benchmark for 22K (916) gold is shown at the top of this page per 10 grams. For our shop rate including making charges, WhatsApp us on +91 91361 75991.',
+      },
+      {
+        q: 'What is the gold rate per gram today in Ghatkopar?',
+        a: 'The per gram rate is the per 10 gram rate divided by 10. The table on this page shows today’s IBJA benchmark for 1 g, 8 g, 10 g and 100 g of 24K, 22K and 18K gold, before 3% GST and making charges.',
       },
       {
         q: 'Why is the shop price higher than the gold rate?',
