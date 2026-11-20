@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { ChevronRight, Plus } from 'lucide-react';
 import { preload } from 'react-dom';
@@ -223,7 +223,8 @@ const BodySection = ({ sec: raw, contentKey, index }: { sec: PageSection; conten
 
 // ---------- page ----------
 
-export const ServicePage = ({ content }: { content: ServicePageContent }) => {
+/** `afterHero`: page-specific block between the hero and the body (the gold-rate tables). */
+export const ServicePage = ({ content, afterHero }: { content: ServicePageContent; afterHero?: ReactNode }) => {
   const route = routeByKey(content.key);
   const isGoldRate = content.key === 'gold_rate';
   const heroImg = PAGE_HEROES[content.key];
@@ -321,6 +322,8 @@ export const ServicePage = ({ content }: { content: ServicePageContent }) => {
           )}
         </div>
       </section>
+
+      {afterHero}
 
       {/* Body */}
       {content.sections.map((sec, i) => (

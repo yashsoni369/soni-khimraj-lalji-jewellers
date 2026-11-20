@@ -17,7 +17,8 @@ const faqPage = (id: string, faqs: PageFaq[]) => ({
   })),
 });
 
-export function pageJsonLd(route: SiteRoute): Record<string, unknown> | null {
+/** `dateModified`: ISO date the page's data last changed (the gold-rate page passes the IBJA rate date). */
+export function pageJsonLd(route: SiteRoute, opts: { dateModified?: string } = {}): Record<string, unknown> | null {
   const url = canonicalUrl(route);
 
   if (route.key === 'home') {
@@ -40,6 +41,7 @@ export function pageJsonLd(route: SiteRoute): Record<string, unknown> | null {
       about: { '@id': STORE_ID },
       breadcrumb: { '@id': `${url}#breadcrumb` },
       primaryImageOfPage: `${SITE_URL}${image.src}`,
+      ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
     },
     {
       '@type': 'BreadcrumbList',

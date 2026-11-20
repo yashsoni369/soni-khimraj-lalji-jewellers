@@ -1,15 +1,11 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { todayInIndia, useGoldRate, useLoaderRate } from '@/hooks/useGoldRate';
-import { formatInr, type MetalPrice } from '@/lib/goldRate';
+import { formatDayMonth as cardDate, formatInr, type MetalPrice } from '@/lib/goldRate';
 import type { CtaLocation } from '@/lib/tracking';
 import { createGoldRateMessage, whatsappUrl } from '@/services/whatsappService';
 import { TrackedLink } from './TrackedCTA';
 import { WhatsAppIcon } from './site/icons';
-
-// "6 Nov" from the rate's ISO date (UTC, so server and client agree).
-const cardDate = (iso: string) =>
-  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 
 const Change = ({ pct }: { pct: number | null }) => {
   if (pct === null || pct === 0) return null;

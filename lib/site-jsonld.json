@@ -99,35 +99,35 @@
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Product",
+              "@type": "Service",
               "name": "BIS hallmarked 22K & 18K gold jewellery"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Product",
+              "@type": "Service",
               "name": "Diamond jewellery"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Product",
+              "@type": "Service",
               "name": "Silver jewellery & articles"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Product",
+              "@type": "Service",
               "name": "Bridal Kundan & Polki jewellery"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Product",
+              "@type": "Service",
               "name": "Mangalsutra"
             }
           },
