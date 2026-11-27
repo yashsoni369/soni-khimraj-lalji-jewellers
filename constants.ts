@@ -109,7 +109,7 @@ export const FAQS = [
   },
   {
     q: 'How do I reach the shop from Ghatkopar station?',
-    a: 'We are under 1 km from Ghatkopar railway station and Metro Line 1, about a 10-minute walk from the West side. Walk to LBS Marg and turn into Jivdaya Lane, between the Ghatkopar Telephone Exchange and Sarvodaya Hospital. The nearest bus stop is Sarvodaya Hospital.',
+    a: 'We are a 4-minute walk from Ghatkopar railway station (West). Shop No 9, Dr. Lakhani Estate, Jivdaya Lane, Ghatkopar West – tap “Get directions” on this page to open the route in Google Maps.',
   },
   {
     q: 'Is your gold jewellery BIS hallmarked?',
