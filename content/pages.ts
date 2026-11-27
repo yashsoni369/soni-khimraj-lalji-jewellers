@@ -307,7 +307,7 @@ export const PAGE_CONTENT: Record<'gold_rate' | 'bridal' | 'old_gold_exchange' |
       {
         heading: 'Today’s silver rate',
         paragraphs: [
-          'The IBJA benchmark silver rate per kilogram is shown on our Gold Rate Today page. For the price of a particular piece, ask us on WhatsApp.',
+          'The IBJA benchmark silver rate for 1 gram, 10 grams, 100 grams and 1 kg is shown on our Gold Rate Today page. For the price of a particular piece, ask us on WhatsApp.',
         ],
       },
     ],

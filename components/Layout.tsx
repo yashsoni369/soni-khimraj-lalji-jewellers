@@ -74,7 +74,7 @@ export const StoreAddress = ({ location = 'store_address' }: { location?: CtaLoc
               </p>
             </div>
             <p className="mt-5 text-[clamp(1.05rem,1.3vw,1.2rem)] leading-relaxed text-glass">
-              <span className="text-brass-hi">A short walk from Ghatkopar station (West).</span> Serving families from{' '}
+              <span className="text-brass-hi">A 4-minute walk from Ghatkopar station (West).</span> Serving families from{' '}
               {NEARBY_AREAS.slice(0, -1).join(', ')} and {lastArea}.
             </p>
             <h3 className="mt-8 font-display text-[clamp(1.35rem,1.8vw,1.6rem)] leading-tight text-glass">
@@ -96,7 +96,7 @@ export const StoreAddress = ({ location = 'store_address' }: { location?: CtaLoc
               </TrackedLink>
               <p className="flex items-start gap-3">
                 <Footprints size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-brass" />
-                <span className="text-[1.08rem] text-glass-soft">A short walk from Ghatkopar station (West)</span>
+                <span className="text-[1.08rem] text-glass-soft">A 4-minute walk from Ghatkopar station (West)</span>
               </p>
               <p className="flex items-center gap-3">
                 <Phone size={20} aria-hidden="true" className="shrink-0 text-brass" />

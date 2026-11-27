@@ -97,7 +97,7 @@ export const SERVICES = [
 export const FAQS = [
   {
     q: 'Where is Soni Khimraj Lalji Jewellers located?',
-    a: 'We are at Shop No 9, Dr. Lakhani Estate, Jivdaya Lane, Ghatkopar West, Mumbai 400086 – a short walk from Ghatkopar railway station (West).',
+    a: 'We are at Shop No 9, Dr. Lakhani Estate, Jivdaya Lane, Ghatkopar West, Mumbai 400086 – a 4-minute walk from Ghatkopar railway station (West).',
   },
   {
     q: 'What are your shop timings?',

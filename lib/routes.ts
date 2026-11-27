@@ -80,7 +80,7 @@ export const ROUTES: SiteRoute[] = [
       'Silver jewellery shop in Ghatkopar West: jewellery, gift articles & pooja items on Jivdaya Lane. Open daily 10 AM–9:30 PM. Get our silver catalogue on WhatsApp.',
     name: 'Silver Jewellery',
     indexable: true,
-    updated: '2026-11-20',
+    updated: '2026-11-27',
   },
   {
     // TODO(owner): set indexable: true once the scheme terms are on the page.
@@ -101,7 +101,7 @@ export const ROUTES: SiteRoute[] = [
       'Meet Mr. Soni, the family jeweller on Jivdaya Lane, Ghatkopar West for 25+ years. BIS hallmarked gold, tested and weighed in front of you. WhatsApp us.',
     name: 'Our Story',
     indexable: true,
-    updated: '2026-11-08',
+    updated: '2026-11-27',
   },
   {
     key: 'collections',

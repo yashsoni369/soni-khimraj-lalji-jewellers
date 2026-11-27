@@ -80,7 +80,7 @@ export const OurStoryPage = () => (
         <div className="mt-[clamp(28px,4vw,56px)] max-w-[60ch] space-y-6 text-[clamp(1.1rem,1.5vw,1.3rem)] font-light leading-[1.7] text-glass">
           <p>
             For more than 25 years, Soni Khimraj Lalji Jewellers has been the family jeweller of Ghatkopar West,
-            Mumbai. Our shop is on Jivdaya Lane, a short walk from Ghatkopar station (West).
+            Mumbai. Our shop is on Jivdaya Lane, a 4-minute walk from Ghatkopar station (West).
           </p>
           <p>
             Mr. Soni answers on WhatsApp himself, so the person you message is the person who will stand at the
