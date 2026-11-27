@@ -36,7 +36,7 @@ export const RateSection = () => (
         to="/gold-rate-today-ghatkopar"
         className="mt-5 inline-flex min-h-[44px] items-center text-[0.95rem] text-brass-hi underline-offset-[5px] hover:underline"
       >
-        24K vs 22K vs 18K explained<span aria-hidden="true">&nbsp;→</span>
+        Soni Khimraj Lalji gold rate today: 24K vs 22K vs 18K<span aria-hidden="true">&nbsp;→</span>
       </Link>
     </div>
   </section>

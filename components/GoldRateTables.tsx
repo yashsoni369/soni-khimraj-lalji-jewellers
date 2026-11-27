@@ -6,6 +6,8 @@ import { formatDayMonth, formatInr, formatRateDate, type GoldHistoryDay, type Go
 // tables are in the server HTML. A table is left out when its data is missing.
 
 const WEIGHTS = [1, 8, 10, 100];
+const SILVER_WEIGHTS = [1, 10, 100, 1000];
+const gramsLabel = (g: number) => (g >= 1000 ? `${g / 1000} kg` : `${g} g`);
 const SHOWN_DAYS = 10;
 
 const th = 'whitespace-nowrap py-3 pr-4 text-left text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-[#c6aa78] last:pr-0';
@@ -74,6 +76,48 @@ export const GoldRateTables = ({
             <p className="mt-4 text-[0.9rem] leading-relaxed text-glass-soft">
               <time dateTime={rate.date}>{formatRateDate(rate.date)}</time> · {copy.perGramNote}
             </p>
+
+            {/* Marathi rate line: searchers also type "आज सोन्याचा दर घाटकोपर" */}
+            <div lang="mr" className="mt-10">
+              <h3 className="text-[1.05rem] font-semibold text-brass-hi">{copy.marathiHeading}</h3>
+              <p className="mt-2 text-[0.98rem] leading-relaxed text-glass">
+                आज २२ कॅरेट (916) सोन्याचा दर {formatInr(rate.gold.k22.price)} प्रति १० ग्रॅम, २४ कॅरेट (999){' '}
+                {formatInr(rate.gold.k24.price)} आणि १८ कॅरेट (750) {formatInr(rate.gold.k18.price)} आहे (IBJA,{' '}
+                {formatDayMonth(rate.date)}). GST आणि मजुरी वेगळी.
+              </p>
+            </div>
+
+            {rate.silver && (
+              <>
+                <h2 id="rate-silver" className="kicker mt-14 text-brass-hi">
+                  {copy.silverHeading}
+                </h2>
+                <div className="mt-6 overflow-x-auto">
+                  <table aria-labelledby="rate-silver" className="w-full min-w-[300px] border-collapse border-b border-brass/25">
+                    <caption className="sr-only">
+                      IBJA 999 silver rate on {formatRateDate(rate.date)} for 1 gram, 10 grams, 100 grams and 1 kg
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col" className={th}>Weight</th>
+                        <th scope="col" className={th}>Silver (999)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {SILVER_WEIGHTS.map((g) => (
+                        <tr key={g}>
+                          <th scope="row" className={`${td} text-left font-normal text-glass-soft`}>
+                            {gramsLabel(g)}
+                          </th>
+                          <td className={td}>{formatInr((rate.silver!.price * g) / 1000)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="mt-4 text-[0.9rem] leading-relaxed text-glass-soft">{copy.silverNote}</p>
+              </>
+            )}
           </div>
         )}
 

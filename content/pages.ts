@@ -33,7 +33,16 @@ export interface ServicePageContent {
   /** Service schema name; omitted for non-service pages */
   serviceType?: string;
   /** Gold-rate page only: copy for the per-gram and last-days tables (data comes from the loader) */
-  rateTables?: { perGramHeading: string; perGramNote: string; historyHeading: string; historyNote: string };
+  rateTables?: {
+    perGramHeading: string;
+    perGramNote: string;
+    historyHeading: string;
+    historyNote: string;
+    silverHeading: string;
+    silverNote: string;
+    /** Marathi heading for the rate line (searchers type "आज सोन्याचा दर घाटकोपर") */
+    marathiHeading: string;
+  };
 }
 
 /** The three non-service pages (our story, collections, gemstones): head and schema data only; their body lives in components/pages. */
@@ -81,6 +90,9 @@ export const PAGE_CONTENT: Record<'gold_rate' | 'bridal' | 'old_gold_exchange' |
       perGramNote: 'IBJA benchmark, before 3% GST and making charges.',
       historyHeading: 'Gold rate in Ghatkopar: last 10 days',
       historyNote: 'IBJA benchmark per 10 grams on each trading day. Sundays and market holidays have no rate.',
+      silverHeading: 'Silver rate today in Ghatkopar',
+      silverNote: 'IBJA benchmark for 999 silver, before 3% GST and making charges.',
+      marathiHeading: 'आज घाटकोपरमधील सोन्याचा दर',
     },
     sections: [
       {
@@ -119,6 +131,18 @@ export const PAGE_CONTENT: Record<'gold_rate' | 'bridal' | 'old_gold_exchange' |
       {
         q: 'What is the gold rate per gram today in Ghatkopar?',
         a: 'The per gram rate is the per 10 gram rate divided by 10. The table on this page shows today’s IBJA benchmark for 1 g, 8 g, 10 g and 100 g of 24K, 22K and 18K gold, before 3% GST and making charges.',
+      },
+      {
+        q: 'What is the 916 gold rate today in Ghatkopar?',
+        a: '916 gold is 22 carat gold (91.6% pure). Its rate is the 22K (916) price in the tables on this page, per gram and per 10 grams, from today’s IBJA benchmark.',
+      },
+      {
+        q: 'What is 22 carat 916 KDM gold?',
+        a: 'KDM is an older trade name for 22 carat jewellery. Today the proof of 916 purity is the BIS hallmark with a 6-digit HUID code, which you can check on the BIS Care app. Every gold piece we sell is BIS hallmarked.',
+      },
+      {
+        q: 'What is the silver rate today in Ghatkopar?',
+        a: 'The silver table on this page shows today’s IBJA benchmark for 999 silver per gram, per 10 grams, per 100 grams and per kg. For our shop price on silver jewellery and articles, WhatsApp us on +91 91361 75991.',
       },
       {
         q: 'Why is the shop price higher than the gold rate?',
