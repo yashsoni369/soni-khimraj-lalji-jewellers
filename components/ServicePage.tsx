@@ -209,10 +209,10 @@ const BodySection = ({ sec: raw, contentKey, index }: { sec: PageSection; conten
           )}
           {contentKey === 'silver' && /silver rate/i.test(sec.heading) && (
             <Link
-              to="/gold-rate-today-ghatkopar"
+              to="/gold-rate-today-ghatkopar#rate-silver"
               className="mt-6 inline-flex min-h-[44px] items-center text-[1rem] text-brass-hi underline-offset-[5px] hover:underline"
             >
-              See today&rsquo;s benchmark rates<span aria-hidden="true">&nbsp;→</span>
+              Silver rate today in Ghatkopar<span aria-hidden="true">&nbsp;→</span>
             </Link>
           )}
         </div>

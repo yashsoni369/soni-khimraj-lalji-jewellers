@@ -40,7 +40,7 @@ export const ROUTES: SiteRoute[] = [
       'BIS hallmarked 916 gold, diamond, silver & bridal jewellery in Ghatkopar West, Mumbai for 25+ years. Open every day, Thursday too, near Ghatkopar station.',
     name: 'Home',
     indexable: true,
-    updated: '2026-11-20',
+    updated: '2026-11-27',
   },
   {
     key: 'gold_rate',
@@ -50,7 +50,7 @@ export const ROUTES: SiteRoute[] = [
       "Today's IBJA gold rate for 24K (999), 22K (916) and 18K (750) per 10 grams, plus silver per kg. Get our Ghatkopar West shop rate on WhatsApp.",
     name: 'Gold Rate Today',
     indexable: true,
-    updated: '2026-11-20',
+    updated: '2026-11-27',
   },
   {
     key: 'bridal',
@@ -80,7 +80,7 @@ export const ROUTES: SiteRoute[] = [
       'Silver jewellery shop in Ghatkopar West: jewellery, gift articles & pooja items on Jivdaya Lane. Open daily 10 AM–9:30 PM. Get our silver catalogue on WhatsApp.',
     name: 'Silver Jewellery',
     indexable: true,
-    updated: '2026-11-20',
+    updated: '2026-11-27',
   },
   {
     // TODO(owner): set indexable: true once the scheme terms are on the page.
@@ -101,7 +101,7 @@ export const ROUTES: SiteRoute[] = [
       'Meet Mr. Soni, the family jeweller on Jivdaya Lane, Ghatkopar West for 25+ years. BIS hallmarked gold, tested and weighed in front of you. WhatsApp us.',
     name: 'Our Story',
     indexable: true,
-    updated: '2026-11-08',
+    updated: '2026-11-27',
   },
   {
     key: 'collections',

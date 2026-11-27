@@ -17,9 +17,8 @@ export const STORE_INFO: StoreInfo = {
   mapIframeSrc: "https://maps.google.com/maps?q=Soni%20Khimraj%20Lalji%20Jewellers%2C%20Jivdaya%20Lane%2C%20Ghatkopar%20West%2C%20Mumbai%20400086&z=17&output=embed",
   instagram: "https://www.instagram.com/sonikhimrajlalji/",
   facebook: "https://www.facebook.com/102854275017661/",
-  // TODO(owner): paste the review link from Google Business Profile → Read reviews → Get more reviews.
-  // Review links stay hidden while this is empty.
-  reviewUrl: "",
+  // Google Business Profile → Read reviews → Get more reviews. Also served as the short link /review.
+  reviewUrl: "https://g.page/r/CYHLvWBhiB5LEAE/review",
   vcardUrl: "/soni-khimraj-lalji-jewellers.vcf",
 };
 
@@ -98,11 +97,19 @@ export const SERVICES = [
 export const FAQS = [
   {
     q: 'Where is Soni Khimraj Lalji Jewellers located?',
-    a: 'We are at Shop No 9, Dr. Lakhani Estate, Jivdaya Lane, Ghatkopar West, Mumbai 400086 – a short walk from Ghatkopar railway station (West).',
+    a: 'We are at Shop No 9, Dr. Lakhani Estate, Jivdaya Lane, Ghatkopar West, Mumbai 400086 – a 4-minute walk from Ghatkopar railway station (West).',
   },
   {
     q: 'What are your shop timings?',
     a: 'We are open every day, Monday to Sunday, from 10 AM to 9:30 PM.',
+  },
+  {
+    q: 'Are you open on Thursday?',
+    a: 'Yes. We are open every day, Thursday included, from 10 AM to 9:30 PM.',
+  },
+  {
+    q: 'How do I reach the shop from Ghatkopar station?',
+    a: 'We are a 4-minute walk from Ghatkopar railway station (West). Shop No 9, Dr. Lakhani Estate, Jivdaya Lane, Ghatkopar West – tap “Get directions” on this page to open the route in Google Maps.',
   },
   {
     q: 'Is your gold jewellery BIS hallmarked?',
@@ -110,7 +117,7 @@ export const FAQS = [
   },
   {
     q: 'How can I get today’s gold rate in Ghatkopar?',
-    a: 'Gold rates change every day. Send us a WhatsApp message on +91 91361 75991 and we will share today’s 22K (916), 18K and 24K rate right away.',
+    a: 'Gold rates change every day. Our Gold Rate Today page shows the IBJA benchmark for 24K, 22K (916) and 18K every trading day. For our shop rate, send us a WhatsApp message on +91 91361 75991 and we will share it right away.',
   },
   {
     q: 'Do you sell silver jewellery?',

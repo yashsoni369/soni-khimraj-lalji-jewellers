@@ -17,6 +17,8 @@ export default [
   route(path('collections'), 'routes/collections.tsx'),
   route(path('gemstones'), 'routes/gemstones.tsx'),
   route('sitemap.xml', 'routes/sitemap.ts'),
+  // Short link to the Google review form (QR code at the counter)
+  route('review', 'routes/review.ts'),
   // Resource route (JSON API)
   route('api/gold-rate', 'routes/api.gold-rate.ts'),
   // Everything else: real 404
